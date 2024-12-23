@@ -36,6 +36,7 @@ private:
     sf::RectangleShape player;
     sf::CircleShape haczyk; 
     sf::Texture texture;
+    sf::RectangleShape linka; //linka ³¹cz¹ca haczyk i koniec wêdki
     float angle;
     float promien;
     bool isKeyPressed;
@@ -82,6 +83,9 @@ public:
         initWindow();
         initPlayer();
         initHaczyk();
+        linka.setFillColor(sf::Color(128, 128, 128)); // Szary kolor 
+        linka.setSize(sf::Vector2f(5.0f, 5.0f)); // Pogrubienie linii (szerokoœæ)
+        
     }
 
     void run() { 
@@ -101,7 +105,9 @@ public:
                 if (haczyk.getPosition().x < player.getPosition().x + 50) //bo inaczej nie da sie wci¹gaæ gdy koliduje z brzegiem
                 {
                     
-                    float y = player.getPosition().y + player.getSize().y / 2 + promien * sin(angle);
+                    //float y = player.getPosition().y + player.getSize().y / 2 + promien * sin(angle);
+                    //opcja wy¿ej jest lepsza ale pobugowana
+                    float y = haczyk.getPosition().y - 5;
                     haczyk.setPosition(haczyk.getPosition().x, y);
                 } 
                 }
@@ -123,7 +129,7 @@ public:
         
         float predkoscKatowa = predkoscLiniowa/promien;
 
-        // Aktualizacja pozycji koñca wêdki
+        // Aktualizacja pozycji haczyka
             angle += predkoscKatowa;
         if (angle > 2 * M_PI)
             angle -= 2 * M_PI;
@@ -132,31 +138,32 @@ public:
         if(klatka%10==0 && haczyk.getPosition().x > player.getPosition().x + 50) {
         float x = player.getPosition().x + player.getSize().x / 2 + promien * cos(angle);
         float y = player.getPosition().y + player.getSize().y / 2 + promien * sin(angle);
-        haczyk.setPosition(x, y);
+        haczyk.setPosition(x, y); 
         }
         }
         //
         if (haczyk.getPosition().y <= powierzchniaWody && rzut == true) {  //zarzucenie wêdki
             if (zarzucanie == true ) {  //animacja zamachu do ty³u wêdk¹
                 if(klatka % 200 == 0){
-                //std::cout << haczyk.getPosition().x << " " << player.getPosition().x << std::endl;
-                if(haczyk.getPosition().x > player.getPosition().x)
-                {
-                    float x = haczyk.getPosition().x - 4;
-                    float y = haczyk.getPosition().y-0.3;
-                    haczyk.setPosition(x,y);
-                }
-                else {
+                    if(haczyk.getPosition().x > player.getPosition().x)
+                    {
+                         float x = haczyk.getPosition().x - 4;
+                         float y = haczyk.getPosition().y-0.3;
+                         haczyk.setPosition(x,y);
+                    }
+                    else {
                     zarzucanie = false;
                     
-                }
+                    }
                 }
             }    
-            else if(klatka%200==0 && zarzucanie ==false){  //wykonuje co 200 klatek
+            else if(klatka%200==0 && zarzucanie ==false)//rzut
+            {  
             float x = haczyk.getPosition().x+ConstSpeedX;
             float y = haczyk.getPosition().y-speedY;
             speedY -= 0.1;
-            haczyk.setPosition(x, y);}
+            haczyk.setPosition(x, y);
+            }
             czyTrzyma = false;
             promien = sqrt((haczyk.getPosition().x - player.getPosition().x) * (haczyk.getPosition().x - player.getPosition().x) + (haczyk.getPosition().y - player.getPosition().y) * (haczyk.getPosition().y - player.getPosition().y));
             angle = atan2(haczyk.getPosition().y - player.getPosition().y, haczyk.getPosition().x - player.getPosition().x);
@@ -167,11 +174,22 @@ public:
         if (klatka > 10000) { //bo inaczej wyjdzie poza zakres int 
             klatka = 0;
         }
-        if (haczyk.getPosition().x < player.getPosition().x + 60  && haczyk.getPosition().y >player.getPosition().y && haczyk.getPosition().y <= player.getPosition().y + 80 && zarzucanie == false) {
+        if (haczyk.getPosition().x < player.getPosition().x + 60  && haczyk.getPosition().y >player.getPosition().y && haczyk.getPosition().y <= player.getPosition().y + 80 && zarzucanie == false) {  //³apanie haczyka
             czyTrzyma = true;
             haczyk.setPosition(player.getPosition().x + ConstHaczykInitX, player.getPosition().y - ConstHaczykInitY);
             speedY = ConstSpeedY;
         }
+
+
+        // Aktualizacja linki 
+
+        if(zarzucanie == false){
+        float dx = haczyk.getPosition().x - (player.getPosition().x + ConstHaczykInitX); 
+        float dy = haczyk.getPosition().y - (player.getPosition().y - ConstHaczykInitY); 
+        float length = std::sqrt(dx * dx + dy * dy); 
+        linka.setSize(sf::Vector2f(length, 3.0f)); // 3.0f to gruboœæ linki 
+        linka.setPosition(player.getPosition().x + ConstHaczykInitX, player.getPosition().y - ConstHaczykInitY); 
+        linka.setRotation(std::atan2(dy, dx) * 180 / M_PI); }
     }
 
     void render()
@@ -179,6 +197,7 @@ public:
         window.clear();
         window.draw(player);
         window.draw(haczyk);
+        window.draw(linka);
         window.display();
     }
 };
