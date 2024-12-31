@@ -5,29 +5,29 @@
 #define M_PI 3.14159265358979323846
 #define ConstSpeedY 4
 #define ConstSpeedX 3
-#define ConstHaczykInitX 60 //pozycja pocz¹tkowa haczyka (gdzie trzyma)
+#define ConstHaczykInitX 80 //pozycja pocz¹tkowa haczyka (gdzie trzyma)
 #define ConstHaczykInitY 30
-class ryby  //jeszcze nie dzia³a
-{
-public:
-    float x;
-    float y;
-    sf::Sprite sprite; 
-    sf::Texture texture;
-    sf::IntRect frameRect; int frameCount; int currentFrame; float frameDuration; float elapsedTime; 
-    ryby(const std::string& textureFile, int frameWidth, int frameHeight, int frameCount, float frameDuration) {
-        if (!texture.loadFromFile(textureFile))
-        {
-            std::cerr << "Blad wczytywania tekstury ryby!" << std::endl;
-        }
-        sprite.setTexture(texture);
-        frameRect = sf::IntRect(0, 0, frameWidth, frameHeight);
-        sprite.setTextureRect(frameRect); this->frameCount = frameCount; this->frameDuration = frameDuration;
-        currentFrame = 0;
-        elapsedTime = 0.0f;
-        
-        }
-    };
+//class ryby  //jeszcze nie dzia³a
+//{
+//public:
+//    float x;
+//    float y;
+//    sf::Sprite sprite; 
+//    sf::Texture texture;
+//    sf::IntRect frameRect; int frameCount; int currentFrame; float frameDuration; float elapsedTime; 
+//    ryby(const std::string& textureFile, int frameWidth, int frameHeight, int frameCount, float frameDuration) {
+//        if (!texture.loadFromFile(textureFile))
+//        {
+//            std::cerr << "Blad wczytywania tekstury ryby!" << std::endl;
+//        }
+//        sprite.setTexture(texture);
+//        frameRect = sf::IntRect(0, 0, frameWidth, frameHeight);
+//        sprite.setTextureRect(frameRect); this->frameCount = frameCount; this->frameDuration = frameDuration;
+//        currentFrame = 0;
+//        elapsedTime = 0.0f;
+//        
+//        }
+//    };
 
 class Game
 {
@@ -37,6 +37,27 @@ private:
     sf::CircleShape haczyk; 
     sf::Texture texture;
     sf::RectangleShape linka; //linka ³¹cz¹ca haczyk i koniec wêdki
+    sf::RectangleShape woda;  
+        //animacja fali
+        sf::Sprite falaSprite;
+        sf::Texture falaTexture;
+        sf::IntRect falaFrameRect;
+        int falaKlatkiSuma;
+        int falaKlatki;
+        float dlugoscKlatki;
+        float czas;
+        std::vector<sf::Sprite> falaSprites;
+        //animacja rybaka
+        sf::Sprite playerSprite;
+        sf::Texture playerTexture;
+        sf::IntRect playerFrameRect;
+        int playerKlatkiSuma;
+        int playerKlatki;
+        float dlugoscKlatkiPlayer;
+        //wêdka
+        sf::Sprite wedkaSprite;
+        sf::Texture wedkaTexture;
+        //
     float angle;
     float promien;
     bool isKeyPressed;
@@ -55,14 +76,51 @@ private:
 
     void initPlayer()       //do ustawienia pozycji i sprite
     {
-        player.setSize(sf::Vector2f(50.0f, 50.0f));
-        player.setFillColor(sf::Color::Green);
+        
+        if (!playerTexture.loadFromFile("obrazy/player3.png"))
+        {
+            std::cout << "Blad wczytywania tekstury!" << std::endl;
+        }
+        playerSprite.setTexture(playerTexture);
         player.setPosition(75.0f, 475.0f);
+        playerSprite.setPosition(75.0f, 475.0f);
+    }
+    void initWêdka() {
+        if (!wedkaTexture.loadFromFile("obrazy/player3.png"))
+        {
+            std::cout << "Blad wczytywania tekstury!" << std::endl;
+        }
+        wedkaSprite.setTexture(wedkaTexture);
     }
     void initRyby() {
         
     }
+    void initWoda() {
+        woda.setSize(sf::Vector2f(10000.0f, 10000.0f));
+        woda.setFillColor(sf::Color(0 , 0 ,128, 128));
+        woda.setPosition(player.getPosition().x + 123, powierzchniaWody+50);
+    }
 
+    void initFala(float x, float y) {
+        if (!falaTexture.loadFromFile("obrazy/FALAspritesheet.png"))
+        { std::cout << "Blad wczytywania tekstury!" << std::endl; 
+        } 
+        falaSprite.setTexture(falaTexture);
+        falaFrameRect = sf::IntRect(0, 0, 600, 100); // 2 pierwsze to x,y , 2 ostatnie to wymiary 
+        falaSprite.setTextureRect(falaFrameRect);
+        falaSprite.setPosition(x, y);
+        falaKlatki = 2; // Ustaw ca³kowit¹ liczbê klatek 
+        dlugoscKlatki = 30.2f; // Czas trwania jednej klatki w sekundach (jednak chyba nie w sekundach)
+        klatka = 0; 
+        czas = 0.0f;
+        for (int i = 0; i < 5; ++i) {
+            sf::Sprite falaSprite; falaSprite.setTexture(falaTexture); 
+            falaSprite.setTextureRect(falaFrameRect); 
+            falaSprite.setPosition(75.0f + i * 550.0f, 475.0f); 
+            falaSprite.setColor(sf::Color(0, 0, 80, 128));
+            falaSprites.push_back(falaSprite); }
+        
+    }
 
     void initHaczyk()       //koniec wêdki (haczyk)
     {
@@ -79,10 +137,14 @@ private:
 
 public:
     Game()
-    {
+    {   initWoda();
+        initFala(woda.getPosition().x , powierzchniaWody-50);
+        initFala(woda.getPosition().x+600, powierzchniaWody - 50);
+        initFala(woda.getPosition().x + 1200, powierzchniaWody - 50);
         initWindow();
         initPlayer();
         initHaczyk();
+        
         linka.setFillColor(sf::Color(128, 128, 128)); // Szary kolor 
         linka.setSize(sf::Vector2f(5.0f, 5.0f)); // Pogrubienie linii (szerokoœæ)
         
@@ -190,14 +252,42 @@ public:
         linka.setSize(sf::Vector2f(length, 3.0f)); // 3.0f to gruboœæ linki 
         linka.setPosition(player.getPosition().x + ConstHaczykInitX, player.getPosition().y - ConstHaczykInitY); 
         linka.setRotation(std::atan2(dy, dx) * 180 / M_PI); }
+    
+    
+        czas += deltaTime.asSeconds(); 
+        if (czas >= dlugoscKlatki) {    //animacja fali
+            czas = 0.0f;
+            falaKlatki++;
+            if (falaKlatki > 3) {
+                falaKlatki = 0;
+            }
+            if (falaKlatki < 3) {
+                falaFrameRect.left = falaKlatki * 600;
+            }
+            else {
+                falaFrameRect.left = 600;
+            }
+            for (auto& falaSprite : falaSprites) { falaSprite.setTextureRect(falaFrameRect); }
+        }
+
+        //animacja wêdki
+        /*if (zarzucanie == true) {
+            float dx = ;
+            float dy = haczyk.getPosition().y - (player.getPosition().y - ConstHaczykInitY);
+            linka.setRotation(std::atan2(dy, dx) * 180 / M_PI);
+        }*/
+
     }
 
     void render()
     {
         window.clear();
-        window.draw(player);
+        window.draw(woda);
+        for (const auto& falaSprite : falaSprites) { window.draw(falaSprite); }
+        window.draw(playerSprite);
         window.draw(haczyk);
         window.draw(linka);
+        
         window.display();
     }
 };
