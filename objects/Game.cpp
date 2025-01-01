@@ -2,6 +2,7 @@
 
 Game::Game()
 {
+    srand(time(NULL));
     initWoda();
     initFala(woda.getPosition().x, powierzchniaWody - 50);
     initFala(woda.getPosition().x + 600, powierzchniaWody - 50);
@@ -9,6 +10,7 @@ Game::Game()
     initWindow();
     initPlayer();
     initHaczyk();
+    initRyby();
 
     linka.setFillColor(sf::Color(128, 128, 128)); // Szary kolor 
     linka.setSize(sf::Vector2f(5.0f, 5.0f)); // Pogrubienie linii (szerokoœæ)
@@ -18,6 +20,7 @@ Game::Game()
 void Game::initWindow()   //rozmiar okna itp
 {
     window.create(sf::VideoMode(1600, 900), "Zmien nazwe");
+    window.setFramerateLimit(60);
 }
 
 void Game::initPlayer()       //do ustawienia pozycji i sprite
@@ -42,6 +45,11 @@ void Game::initWêdka() {
 
 void Game::initRyby() {
 
+    ryby = {};
+    if (!rybaTexture.loadFromFile("obrazy/ryba.png", sf::IntRect(0, 0, 515, 256)))
+    {
+        std::cerr << "Blad wczytywania tekstury ryby!" << std::endl;
+    }
 }
 
 void Game::initWoda() {
@@ -60,7 +68,7 @@ void Game::initFala(float x, float y) {
     falaSprite.setTextureRect(falaFrameRect);
     falaSprite.setPosition(x, y);
     falaKlatki = 2; // Ustaw ca³kowit¹ liczbê klatek 
-    dlugoscKlatki = 30.2f; // Czas trwania jednej klatki w sekundach (jednak chyba nie w sekundach)
+    dlugoscKlatki = 0.2f; // Czas trwania jednej klatki w sekundach (jednak chyba nie w sekundach)
     klatka = 0;
     czas = 0.0f;
     for (int i = 0; i < 5; ++i) {
@@ -96,6 +104,7 @@ void Game::run() {
             {
                 window.close();
             }
+
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)//ci¹gniêcie  
             {
                 if (rzut == false && zarzucanie == false) {
@@ -115,6 +124,7 @@ void Game::run() {
                 rzut = true;
                 czyTrzyma = false;
             }
+
         }
         update(sf::seconds(1.f / 60.f)); render();
     }
@@ -132,45 +142,39 @@ void Game::update(sf::Time deltaTime)
     if (angle > 2 * M_PI)
         angle -= 2 * M_PI;
 
-    if (rzut == false && czyTrzyma == false) {    //spadanie
-        if (klatka % 10 == 0 && haczyk.getPosition().x > player.getPosition().x + 50) {
+    if (rzut == false && czyTrzyma == false) {    //spadanie haczyka
+        if (haczyk.getPosition().x > player.getPosition().x + 50) {
             float x = player.getPosition().x + player.getSize().x / 2 + promien * cos(angle);
             float y = player.getPosition().y + player.getSize().y / 2 + promien * sin(angle);
             haczyk.setPosition(x, y);
         }
     }
-    //
+    
     if (haczyk.getPosition().y <= powierzchniaWody && rzut == true) {  //zarzucenie wêdki
         if (zarzucanie == true) {  //animacja zamachu do ty³u wêdk¹
-            if (klatka % 200 == 0) {
-                if (haczyk.getPosition().x > player.getPosition().x)
-                {
-                    float x = haczyk.getPosition().x - 4;
-                    float y = haczyk.getPosition().y - 0.3;
-                    haczyk.setPosition(x, y);
-                }
-                else {
-                    zarzucanie = false;
+            if (haczyk.getPosition().x > player.getPosition().x)
+            {
+                float x = haczyk.getPosition().x - 2;
+                float y = haczyk.getPosition().y - 0.15;
+                haczyk.setPosition(x, y);
+            }
+            else {
+                zarzucanie = false;
 
-                }
             }
         }
-        else if (klatka % 200 == 0 && zarzucanie == false)//rzut
+        else if (zarzucanie == false)//rzut
         {
             float x = haczyk.getPosition().x + ConstSpeedX;
             float y = haczyk.getPosition().y - speedY;
-            speedY -= 0.1;
+            speedY -= 0.05;
             haczyk.setPosition(x, y);
         }
         czyTrzyma = false;
         promien = sqrt((haczyk.getPosition().x - player.getPosition().x) * (haczyk.getPosition().x - player.getPosition().x) + (haczyk.getPosition().y - player.getPosition().y) * (haczyk.getPosition().y - player.getPosition().y));
         angle = atan2(haczyk.getPosition().y - player.getPosition().y, haczyk.getPosition().x - player.getPosition().x);
-    }
-    else {
+    } else {
         rzut = false;
-    }
-    if (klatka > 10000) { //bo inaczej wyjdzie poza zakres int 
-        klatka = 0;
     }
     if (haczyk.getPosition().x < player.getPosition().x + 60 && haczyk.getPosition().y >player.getPosition().y && haczyk.getPosition().y <= player.getPosition().y + 80 && zarzucanie == false) {  //³apanie haczyka
         czyTrzyma = true;
@@ -214,6 +218,24 @@ void Game::update(sf::Time deltaTime)
         linka.setRotation(std::atan2(dy, dx) * 180 / M_PI);
     }*/
 
+    if (klatka % 10 == 0 && ryby.size() <= 25 && rand() % 3 == 0)   // spawnuje ryby co 10 klatek, maksymalnie 25 ryb na raz
+    {
+        int x1 = rand() % 30 + 1650;    // losowe wspolrzedne ryb (takie, ze nie wychodza poza wode)
+        int y1 = rand() % 270 + 600;
+
+        int r = (rand() % 255 + 0);     // losowe kolory ryb
+        int g = (rand() % 255 + 0);
+        int b = (rand() % 255 + 0);
+        ryby.push_back(Ryba(x1, y1, sf::Color(r, g, b, 255), 2, rybaTexture));
+    }
+
+    for (auto& ryba : ryby) {
+        ryba.update();
+    }
+
+    if (klatka > 10000) { //bo inaczej wyjdzie poza zakres int 
+        klatka = 0;
+    }
 }
 
 void Game::render()
@@ -224,6 +246,9 @@ void Game::render()
     window.draw(playerSprite);
     window.draw(haczyk);
     window.draw(linka);
+    for (auto& ryba : ryby) {
+        window.draw(ryba.rybaSprite);
+    }
 
     window.display();
 }

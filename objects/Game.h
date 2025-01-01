@@ -2,7 +2,11 @@
 #define _GAME_
 
 #include <SFML/Graphics.hpp>
+#include "Ryba.h"
 #include <iostream>
+#include <ctime>
+#include <cstdlib>
+#include <cstdio>
 
 #define ConstHaczykInitX 80 //pozycja pocz¹tkowa haczyka (gdzie trzyma)
 #define ConstHaczykInitY 30
@@ -13,6 +17,7 @@
 class Game
 {
 private:
+
     sf::RenderWindow window;
     sf::RectangleShape player;
     sf::CircleShape haczyk;
@@ -22,6 +27,7 @@ private:
     //animacja fali
     sf::Sprite falaSprite;
     sf::Texture falaTexture;
+    sf::Texture rybaTexture;
     sf::IntRect falaFrameRect;
     int falaKlatkiSuma;
     int falaKlatki;
@@ -39,6 +45,8 @@ private:
     sf::Sprite wedkaSprite;
     sf::Texture wedkaTexture;
     //
+    std::vector<Ryba> ryby;
+
     float angle;
     float promien;
     bool isKeyPressed;
@@ -48,7 +56,7 @@ private:
     float speedY = ConstSpeedY;
     float powierzchniaWody = 525.0; //pozycja powierzchni wody (Y)
     int klatka = 0;     //do sprawdzania która klatka jest aktualnie wyœwietlana(operacje takie jak co 120 klatek zrób cos)
-    float predkoscLiniowa = 0.03; //predkosc haczyka
+    float predkoscLiniowa = 1.0; //predkosc haczyka
 
     void initWindow();
     void initPlayer();
