@@ -1,4 +1,4 @@
-#ifndef _GAME_
+ï»¿#ifndef _GAME_
 #define _GAME_
 
 #include <SFML/Graphics.hpp>
@@ -8,8 +8,10 @@
 #include <cstdlib>
 #include <cstdio>
 
-#define ConstHaczykInitX 80 //pozycja pocz¹tkowa haczyka (gdzie trzyma)
+#define ConstHaczykInitX 80 //pozycja poczï¿½tkowa haczyka (gdzie trzyma)
 #define ConstHaczykInitY 30
+#define ConstWedkaInitX 125.0f
+#define ConstWedkaInitY 530.0f
 #define M_PI 3.14159265358979323846
 #define ConstSpeedY 4
 #define ConstSpeedX 3
@@ -22,7 +24,7 @@ private:
     sf::RectangleShape player;
     sf::CircleShape haczyk;
     sf::Texture texture;
-    sf::RectangleShape linka; //linka ³¹cz¹ca haczyk i koniec wêdki
+    sf::RectangleShape linka; //linka ï¿½ï¿½czï¿½ca haczyk i koniec wï¿½dki
     sf::RectangleShape woda;
     //animacja fali
     sf::Sprite falaSprite;
@@ -41,26 +43,28 @@ private:
     int playerKlatkiSuma;
     int playerKlatki;
     float dlugoscKlatkiPlayer;
-    //wêdka
+    //wï¿½dka
     sf::Sprite wedkaSprite;
     sf::Texture wedkaTexture;
-    //
+    bool animacjaWedka2 = false;
+    float katWedki; //do animacji rzutu
+    //ryby
     std::vector<Ryba> ryby;
 
     float angle;
     float promien;
     bool isKeyPressed;
-    bool rzut = false;  //¿eby podczas zarzucania wêdki nie spada³ haczyk i nie da³o siê wci¹gaæ
+    bool rzut = false;  //ï¿½eby podczas zarzucania wï¿½dki nie spadaï¿½ haczyk i nie daï¿½o siï¿½ wciï¿½gaï¿½
     bool czyTrzyma = true;
-    bool zarzucanie = false;    //animacja zamachu do ty³u wêdk¹
+    bool zarzucanie = false;    //animacja zamachu do tyï¿½u wï¿½dkï¿½
     float speedY = ConstSpeedY;
     float powierzchniaWody = 525.0; //pozycja powierzchni wody (Y)
-    int klatka = 0;     //do sprawdzania która klatka jest aktualnie wyœwietlana(operacje takie jak co 120 klatek zrób cos)
+    int klatka = 0;     //do sprawdzania ktï¿½ra klatka jest aktualnie wyï¿½wietlana(operacje takie jak co 120 klatek zrï¿½b cos)
     float predkoscLiniowa = 1.0; //predkosc haczyka
 
     void initWindow();
     void initPlayer();
-    void initWêdka();
+    void initWedka();
     void initRyby();
     void initWoda();
     void initFala(float x, float y);
