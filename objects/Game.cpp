@@ -226,10 +226,9 @@ void Game::update(sf::Time deltaTime)
             //std::cout << katWedki << std::endl;
             //float endX = ConstWedkaInitX + 100 / (std::cos(katWedki*M_PI/180));
             //float endY = ConstWedkaInitY + 100 / (std::sin(katWedki * M_PI / 180));
-            float endX = player.getPosition().x + ConstWedkaInitX * std::cos(katWedki * M_PI / 180) - ConstWedkaInitY * std::sin(katWedki * M_PI / 180);
-            float endY = player.getPosition().y + ConstWedkaInitX * std::sin(katWedki * M_PI / 180) + ConstWedkaInitY * std::cos(katWedki * M_PI / 180);
-            // Wyświetlenie pozycji końca wędki 
-            std::cout << "Aktualna pozycja końca wędki: (" << endX << ", " << endY << ")"<<std::endl;
+            //float endX = player.getPosition().x + ConstWedkaInitX * std::cos(katWedki * M_PI / 180) - ConstWedkaInitY * std::sin(katWedki * M_PI / 180);
+            //float endY = player.getPosition().y + ConstWedkaInitX * std::sin(katWedki * M_PI / 180) + ConstWedkaInitY * std::cos(katWedki * M_PI / 180);
+            
 
         }
         else
@@ -240,12 +239,23 @@ void Game::update(sf::Time deltaTime)
     
         // Aktualizacja linki 
 
-        if (zarzucanie == false && animacjaWedka2 == false) {
+        if (zarzucanie == false) {
             float dx = haczyk.getPosition().x - (player.getPosition().x + ConstHaczykInitX);
             float dy = haczyk.getPosition().y - (player.getPosition().y - ConstHaczykInitY);
             float length = std::sqrt(dx * dx + dy * dy);
             linka.setSize(sf::Vector2f(length, 3.0f)); // 3.0f to grubosc linki 
-            linka.setPosition(player.getPosition().x + ConstHaczykInitX, player.getPosition().y - ConstHaczykInitY);
+            if (animacjaWedka2 == false) {
+                linka.setPosition(player.getPosition().x + ConstHaczykInitX, player.getPosition().y - ConstHaczykInitY);
+            }
+            else {
+                float deltaX = 100 * (std::cos(katWedki * (M_PI/180)));
+                float deltaY = 100 * (std::sin(katWedki * (M_PI / 180)));
+                deltaX += ConstWedkaInitX;
+                deltaY += ConstWedkaInitY;
+                linka.setPosition(deltaX, deltaY);
+                dx = haczyk.getPosition().x - deltaX;
+                dy = haczyk.getPosition().x - deltaY;
+            }
             linka.setRotation(std::atan2(dy, dx) * 180 / M_PI);
         }
 
@@ -272,14 +282,16 @@ void Game::update(sf::Time deltaTime)
 }
 
 void Game::render()
-{
+{   //wazna kolejnosc bo tworza się warstwy
     window.clear();
     window.draw(woda);
     for (const auto& falaSprite : falaSprites) { window.draw(falaSprite); }
+    
+    window.draw(linka);
     window.draw(wedkaSprite);
     window.draw(playerSprite);
     window.draw(haczyk);
-    window.draw(linka);
+    
     for (auto& ryba : ryby) {
         window.draw(ryba.rybaSprite);
     }
