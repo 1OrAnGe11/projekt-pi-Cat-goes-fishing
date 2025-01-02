@@ -8,8 +8,8 @@
 #include <cstdlib>
 #include <cstdio>
 
-#define ConstHaczykInitX 80 //pozycja pocz�tkowa haczyka (gdzie trzyma)
-#define ConstHaczykInitY 30
+#define ConstHaczykInitX 121 //pozycja pocz�tkowa haczyka (gdzie trzyma)
+#define ConstHaczykInitY 3
 #define ConstWedkaInitX 125.0f
 #define ConstWedkaInitY 530.0f
 #define M_PI 3.14159265358979323846
