@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Ryba.h"
+#include "Button.h"
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
@@ -15,12 +16,17 @@
 #define M_PI 3.14159265358979323846
 #define ConstSpeedY 4
 #define ConstSpeedX 3
+#define RozmiarOknaX 1600
+#define RozmiarOknaY 900
 
 class Game
 {
 private:
-
     sf::RenderWindow window;
+    sf::Texture menu_backgroundTexture;
+    sf::Sprite menu_backgroundSprite;
+    Button start_button = Button(300, 100, (RozmiarOknaX- 300)/2, (RozmiarOknaY-550), sf::Color(100, 100, 100, 255), &window, "Graj", 50);
+    int screen = 0;
     sf::RectangleShape player;
     sf::CircleShape haczyk;
     sf::Texture texture;
@@ -29,7 +35,9 @@ private:
     //animacja fali
     sf::Sprite falaSprite;
     sf::Texture falaTexture;
-    sf::Texture rybaTexture;
+    sf::Texture rybaTexture1;
+    sf::Texture rybaTexture2;
+    sf::Texture rybaTexture3;
     sf::IntRect falaFrameRect;
     int falaKlatkiSuma;
     int falaKlatki;
@@ -69,6 +77,7 @@ private:
     void initWoda();
     void initFala(float x, float y);
     void initHaczyk();
+    void initBackground();
 
 public:
     Game();
