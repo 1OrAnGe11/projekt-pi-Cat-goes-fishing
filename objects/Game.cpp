@@ -63,22 +63,22 @@ void Game::initWedka() {
 void Game::initRyby() {
 
     ryby = {};
- 
+
     if (!rybaTexture3.loadFromFile("obrazy/ryba3.png", sf::IntRect(0, 0, 23, 12)))
     {
         std::cerr << "Blad wczytywania tekstury ryby!" << std::endl;
     }
-       
+
     if (!rybaTexture2.loadFromFile("obrazy/ryba2.png", sf::IntRect(0, 0, 21, 11)))
     {
         std::cerr << "Blad wczytywania tekstury ryby!" << std::endl;
     }
-        
+
     if (!rybaTexture1.loadFromFile("obrazy/ryba1.png", sf::IntRect(0, 0, 18, 10)))
     {
         std::cerr << "Blad wczytywania tekstury ryby!" << std::endl;
     }
- }
+}
 
 
 void Game::initWoda() {
@@ -153,7 +153,7 @@ void Game::run() {
                 rzut = true;
                 czyTrzyma = false;
             }
-        
+
         }
         update(sf::seconds(1.f / 60.f)); render();
     }
@@ -190,7 +190,7 @@ void Game::update(sf::Time deltaTime)
                 if (haczyk.getPosition().x > player.getPosition().x)
                 {
                     float x = haczyk.getPosition().x - 2;
-                    float y = haczyk.getPosition().y - 0.15;
+                    float y = haczyk.getPosition().y - 0.65;
                     haczyk.setPosition(x, y);
                 }
                 else {
@@ -244,6 +244,7 @@ void Game::update(sf::Time deltaTime)
             animacjaWedka2 = true;
             katWedki = std::atan2(dy, dx) * 180 / M_PI - 180 * -1;
             //std::cout << katWedki << std::endl;
+
         }
         else if (animacjaWedka2 == true && katWedki <= 319.0) {//&& std::atan2(wedkaSprite.getPosition().y, wedkaSprite.getPosition().x) != -M_PI / 4) {
             //std::cout << atan2(wedkaSprite.getPosition().y, wedkaSprite.getPosition().x)<<" "<< wedkaSprite.getPosition().y <<" " << wedkaSprite.getPosition().x << std::endl;
@@ -280,9 +281,11 @@ void Game::update(sf::Time deltaTime)
                 float deltaY = 100 * (std::sin(katWedki * (M_PI / 180)));
                 deltaX += ConstWedkaInitX;
                 deltaY += ConstWedkaInitY;
-                linka.setPosition(deltaX, deltaY);
-                dx = haczyk.getPosition().x - deltaX;
-                dy = haczyk.getPosition().x - deltaY;
+                linka.setPosition(deltaX-1, deltaY+7);
+                dx = haczyk.getPosition().x - (deltaX-1);
+                dy = haczyk.getPosition().y - (deltaY + 7);
+                length = std::sqrt(dx * dx + dy * dy);
+                linka.setSize(sf::Vector2f(length, 3.0f));
             }
             linka.setRotation(std::atan2(dy, dx) * 180 / M_PI);
         }
@@ -313,7 +316,7 @@ void Game::update(sf::Time deltaTime)
 void Game::render()
 {   //wazna kolejnosc bo tworza się warstwy
     window.clear();
-    
+
     switch (screen)
     {
     case 0:
@@ -333,6 +336,6 @@ void Game::render()
         }
         break;
     }
-    
+
     window.display();
 }
