@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <cstdio>
 
+
 #define ConstHaczykInitX 122 //pozycja pocz�tkowa haczyka (gdzie trzyma)
 #define ConstHaczykInitY 1
 #define ConstWedkaInitX 125.0f
@@ -18,14 +19,14 @@
 #define ConstSpeedX 3
 #define RozmiarOknaX 1600
 #define RozmiarOknaY 900
-
+#define ConstPlayerSpeed 10
 class Game
 {
 private:
     sf::RenderWindow window;
     sf::Texture menu_backgroundTexture;
     sf::Sprite menu_backgroundSprite;
-    Button start_button = Button(300, 100, (RozmiarOknaX- 300)/2, (RozmiarOknaY-550), sf::Color(100, 100, 100, 255), &window, "Graj", 50);
+    Button start_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Graj", 50);
     int screen = 0;
     sf::RectangleShape player;
     sf::CircleShape haczyk;
@@ -59,6 +60,12 @@ private:
     //ryby
     std::vector<Ryba> ryby;
 
+    //przejscie ekranu
+    sf::RectangleShape zanikanie; 
+    bool czyPrzejscie = false;
+    sf::Clock clock;
+    sf::Time elapsed = sf::Time::Zero;
+
     float angle;
     float promien;
     bool isKeyPressed;
@@ -69,6 +76,7 @@ private:
     float powierzchniaWody = 525.0; //pozycja powierzchni wody (Y)
     int klatka = 0;     //do sprawdzania kt�ra klatka jest aktualnie wy�wietlana(operacje takie jak co 120 klatek zr�b cos)
     float predkoscLiniowa = 1.0; //predkosc haczyka
+    bool LokalizacjaRyby = true; //czy u ryb czy w sklepach
 
     void initWindow();
     void initPlayer();
@@ -78,7 +86,8 @@ private:
     void initFala(float x, float y);
     void initHaczyk();
     void initBackground();
-
+    void initZanikanie();
+    void przejscie(sf::Time deltaTime);
 public:
     Game();
     void run();

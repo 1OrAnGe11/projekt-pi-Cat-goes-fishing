@@ -13,7 +13,7 @@ Game::Game()
     initPlayer();
     initHaczyk();
     initRyby();
-
+    initZanikanie();
     linka.setFillColor(sf::Color(128, 128, 128)); // Szary kolor 
     linka.setSize(sf::Vector2f(5.0f, 5.0f)); // Pogrubienie linii (szeroko��)
 
@@ -122,6 +122,34 @@ void Game::initHaczyk()       //koniec w�dki (haczyk)
     float yInit = player.getPosition().y - ConstHaczykInitY;
     haczyk.setPosition(xInit, yInit);
 }
+void Game::initZanikanie(){
+    zanikanie.setSize(sf::Vector2f(RozmiarOknaX, RozmiarOknaY));
+    zanikanie.setFillColor(sf::Color(0, 0, 0, 0));
+}
+void Game::przejscie(sf::Time deltaTime)
+{
+    
+    static float alpha = 0; // Aktualna przezroczystość 
+    const float fadeSpeed = 100.0f; // Szybkość przejścia (zmiana przezroczystości na sekundę) 
+        
+    alpha += fadeSpeed * deltaTime.asSeconds(); 
+    if (alpha > 256) {
+        alpha = 0;
+        czyPrzejscie = false;
+
+        if (LokalizacjaRyby == true) {
+            screen = 2;
+            LokalizacjaRyby = false;
+        }
+        else {
+            screen = 1;
+            LokalizacjaRyby = true;
+        }
+    }
+    
+    
+    zanikanie.setFillColor(sf::Color(0, 0, 0, static_cast<sf::Uint8>(alpha)));
+}
 
 void Game::run() {
     while (window.isOpen())
@@ -134,7 +162,7 @@ void Game::run() {
                 window.close();
             }
 
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)//ci�gni�cie  
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && LokalizacjaRyby==true)//ci�gni�cie  
             {
                 if (rzut == false && zarzucanie == false) {
                     promien -= 3;
@@ -142,18 +170,30 @@ void Game::run() {
                     {
 
                         //float y = player.getPosition().y + player.getSize().y / 2 + promien * sin(angle);
-                        //opcja wy�ej jest lepsza ale pobugowana
+                        //opcja wyzej jest lepsza ale pobugowana
                         float y = haczyk.getPosition().y - 5;
                         haczyk.setPosition(haczyk.getPosition().x, y);
                     }
                 }
             }
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::E && zarzucanie == false && rzut == false && czyTrzyma) {//zarzu� w�dke (bind do zmiany)
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::E && zarzucanie == false && rzut == false && czyTrzyma && LokalizacjaRyby == true) {//zarzu� w�dke (bind do zmiany)
                 zarzucanie = true;
                 rzut = true;
                 czyTrzyma = false;
             }
-
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Q&&czyPrzejscie==false) {
+                
+                    czyPrzejscie = true;
+            }
+            if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::D) && czyPrzejscie == false && LokalizacjaRyby == false) {
+                int predkosc = ConstPlayerSpeed;
+                if (event.key.code == sf::Keyboard::A) {
+                    predkosc *= -1;
+                }
+                if(player.getPosition().x + predkosc > 50 && player.getPosition().x + predkosc<RozmiarOknaX-50){
+                playerSprite.setPosition(sf::Vector2f(player.getPosition().x + predkosc, player.getPosition().y));
+                }
+            }
         }
         update(sf::seconds(1.f / 60.f)); render();
     }
@@ -163,15 +203,18 @@ void Game::update(sf::Time deltaTime)
 {
 
     klatka++;
+
+    if (czyPrzejscie) {
+        przejscie(deltaTime);
+    }
     switch (screen)
     {
     case 0:
         if (start_button.clicked())
             screen = 1;
         break;
-    case 1:
+    case 1:{
         float predkoscKatowa = predkoscLiniowa / promien;
-
         // Aktualizacja pozycji haczyka
         angle += predkoscKatowa;
         if (angle > 2 * M_PI)
@@ -281,8 +324,8 @@ void Game::update(sf::Time deltaTime)
                 float deltaY = 100 * (std::sin(katWedki * (M_PI / 180)));
                 deltaX += ConstWedkaInitX;
                 deltaY += ConstWedkaInitY;
-                linka.setPosition(deltaX-1, deltaY+7);
-                dx = haczyk.getPosition().x - (deltaX-1);
+                linka.setPosition(deltaX+1, deltaY+7);
+                dx = haczyk.getPosition().x - (deltaX+1);
                 dy = haczyk.getPosition().y - (deltaY + 7);
                 length = std::sqrt(dx * dx + dy * dy);
                 linka.setSize(sf::Vector2f(length, 3.0f));
@@ -307,15 +350,24 @@ void Game::update(sf::Time deltaTime)
             ryba.update();
         }
 
+        
         if (klatka > 10000) { //bo inaczej wyjdzie poza zakres int 
             klatka = 0;
         }
+        //std::cout << screen <<" " <<LokalizacjaRyby<< std::endl;
+        break; }
+    case 2: //sklepy
+
+        break;
     }
+    
+
 }
 
 void Game::render()
 {   //wazna kolejnosc bo tworza się warstwy
     window.clear();
+    
 
     switch (screen)
     {
@@ -324,7 +376,7 @@ void Game::render()
         start_button.render();
         window.draw(start_button.text);
         break;
-    case 1:
+    case 1:     //ryby woda itp
         window.draw(woda);
         for (const auto& falaSprite : falaSprites) { window.draw(falaSprite); }
         window.draw(playerSprite);
@@ -335,7 +387,10 @@ void Game::render()
             window.draw(ryba.rybaSprite);
         }
         break;
+    case 2:     //sklepy
+        window.draw(playerSprite);
+        break;
     }
-
+    window.draw(zanikanie);
     window.display();
 }
