@@ -138,10 +138,20 @@ void Game::przejscie(sf::Time deltaTime)
         czyPrzejscie = false;
 
         if (LokalizacjaRyby == true) {
+            player.setPosition(RozmiarOknaX - 150.0f, 475.0f);
             screen = 2;
             LokalizacjaRyby = false;
+            playerSprite.setScale(-1.f, 1.f); // Odbicie poziome
+            playerSprite.setPosition(playerSprite.getGlobalBounds().width, 0);
+            skierowanyWprawo = false;
         }
         else {
+            player.setPosition(75.0f, 475.0f);
+            playerSprite.setPosition(75.0f, 475.0f);
+            if (skierowanyWprawo == false) {
+                playerSprite.setScale(1.f, 1.f);
+                skierowanyWprawo = true;
+            }
             screen = 1;
             LokalizacjaRyby = true;
         }
@@ -186,13 +196,26 @@ void Game::run() {
                     czyPrzejscie = true;
             }
             if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::D) && czyPrzejscie == false && LokalizacjaRyby == false) {
-                int predkosc = ConstPlayerSpeed;
+                if (player.getPosition().x + predkosc > 10 && player.getPosition().x + predkosc < RozmiarOknaX - 10) {
+                    predkosc = ConstPlayerSpeed;
+                }
                 if (event.key.code == sf::Keyboard::A) {
                     predkosc *= -1;
+                    if(skierowanyWprawo==true){
+                    playerSprite.setScale(-1.f, 1.f); // lustrzane odbicie poziome
+                    playerSprite.setPosition(playerSprite.getGlobalBounds().width, 0);
+                    skierowanyWprawo = false;
+                    }
+
                 }
-                if(player.getPosition().x + predkosc > 50 && player.getPosition().x + predkosc<RozmiarOknaX-50){
-                playerSprite.setPosition(sf::Vector2f(player.getPosition().x + predkosc, player.getPosition().y));
+                else if (skierowanyWprawo == false) {
+                    playerSprite.setScale(1.f, 1.f); 
+                    playerSprite.setPosition(playerSprite.getGlobalBounds().width, 0);
+                    skierowanyWprawo = true;
                 }
+            }
+            if (event.type == sf::Event::KeyReleased && (event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::D)) {
+                predkosc = 0;
             }
         }
         update(sf::seconds(1.f / 60.f)); render();
@@ -201,7 +224,7 @@ void Game::run() {
 
 void Game::update(sf::Time deltaTime)
 {
-
+    
     klatka++;
 
     if (czyPrzejscie) {
@@ -214,6 +237,7 @@ void Game::update(sf::Time deltaTime)
             screen = 1;
         break;
     case 1:{
+        
         float predkoscKatowa = predkoscLiniowa / promien;
         // Aktualizacja pozycji haczyka
         angle += predkoscKatowa;
@@ -357,7 +381,12 @@ void Game::update(sf::Time deltaTime)
         //std::cout << screen <<" " <<LokalizacjaRyby<< std::endl;
         break; }
     case 2: //sklepy
-
+        std::cout << player.getPosition().x + predkosc<<std::endl;
+        if ((player.getPosition().x + predkosc) > 20 && (player.getPosition().x + predkosc) < RozmiarOknaX - 110) {
+        player.setPosition(player.getPosition().x + predkosc, player.getPosition().y);
+        playerSprite.setPosition(player.getPosition().x + predkosc, player.getPosition().y);
+        }
+        
         break;
     }
     

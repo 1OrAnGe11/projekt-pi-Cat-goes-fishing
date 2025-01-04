@@ -19,7 +19,7 @@
 #define ConstSpeedX 3
 #define RozmiarOknaX 1600
 #define RozmiarOknaY 900
-#define ConstPlayerSpeed 10
+#define ConstPlayerSpeed 5
 class Game
 {
 private:
@@ -77,6 +77,8 @@ private:
     int klatka = 0;     //do sprawdzania kt�ra klatka jest aktualnie wy�wietlana(operacje takie jak co 120 klatek zr�b cos)
     float predkoscLiniowa = 1.0; //predkosc haczyka
     bool LokalizacjaRyby = true; //czy u ryb czy w sklepach
+    int predkosc = 0;
+    bool skierowanyWprawo = true;
 
     void initWindow();
     void initPlayer();
