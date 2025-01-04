@@ -14,6 +14,8 @@ Game::Game()
     initHaczyk();
     initRyby();
     initZanikanie();
+    initTlo();
+    initDrewno();
     linka.setFillColor(sf::Color(128, 128, 128)); // Szary kolor 
     linka.setSize(sf::Vector2f(5.0f, 5.0f)); // Pogrubienie linii (szeroko��)
 
@@ -36,7 +38,24 @@ void Game::initBackground()
     menu_backgroundSprite.setTexture(menu_backgroundTexture);
     menu_backgroundSprite.setPosition(0, 0);
 }
-
+void Game::initTlo()
+{
+    if (!tloTexture.loadFromFile("obrazy/tlo4.png"))
+    {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
+    tloSprite.setTexture(tloTexture);
+    tloSprite.setPosition(0, 0);
+}
+void Game::initDrewno()
+{
+    if (!drewnoTexture.loadFromFile("obrazy/drewno.png"))
+    {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
+    drewnoSprite.setTexture(drewnoTexture);
+    drewnoSprite.setPosition(-70, player.getPosition().y + 80);
+}
 void Game::initPlayer()       //do ustawienia pozycji i sprite
 {
 
@@ -44,9 +63,14 @@ void Game::initPlayer()       //do ustawienia pozycji i sprite
     {
         std::cout << "Blad wczytywania tekstury!" << std::endl;
     }
+    if (!chodzenieTexture.loadFromFile("obrazy/player sprite2.png"))
+    {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
     playerSprite.setTexture(playerTexture);
     player.setPosition(75.0f, 475.0f);
     playerSprite.setPosition(75.0f, 475.0f);
+
 }
 
 void Game::initWedka() {
@@ -84,7 +108,7 @@ void Game::initRyby() {
 void Game::initWoda() {
     woda.setSize(sf::Vector2f(10000.0f, 10000.0f));
     woda.setFillColor(sf::Color(0, 0, 128, 128));
-    woda.setPosition(player.getPosition().x + 123, powierzchniaWody + 50);
+    woda.setPosition(0, powierzchniaWody + 50);//player.getPosition().x + 123
 }
 
 void Game::initFala(float x, float y) {
@@ -104,7 +128,7 @@ void Game::initFala(float x, float y) {
         sf::Sprite falaSprite; falaSprite.setTexture(falaTexture);
         falaSprite.setTextureRect(falaFrameRect);
         falaSprite.setPosition(75.0f + i * 550.0f, 475.0f);
-        falaSprite.setColor(sf::Color(0, 0, 80, 128));
+        falaSprite.setColor(sf::Color(0, 0, 128, 255));
         falaSprites.push_back(falaSprite);
     }
 
@@ -128,7 +152,10 @@ void Game::initZanikanie(){
 }
 void Game::przejscie(sf::Time deltaTime)
 {
-    
+    if (!chodzenieTexture.loadFromFile("obrazy/playerscreen2.1 1.png"))
+    {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
     static float alpha = 0; // Aktualna przezroczystość 
     const float fadeSpeed = 100.0f; // Szybkość przejścia (zmiana przezroczystości na sekundę) 
         
@@ -144,6 +171,7 @@ void Game::przejscie(sf::Time deltaTime)
             playerSprite.setScale(-1.f, 1.f); // Odbicie poziome
             playerSprite.setPosition(playerSprite.getGlobalBounds().width, 0);
             skierowanyWprawo = false;
+            playerSprite.setTexture(chodzenieTexture);
         }
         else {
             player.setPosition(75.0f, 475.0f);
@@ -154,6 +182,7 @@ void Game::przejscie(sf::Time deltaTime)
             }
             screen = 1;
             LokalizacjaRyby = true;
+            playerSprite.setTexture(playerTexture);
         }
     }
     
@@ -381,12 +410,29 @@ void Game::update(sf::Time deltaTime)
         //std::cout << screen <<" " <<LokalizacjaRyby<< std::endl;
         break; }
     case 2: //sklepy
-        std::cout << player.getPosition().x + predkosc<<std::endl;
+        
         if ((player.getPosition().x + predkosc) > 20 && (player.getPosition().x + predkosc) < RozmiarOknaX - 110) {
         player.setPosition(player.getPosition().x + predkosc, player.getPosition().y);
         playerSprite.setPosition(player.getPosition().x + predkosc, player.getPosition().y);
         }
         
+        czas += deltaTime.asSeconds();
+
+        if (predkosc != 0) {
+            
+            if (czas >= dlugoscKlatki) {    //animacja fali
+                czas = 0.0f;
+                playerKlatki++;
+                if (playerKlatki > 1) {
+                    playerKlatki = 0;
+                }
+                
+                    playerFrameRect.left = playerKlatki * 100;
+                }
+                
+                 playerSprite.setTextureRect(playerFrameRect); 
+            
+        }
         break;
     }
     
@@ -406,8 +452,10 @@ void Game::render()
         window.draw(start_button.text);
         break;
     case 1:     //ryby woda itp
+        window.draw(tloSprite);
         window.draw(woda);
         for (const auto& falaSprite : falaSprites) { window.draw(falaSprite); }
+        window.draw(drewnoSprite);
         window.draw(playerSprite);
         window.draw(wedkaSprite);
         window.draw(haczyk);

@@ -26,6 +26,10 @@ private:
     sf::RenderWindow window;
     sf::Texture menu_backgroundTexture;
     sf::Sprite menu_backgroundSprite;
+    sf::Texture tloTexture;
+    sf::Sprite tloSprite;
+    sf::Texture drewnoTexture;
+    sf::Sprite drewnoSprite;
     Button start_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Graj", 50);
     int screen = 0;
     sf::RectangleShape player;
@@ -48,6 +52,7 @@ private:
     //animacja rybaka
     sf::Sprite playerSprite;
     sf::Texture playerTexture;
+    sf::Texture chodzenieTexture;
     sf::IntRect playerFrameRect;
     int playerKlatkiSuma;
     int playerKlatki;
@@ -79,9 +84,11 @@ private:
     bool LokalizacjaRyby = true; //czy u ryb czy w sklepach
     int predkosc = 0;
     bool skierowanyWprawo = true;
-
+    
+    void initTlo();
     void initWindow();
     void initPlayer();
+    void initDrewno();
     void initWedka();
     void initRyby();
     void initWoda();
