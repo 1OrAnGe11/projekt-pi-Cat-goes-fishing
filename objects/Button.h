@@ -11,6 +11,8 @@ class Button
 {
 private:
     sf::RenderWindow* window;
+    bool mouse_over();
+    bool pressed = false;
 public:
     float x = 0;
     float y = 0;
@@ -24,15 +26,15 @@ public:
     sf::String napis;
     sf::Text text;
     sf::Font font;
+    sf::Keyboard::Key bind;
 
     Button(float rozmiar_x, float rozmiar_y, float initialX, float initialY, sf::Color color, sf::RenderWindow* window, sf::String napis,
         int character_size);
     void render();
     void setPos(float x, float y);
-    bool mouse_over();
-    bool left_click();
-    bool clicked();
+    bool clicked(sf::Event event);
     sf::Vector2f getPos();
+    void zmien_nazwe(float rozmiar_x, float rozmiar_y, float initialX, float initialY, sf::String napis);
 };
 
 #endif

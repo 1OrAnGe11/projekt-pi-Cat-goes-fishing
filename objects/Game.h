@@ -4,11 +4,11 @@
 #include <SFML/Graphics.hpp>
 #include "Ryba.h"
 #include "Button.h"
+#include "TextBox.h"
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
 #include <cstdio>
-
 
 #define ConstHaczykInitX 122 //pozycja pocz�tkowa haczyka (gdzie trzyma)
 #define ConstHaczykInitY 1
@@ -20,6 +20,7 @@
 #define RozmiarOknaX 1600
 #define RozmiarOknaY 900
 #define ConstPlayerSpeed 5
+
 class Game
 {
 private:
@@ -30,8 +31,28 @@ private:
     sf::Sprite tloSprite;
     sf::Texture drewnoTexture;
     sf::Sprite drewnoSprite;
+    sf::Texture options_backgroundTexture;
+    sf::Sprite options_backgroundSprite;
+    sf::Texture sterowanie_backgroundTexture;
+    sf::Sprite sterowanie_backgroundSprite;
+    sf::Texture sklepy_backgroundTexture;
+    sf::Sprite sklepy_backgroundSprite;
     Button start_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Graj", 50);
+    Button options_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Opcje", 50);
+    Button quit_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 150), sf::Color(100, 100, 100, 255), &window, "Wyjdz", 50);
+    Button sterowanie_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Sterowanie", 50);
+    Button options_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Cofnij", 50);
+    Button rzucanie_wedka_button = Button(300, 100, (RozmiarOknaX - 590) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window,
+        "Rzucanie\n   wedka", 50);
+    TextBox bind_rzucanie_wedka_button = TextBox(270, 100, (RozmiarOknaX + 200 ) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window,
+        "E", 50);
+    Button sterowanie_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Cofnij", 50);
+
     int screen = 0;
+    int options_screen = 0;
+    sf::Keyboard::Key bind_rzucanie = sf::Keyboard::E;
+    char char_bind_rzucanie;
+    sf::Keyboard::Key bind_ciagniecie = sf::Keyboard::Space;
     sf::RectangleShape player;
     sf::CircleShape haczyk;
     sf::Texture texture;
@@ -66,7 +87,7 @@ private:
     std::vector<Ryba> ryby;
 
     //przejscie ekranu
-    sf::RectangleShape zanikanie; 
+    sf::RectangleShape zanikanie;
     bool czyPrzejscie = false;
     sf::Clock clock;
     sf::Time elapsed = sf::Time::Zero;
@@ -84,7 +105,7 @@ private:
     bool LokalizacjaRyby = true; //czy u ryb czy w sklepach
     int predkosc = 0;
     bool skierowanyWprawo = true;
-    
+
     void initTlo();
     void initWindow();
     void initPlayer();
@@ -97,6 +118,7 @@ private:
     void initBackground();
     void initZanikanie();
     void przejscie(sf::Time deltaTime);
+
 public:
     Game();
     void run();
