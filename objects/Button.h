@@ -12,7 +12,6 @@ class Button
 private:
     sf::RenderWindow* window;
     bool mouse_over();
-    bool pressed = false;
 public:
     float x = 0;
     float y = 0;

@@ -93,7 +93,6 @@ void Game::initPlayer()       //do ustawienia pozycji i sprite
     dlugoscKlatkiPlayer = 0.3f; // Czas trwania jednej klatki w sekundach (jednak chyba nie w sekundach)
     playerKlatki = 0;
     czas = 0.0f;
-
     playerFrameRect.left = 300;
     playerSprite.setTextureRect(playerFrameRect);
 }
@@ -178,11 +177,14 @@ void Game::initZanikanie() {
 }
 void Game::przejscie(sf::Time deltaTime)
 {
-
-
     static float alpha = 0; // Aktualna przezroczystość 
     const float fadeSpeed = 100.0f; // Szybkość przejścia (zmiana przezroczystości na sekundę) 
 
+    if (pomoc_przejscie)
+    {
+        alpha = 0;
+        std::cout << "duypa" << alpha << std::endl;
+    }
     alpha += fadeSpeed * deltaTime.asSeconds();
     if (alpha > 256) {
         alpha = 0;
@@ -194,7 +196,7 @@ void Game::przejscie(sf::Time deltaTime)
             playerSprite.setScale(-1.f, 1.f); // Odbicie poziome
             playerSprite.setPosition(playerSprite.getGlobalBounds().width, 0);
             skierowanyWprawo = false;
-            
+            screen_gra_pomoc = screen;
         }
         else {
             playerFrameRect.left = 300;
@@ -208,11 +210,13 @@ void Game::przejscie(sf::Time deltaTime)
             screen = 1;
             LokalizacjaRyby = true;
             playerSprite.setTexture(playerTexture);
+            screen_gra_pomoc = screen;
         }
     }
 
 
     zanikanie.setFillColor(sf::Color(0, 0, 0, static_cast<sf::Uint8>(alpha)));
+    pomoc_przejscie = false;
 }
 
 void Game::run() {
@@ -225,7 +229,11 @@ void Game::run() {
             {
                 window.close();
             }
-
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape && (screen == 1 || screen == 2))//zatrzymanie gry
+            {
+                screen_gra_pomoc = screen;
+                screen = 8;
+            }
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && LokalizacjaRyby == true)//ci�gni�cie  
             {
                 if (rzut == false && zarzucanie == false) {
@@ -274,28 +282,66 @@ void Game::run() {
             }
             switch (screen)
             {
-            case 0:
+            case 0:     //menu
                 if (start_button.clicked(event))
-                    screen = 1;
+                    screen = 6;
                 if (options_button.clicked(event))
+                {
+                    screen_options_pomoc = 0;
                     screen = 3;
+                }
                 if (quit_button.clicked(event))
                     screen = 4;
                 break;
-            case 1:
+            case 1:     //gra
                 break;
-            case 3: //opcje
+            case 3:     //opcje
                 if (sterowanie_button.clicked(event))
                     screen = 5;
                 if (options_back_button.clicked(event))
-                    screen = 0;
+                    screen = screen_options_pomoc;
                 break;
-            case 4: //wyjscie
+            case 4:     //wyjscie
                 break;
-            case 5: //zmiana sterowania
-                bind_rzucanie_wedka_button.wpisywanie(event);
+            case 5:     //zmiana sterowania
+                bind_rzucanie = (sf::Keyboard::Key)bind_rzucanie_wedka_button.key_bind(event);
+                std::cout << (sf::Keyboard::Key)bind_rzucanie_wedka_button.key_bind(event) << std::endl;
                 if (sterowanie_back_button.clicked(event))
                     screen = 3;
+                break;
+            case 6:     //wybor konta
+                if (gosc_button.clicked(event))
+                    screen = screen_gra_pomoc;
+                if (logowanie_button.clicked(event))
+                    screen = 7;
+                if (start_back_button.clicked(event))
+                    screen = 0;
+            case 7:     //logowanie do konta
+                nazwa_button.wpisywanie(event);
+                haslo_button.wpisywanie(event);
+                if (zaloguj_sie_button.clicked(event))
+                    std::cout << "Jeszce nie dziala lol" << std::endl;
+                if (logowanie_back_button.clicked(event))
+                    screen = 6;
+                break;
+            case 8:     //zatrzymanie (escape podczas gry)
+                czyPrzejscie = false;
+                zanikanie.setFillColor(sf::Color(0, 0, 0, 0));
+                if (wznow_button.clicked(event))
+                {
+                    screen = screen_gra_pomoc;
+                    pomoc_przejscie = true;
+                }
+                if (options_button.clicked(event))
+                {
+                    screen_options_pomoc = 8;
+                    screen = 3;
+                }
+                if (gra_back_button.clicked(event))
+                {
+                    pomoc_przejscie = true;
+                    screen = 0;
+                }
                 break;
             }
         }
@@ -469,7 +515,7 @@ void Game::update(sf::Time deltaTime)
         czas += deltaTime.asSeconds();
         if (predkosc != 0) {    //animacja chodzenia
 
-            if (czas >= dlugoscKlatki) {    
+            if (czas >= dlugoscKlatki) {
                 czas = 0.0f;
                 playerKlatki++;
                 if (playerKlatki > 1) {
@@ -478,6 +524,7 @@ void Game::update(sf::Time deltaTime)
 
                 playerFrameRect.left = playerKlatki * 100;
             }
+
             std::cout << playerFrameRect.left << " " << playerKlatki << " " << czas << std::endl;
             playerSprite.setTextureRect(playerFrameRect);
 
@@ -494,6 +541,12 @@ void Game::update(sf::Time deltaTime)
     case 4: //wyjscie
         break;
     case 5: //zmiana sterowania
+        break;
+    case 6: //wybor konta
+        break;
+    case 7: //zaloguj sie
+        break;
+    case 8: //zatrzymanie (escape podczas gry)
         break;
     }
 }
@@ -547,6 +600,35 @@ void Game::render()
         window.draw(bind_rzucanie_wedka_button.text);
         sterowanie_back_button.render();
         window.draw(sterowanie_back_button.text);
+        break;
+    case 6:     //wybor konta
+        window.draw(sterowanie_backgroundSprite);
+        gosc_button.render();
+        window.draw(gosc_button.text);
+        logowanie_button.render();
+        window.draw(logowanie_button.text);
+        start_back_button.render();
+        window.draw(start_back_button.text);
+        break;
+    case 7:     //logowanie
+        window.draw(sterowanie_backgroundSprite);
+        nazwa_button.render();
+        window.draw(nazwa_button.text);
+        haslo_button.render();
+        window.draw(haslo_button.text);
+        zaloguj_sie_button.render();
+        window.draw(zaloguj_sie_button.text);
+        logowanie_back_button.render();
+        window.draw(logowanie_back_button.text);
+        break;
+    case 8:     //zatrzymanie (escape podczas gry)
+        window.draw(sterowanie_backgroundSprite);
+        wznow_button.render();
+        window.draw(wznow_button.text);
+        options_button.render();
+        window.draw(options_button.text);
+        gra_back_button.render();
+        window.draw(gra_back_button.text);
         break;
     }
     window.draw(zanikanie);

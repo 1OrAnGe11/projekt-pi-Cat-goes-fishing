@@ -40,18 +40,28 @@ private:
     Button start_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Graj", 50);
     Button options_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Opcje", 50);
     Button quit_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 150), sf::Color(100, 100, 100, 255), &window, "Wyjdz", 50);
+
     Button sterowanie_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Sterowanie", 50);
     Button options_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Cofnij", 50);
-    Button rzucanie_wedka_button = Button(300, 100, (RozmiarOknaX - 590) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window,
-        "Rzucanie\n   wedka", 50);
-    TextBox bind_rzucanie_wedka_button = TextBox(270, 100, (RozmiarOknaX + 200 ) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window,
-        "E", 50);
+
+    TextBox bind_rzucanie_wedka_button = TextBox(270, 100, (RozmiarOknaX + 200) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "E", 50);
+    Button rzucanie_wedka_button = Button(300, 100, (RozmiarOknaX - 590) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Rzucanie\n   wedka", 50);
     Button sterowanie_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Cofnij", 50);
 
+    Button logowanie_button = Button(300, 100, (RozmiarOknaX + 150) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Konto", 50);
+    Button gosc_button = Button(300, 100, (RozmiarOknaX - 750) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Gosc", 50);
+    Button start_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Cofnij", 50);
+
+    TextBox nazwa_button = TextBox(300, 100, (RozmiarOknaX + 200) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Nazwa", 50);
+    TextBox haslo_button = TextBox(300, 100, (RozmiarOknaX - 800) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Haslo", 50);
+    Button logowanie_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 150), sf::Color(100, 100, 100, 255), &window, "Cofnij", 50);
+    Button zaloguj_sie_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Zaloguj sie", 50);
+
+    Button wznow_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Wznow", 50);
+    Button gra_back_button = Button(400, 100, (RozmiarOknaX - 400) / 2, (RozmiarOknaY - 150), sf::Color(100, 100, 100, 255), &window, "Wyjdz do menu", 50);
+
     int screen = 0;
-    int options_screen = 0;
     sf::Keyboard::Key bind_rzucanie = sf::Keyboard::E;
-    char char_bind_rzucanie;
     sf::Keyboard::Key bind_ciagniecie = sf::Keyboard::Space;
     sf::RectangleShape player;
     sf::CircleShape haczyk;
@@ -104,8 +114,11 @@ private:
     bool LokalizacjaRyby = true; //czy u ryb czy w sklepach
     int predkosc = 0;
     bool skierowanyWprawo = true;
+    bool pomoc_przejscie = false;
+    int screen_options_pomoc;
+    int screen_gra_pomoc = 1;
 
-    void initTlo();
+
     void initWindow();
     void initPlayer();
     void initDrewno();

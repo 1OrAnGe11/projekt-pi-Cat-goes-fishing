@@ -41,14 +41,9 @@ bool Button::mouse_over()
 bool Button::clicked(sf::Event event)
 {
 	
-	if (!pressed && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 	{
-		pressed = true;
 		return mouse_over();
-	}
-	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
-	{
-		pressed = false;
 	}
 	return false;
 }
