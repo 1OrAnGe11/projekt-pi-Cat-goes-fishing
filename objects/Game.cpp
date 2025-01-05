@@ -80,17 +80,22 @@ void Game::initDrewno()
 void Game::initPlayer()       //do ustawienia pozycji i sprite
 {
 
-    if (!playerTexture.loadFromFile("obrazy/player3.png"))
+    if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny.png"))
     {
         std::cout << "Blad wczytywania tekstury!" << std::endl;
     }
-    if (!chodzenieTexture.loadFromFile("obrazy/player sprite2.png"))
-    {
-        std::cout << "Blad wczytywania tekstury!" << std::endl;
-    }
-    playerSprite.setTexture(playerTexture);
     player.setPosition(75.0f, 475.0f);
     playerSprite.setPosition(75.0f, 475.0f);
+    playerSprite.setTexture(playerTexture);
+    playerFrameRect = sf::IntRect(0, 0, 100, 100); // 2 pierwsze to x,y , 2 ostatnie to wymiary 
+    playerSprite.setTextureRect(playerFrameRect);
+    playerKlatkiSuma = 2; // Ustaw ca�kowit� liczb� klatek 
+    dlugoscKlatkiPlayer = 0.3f; // Czas trwania jednej klatki w sekundach (jednak chyba nie w sekundach)
+    playerKlatki = 0;
+    czas = 0.0f;
+
+    playerFrameRect.left = 300;
+    playerSprite.setTextureRect(playerFrameRect);
 }
 
 void Game::initWedka() {
@@ -174,10 +179,6 @@ void Game::initZanikanie() {
 void Game::przejscie(sf::Time deltaTime)
 {
 
-    if (!chodzenieTexture.loadFromFile("obrazy/playerscreen2.1 1.png"))
-    {
-        std::cout << "Blad wczytywania tekstury!" << std::endl;
-    }
 
     static float alpha = 0; // Aktualna przezroczystość 
     const float fadeSpeed = 100.0f; // Szybkość przejścia (zmiana przezroczystości na sekundę) 
@@ -193,9 +194,11 @@ void Game::przejscie(sf::Time deltaTime)
             playerSprite.setScale(-1.f, 1.f); // Odbicie poziome
             playerSprite.setPosition(playerSprite.getGlobalBounds().width, 0);
             skierowanyWprawo = false;
-            playerSprite.setTexture(chodzenieTexture);
+            
         }
         else {
+            playerFrameRect.left = 300;
+            playerSprite.setTextureRect(playerFrameRect);
             player.setPosition(75.0f, 475.0f);
             playerSprite.setPosition(75.0f, 475.0f);
             if (skierowanyWprawo == false) {
@@ -464,9 +467,9 @@ void Game::update(sf::Time deltaTime)
         }
 
         czas += deltaTime.asSeconds();
-        if (predkosc != 0) {
+        if (predkosc != 0) {    //animacja chodzenia
 
-            if (czas >= dlugoscKlatki) {    //animacja fali
+            if (czas >= dlugoscKlatki) {    
                 czas = 0.0f;
                 playerKlatki++;
                 if (playerKlatki > 1) {
@@ -475,9 +478,13 @@ void Game::update(sf::Time deltaTime)
 
                 playerFrameRect.left = playerKlatki * 100;
             }
-
+            std::cout << playerFrameRect.left << " " << playerKlatki << " " << czas << std::endl;
             playerSprite.setTextureRect(playerFrameRect);
 
+        }
+        else {
+            playerFrameRect.left = 200; //lub 300 ale nie wiem które lepsze
+            playerSprite.setTextureRect(playerFrameRect);
         }
         break;
 

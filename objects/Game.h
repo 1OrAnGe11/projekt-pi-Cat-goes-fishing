@@ -73,7 +73,6 @@ private:
     //animacja rybaka
     sf::Sprite playerSprite;
     sf::Texture playerTexture;
-    sf::Texture chodzenieTexture;
     sf::IntRect playerFrameRect;
     int playerKlatkiSuma;
     int playerKlatki;
