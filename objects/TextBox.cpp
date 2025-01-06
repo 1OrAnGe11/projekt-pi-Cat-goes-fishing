@@ -15,6 +15,7 @@ TextBox::TextBox(float rozmiar_x, float rozmiar_y, float initialX, float initial
 	text.setPosition(initialX + rozmiar_x / 2, initialY + rozmiar_y / 2);
 	setPos(initialX, initialY);
 	this->window = window;
+	this->napis = napis;
 	this->rozmiar_x = rozmiar_x;
 	this->rozmiar_y = rozmiar_y;
 }
@@ -41,14 +42,16 @@ bool TextBox::mouse_over()
 bool TextBox::clicked(sf::Event event)
 {
 
-	if (!pressed && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 	{
-		pressed = true;
-		return mouse_over();
-	}
-	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
-	{
-		pressed = false;
+		if (!mouse_over()) {
+			pomoc = false;
+			pomoc1 = true;
+			if (input == "")
+				zmien_nazwe(napis);
+			return false;
+		}
+		return true;
 	}
 	return false;
 }
@@ -72,7 +75,7 @@ void TextBox::wpisywanie(sf::Event event)
 	if (pomoc && pomoc1)
 	{
 		pomoc1 = false;
-		zmien_nazwe("[Wprowadz]");
+		zmien_nazwe(input);
 	}
 	if (pomoc)
 	{

@@ -45,24 +45,30 @@ private:
     Button sterowanie_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Sterowanie", 50);
     Button options_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Cofnij", 50);
 
+    sf::Keyboard::Key bind_rzucanie = sf::Keyboard::E;
+    sf::Keyboard::Key bind_wciaganie = sf::Keyboard::Space;
+    sf::Keyboard::Key bind_przejscie = sf::Keyboard::Q;
+    sf::Keyboard::Key bind_chodzenie_lewo = sf::Keyboard::A;
+    sf::Keyboard::Key bind_chodzenie_prawo = sf::Keyboard::D;
+
     TextBox_znak bind_rzucanie_wedka_button = TextBox_znak(270, 100, (RozmiarOknaX + 60) / 2, (RozmiarOknaY - 875), sf::Color(100, 100, 100, 255), &window, 
-        "E", 50);
+        bind_rzucanie, 50);
     Button rzucanie_wedka_button = Button(300, 100, (RozmiarOknaX - 650) / 2, (RozmiarOknaY - 875), sf::Color(100, 100, 100, 255), &window,
         "Rzucanie\n   wedki", 50);
     TextBox_znak bind_wciaganie_wedka_button = TextBox_znak(270, 100, (RozmiarOknaX + 60) / 2, (RozmiarOknaY - 725), sf::Color(100, 100, 100, 255), &window,
-        "Space", 50);
+        bind_wciaganie, 50);
     Button wciaganie_wedka_button = Button(300, 100, (RozmiarOknaX - 650) / 2, (RozmiarOknaY - 725), sf::Color(100, 100, 100, 255), &window,
         "Wciaganie\n   wedki", 50);
     TextBox_znak bind_przejscie_button = TextBox_znak(270, 100, (RozmiarOknaX + 60) / 2, (RozmiarOknaY - 575), sf::Color(100, 100, 100, 255), &window,
-        "Q", 50);
+        bind_przejscie, 50);
     Button przejscie_button = Button(300, 100, (RozmiarOknaX - 650) / 2, (RozmiarOknaY - 575), sf::Color(100, 100, 100, 255), &window,
         "Przejscie", 50);
     TextBox_znak bind_chodzenie_lewo_button = TextBox_znak(270, 100, (RozmiarOknaX + 60) / 2, (RozmiarOknaY - 425), sf::Color(100, 100, 100, 255), &window,
-        "A", 50);
+        bind_chodzenie_lewo, 50);
     Button chodzenie_lewo_button = Button(300, 100, (RozmiarOknaX - 650) / 2, (RozmiarOknaY - 425), sf::Color(100, 100, 100, 255), &window,
         "Chodzenie\n   w lewo", 50);
     TextBox_znak bind_chodzenie_prawo_button = TextBox_znak(270, 100, (RozmiarOknaX + 60) / 2, (RozmiarOknaY - 275), sf::Color(100, 100, 100, 255), &window,
-        "D", 50);
+        bind_chodzenie_prawo, 50);
     Button chodzenie_prawo_button = Button(300, 100, (RozmiarOknaX - 650) / 2, (RozmiarOknaY - 275), sf::Color(100, 100, 100, 255), &window,
         "Chodzenie\n  w prawo", 50);
     Button sterowanie_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 125), sf::Color(100, 100, 100, 255), &window, "Cofnij", 50);
@@ -80,11 +86,6 @@ private:
     Button gra_back_button = Button(400, 100, (RozmiarOknaX - 400) / 2, (RozmiarOknaY - 150), sf::Color(100, 100, 100, 255), &window, "Wyjdz do menu", 50);
 
     int screen = 0;
-    sf::Keyboard::Key bind_rzucanie = sf::Keyboard::E;
-    sf::Keyboard::Key bind_wciaganie = sf::Keyboard::Space;
-    sf::Keyboard::Key bind_przejscie = sf::Keyboard::Q;
-    sf::Keyboard::Key bind_chodzenie_lewo = sf::Keyboard::A;
-    sf::Keyboard::Key bind_chodzenie_prawo = sf::Keyboard::D;
 
     sf::RectangleShape player;
     sf::CircleShape haczyk;

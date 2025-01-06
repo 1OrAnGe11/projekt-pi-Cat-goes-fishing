@@ -19,6 +19,7 @@ public:
     std::string napis;
     std::string input;
     sf::Keyboard::Key bind;
+    sf::Keyboard::Key default_bind;
     float x = 0;
     float y = 0;
     float rozmiar_x = 0;
@@ -27,7 +28,7 @@ public:
     bool pomoc1 = true;
     float rozmiar_text_x;
     float rozmiar_text_y;
-    TextBox_znak(float rozmiar_x, float rozmiar_y, float initialX, float initialY, sf::Color color, sf::RenderWindow* window, sf::String napis, int character_size);
+    TextBox_znak(float rozmiar_x, float rozmiar_y, float initialX, float initialY, sf::Color color, sf::RenderWindow* window, sf::Keyboard::Key bind, int character_size);
     void zmien_nazwe(std::string napis);
     void wpisywanie(sf::Event event);
     void key_bind(sf::Event event);

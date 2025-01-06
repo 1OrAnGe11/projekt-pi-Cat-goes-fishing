@@ -284,20 +284,30 @@ void Game::run() {
             {
             case 0:     //menu
                 if (start_button.clicked(event))
+                {
                     screen = 6;
+                    continue;
+                }
                 if (options_button.clicked(event))
                 {
                     screen_options_pomoc = 0;
                     screen = 3;
+                    continue;
                 }
                 if (quit_button.clicked(event))
+                {
                     screen = 4;
+                    continue;
+                }
                 break;
             case 1:     //gra
                 break;
             case 3:     //opcje
                 if (sterowanie_button.clicked(event))
+                {
                     screen = 5;
+                    continue;
+                }
                 if (options_back_button.clicked(event))
                     screen = screen_options_pomoc;
                 break;
@@ -330,22 +340,34 @@ void Game::run() {
                     bind_chodzenie_prawo = sf::Keyboard::D;
 
                 if (sterowanie_back_button.clicked(event))
+                {
                     screen = 3;
+                    continue;
+                }
                 break;
             case 6:     //wybor konta
                 if (gosc_button.clicked(event))
                     screen = screen_gra_pomoc;
                 if (logowanie_button.clicked(event))
+                {
                     screen = 7;
+                    continue;
+                }
                 if (start_back_button.clicked(event))
+                {
                     screen = 0;
+                    continue;
+                }
             case 7:     //logowanie do konta
                 nazwa_button.wpisywanie(event);
                 haslo_button.wpisywanie(event);
                 if (zaloguj_sie_button.clicked(event))
                     std::cout << "Jeszce nie dziala lol" << std::endl;
                 if (logowanie_back_button.clicked(event))
+                {
                     screen = 6;
+                    continue;
+                }
                 break;
             case 8:     //zatrzymanie (escape podczas gry)
                 czyPrzejscie = false;
@@ -359,11 +381,13 @@ void Game::run() {
                 {
                     screen_options_pomoc = 8;
                     screen = 3;
+                    continue;
                 }
                 if (gra_back_button.clicked(event))
                 {
                     pomoc_przejscie = true;
                     screen = 0;
+                    continue;
                 }
                 break;
             }

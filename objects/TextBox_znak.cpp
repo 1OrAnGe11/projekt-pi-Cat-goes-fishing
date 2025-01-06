@@ -1,6 +1,6 @@
 #include "TextBox_znak.h"
 
-TextBox_znak::TextBox_znak(float rozmiar_x, float rozmiar_y, float initialX, float initialY, sf::Color color, sf::RenderWindow* window, sf::String napis,
+TextBox_znak::TextBox_znak(float rozmiar_x, float rozmiar_y, float initialX, float initialY, sf::Color color, sf::RenderWindow* window, sf::Keyboard::Key bind,
 	int character_size)
 {
 	shape.setSize(sf::Vector2f(rozmiar_x, rozmiar_y));
@@ -8,7 +8,8 @@ TextBox_znak::TextBox_znak(float rozmiar_x, float rozmiar_y, float initialX, flo
 	if (!font.loadFromFile("fonts/ARIAL.TTF"))
 		std::cout << "Nie zaladowano fonta" << std::endl;
 	text.setFont(font);
-	text.setString(napis);
+    this->bind = bind;
+	text.setString(klawisz_na_unicode(this->bind));
 	text.setCharacterSize(character_size);
 	text.setFillColor(sf::Color::Black);
 	text.setOrigin(text.getGlobalBounds().getSize() / 2.f + text.getLocalBounds().getPosition());
@@ -41,16 +42,17 @@ bool TextBox_znak::mouse_over()
 bool TextBox_znak::clicked(sf::Event event)
 {
 
-	if (!pressed && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
-	{
-		pressed = true;
-		return mouse_over();
-	}
-	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
-	{
-		pressed = false;
-	}
-	return false;
+    if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+    {
+        if (!mouse_over()) {
+            pomoc = false;
+            pomoc1 = true;
+            zmien_nazwe(klawisz_na_unicode(this->bind));
+            return false;
+        }
+        return true;
+    }
+    return false;
 }
 
 void TextBox_znak::render()
@@ -63,34 +65,6 @@ void TextBox_znak::zmien_nazwe(std::string napis)
 	text.setString(napis);
 	text.setOrigin(text.getGlobalBounds().getSize() / 2.f + text.getLocalBounds().getPosition());
 	text.setPosition(x + (rozmiar_x / 2), y + (rozmiar_y / 2));
-}
-
-void TextBox_znak::wpisywanie(sf::Event event)
-{
-	if (clicked(event))
-		pomoc = true;
-	if (pomoc && pomoc1)
-	{
-		pomoc1 = false;
-		zmien_nazwe("[Wprowadz]");
-	}
-	if (pomoc)
-	{
-		if (event.type == sf::Event::TextEntered)
-		{
-
-			if (event.text.unicode >= 32 && event.text.unicode <= 126)
-			{
-				input += (char)event.text.unicode;
-				zmien_nazwe(input);
-			}
-			if (event.text.unicode == 8 && input.size() > 0)
-			{
-				input = input.substr(0, input.size() - 1);
-				zmien_nazwe(input);
-			}
-		}
-	}
 }
 
 
