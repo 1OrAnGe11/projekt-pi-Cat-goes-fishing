@@ -30,7 +30,7 @@ public:
     TextBox(float rozmiar_x, float rozmiar_y, float initialX, float initialY, sf::Color color, sf::RenderWindow* window, sf::String napis, int character_size);
     void zmien_nazwe(std::string napis);
     void wpisywanie(sf::Event event);
-    int key_bind(sf::Event event);
+    void key_bind(sf::Event event);
     void setPos(float x, float y);
     sf::Vector2f getPos();
     void render();

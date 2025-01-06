@@ -234,7 +234,7 @@ void Game::run() {
                 screen_gra_pomoc = screen;
                 screen = 8;
             }
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && LokalizacjaRyby == true)//ci�gni�cie  
+            if (event.type == sf::Event::KeyPressed && event.key.code == bind_wciaganie && LokalizacjaRyby == true && screen == 1)//ci�gni�cie  
             {
                 if (rzut == false && zarzucanie == false) {
                     promien -= 3;
@@ -248,21 +248,21 @@ void Game::run() {
                     }
                 }
             }
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::E && zarzucanie == false && rzut == false && czyTrzyma && LokalizacjaRyby == true) {//zarzu� w�dke (bind do zmiany)
+            if (event.type == sf::Event::KeyPressed && event.key.code == bind_rzucanie && zarzucanie == false && rzut == false && czyTrzyma && LokalizacjaRyby == true && screen == 1) {//zarzu� w�dke (bind do zmiany)
                 zarzucanie = true;
                 rzut = true;
                 czyTrzyma = false;
             }
 
-            if ( (screen == 1 || screen == 2) && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Q && czyPrzejscie == false) {
+            if ( (screen == 1 || screen == 2) && event.type == sf::Event::KeyPressed && event.key.code == bind_przejscie && czyPrzejscie == false) {
 
                 czyPrzejscie = true;
             }
-            if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::D) && czyPrzejscie == false && LokalizacjaRyby == false) {
+            if (event.type == sf::Event::KeyPressed && (event.key.code == bind_chodzenie_lewo || event.key.code == bind_chodzenie_prawo) && czyPrzejscie == false && LokalizacjaRyby == false) {
                 if (player.getPosition().x + predkosc > 10 && player.getPosition().x + predkosc < RozmiarOknaX - 10) {
                     predkosc = ConstPlayerSpeed;
                 }
-                if (event.key.code == sf::Keyboard::A) {
+                if (event.key.code == bind_chodzenie_lewo) {
                     predkosc *= -1;
                     if (skierowanyWprawo == true) {
                         playerSprite.setScale(-1.f, 1.f); // lustrzane odbicie poziome
@@ -277,7 +277,7 @@ void Game::run() {
                     skierowanyWprawo = true;
                 }
             }
-            if (event.type == sf::Event::KeyReleased && (event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::D)) {
+            if (event.type == sf::Event::KeyReleased && (event.key.code == bind_chodzenie_lewo || event.key.code == bind_chodzenie_prawo)) {
                 predkosc = 0;
             }
             switch (screen)
@@ -304,8 +304,31 @@ void Game::run() {
             case 4:     //wyjscie
                 break;
             case 5:     //zmiana sterowania
-                bind_rzucanie = (sf::Keyboard::Key)bind_rzucanie_wedka_button.key_bind(event);
-                std::cout << (sf::Keyboard::Key)bind_rzucanie_wedka_button.key_bind(event) << std::endl;
+                bind_rzucanie_wedka_button.key_bind(event);
+                bind_rzucanie = bind_rzucanie_wedka_button.bind;
+                if (bind_rzucanie == 0)
+                    bind_rzucanie = sf::Keyboard::E;
+
+                bind_wciaganie_wedka_button.key_bind(event);
+                bind_wciaganie = bind_wciaganie_wedka_button.bind;
+                if (bind_wciaganie == 0)
+                    bind_wciaganie = sf::Keyboard::Space;
+
+                bind_przejscie_button.key_bind(event);
+                bind_przejscie = bind_przejscie_button.bind;
+                if (bind_przejscie == 0)
+                    bind_przejscie = sf::Keyboard::Q;
+
+                bind_chodzenie_lewo_button.key_bind(event);
+                bind_chodzenie_lewo = bind_chodzenie_lewo_button.bind;
+                if (bind_chodzenie_lewo == 0)
+                    bind_chodzenie_lewo = sf::Keyboard::A;
+
+                bind_chodzenie_prawo_button.key_bind(event);
+                bind_chodzenie_prawo = bind_chodzenie_prawo_button.bind;
+                if (bind_chodzenie_prawo == 0)
+                    bind_chodzenie_prawo = sf::Keyboard::D;
+
                 if (sterowanie_back_button.clicked(event))
                     screen = 3;
                 break;
@@ -354,8 +377,6 @@ void Game::update(sf::Time deltaTime)
 {
 
     klatka++;
-
-    //char_bind_rzucanie = wpisywanie_bind_rzucanie_wedka.wypisz()
 
     float predkoscKatowa = predkoscLiniowa / promien;
 
@@ -594,10 +615,32 @@ void Game::render()
         window.close();
     case 5:     // zmiana sterowania
         window.draw(sterowanie_backgroundSprite);
+
         rzucanie_wedka_button.render();
         window.draw(rzucanie_wedka_button.text);
         bind_rzucanie_wedka_button.render();
         window.draw(bind_rzucanie_wedka_button.text);
+
+        wciaganie_wedka_button.render();
+        window.draw(wciaganie_wedka_button.text);
+        bind_wciaganie_wedka_button.render();
+        window.draw(bind_wciaganie_wedka_button.text);
+
+        przejscie_button.render();
+        window.draw(przejscie_button.text);
+        bind_przejscie_button.render();
+        window.draw(bind_przejscie_button.text);
+
+        chodzenie_lewo_button.render();
+        window.draw(chodzenie_lewo_button.text);
+        bind_chodzenie_lewo_button.render();
+        window.draw(bind_chodzenie_lewo_button.text);
+
+        chodzenie_prawo_button.render();
+        window.draw(chodzenie_prawo_button.text);
+        bind_chodzenie_prawo_button.render();
+        window.draw(bind_chodzenie_prawo_button.text);
+
         sterowanie_back_button.render();
         window.draw(sterowanie_back_button.text);
         break;

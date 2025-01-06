@@ -92,28 +92,3 @@ void TextBox::wpisywanie(sf::Event event)
 		}
 	}
 }
-
-
-int TextBox::key_bind(sf::Event event)
-{
-	if (clicked(event))
-		pomoc = true;
-	if (pomoc && pomoc1)
-	{
-		pomoc1 = false;
-		zmien_nazwe("[Wprowadz]");
-	}
-	if (pomoc)
-	{
-		if (event.type == sf::Event::TextEntered)
-		{
-
-			if (event.text.unicode >= 32 && event.text.unicode <= 126)
-			{
-				input = (char)event.text.unicode;
-				zmien_nazwe(input);
-				return event.text.unicode;
-			}
-		}
-	}
-}
