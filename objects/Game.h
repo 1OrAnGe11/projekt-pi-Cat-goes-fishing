@@ -10,7 +10,9 @@
 #include <ctime>
 #include <cstdlib>
 #include <cstdio>
-
+#include <fstream>
+#include <sstream>
+#include <string>
 
 #define ConstHaczykInitX 122 //pozycja pocz�tkowa haczyka (gdzie trzyma)
 #define ConstHaczykInitY 1
@@ -28,7 +30,7 @@ class Game
 private:
     //do zmiany !!!!! (bo czytane z pliku)
     int maxRybyNaHaczyku = 1;
-    
+
     //
     sf::RenderWindow window;
     sf::Texture menu_backgroundTexture;
@@ -82,16 +84,26 @@ private:
     Button gosc_button = Button(300, 100, (RozmiarOknaX - 750) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Gosc", 50);
     Button start_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Cofnij", 50);
 
-    TextBox nazwa_button = TextBox(300, 100, (RozmiarOknaX + 200) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Nazwa", 50);
-    TextBox haslo_button = TextBox(300, 100, (RozmiarOknaX - 800) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Haslo", 50);
+    TextBox nazwa_button = TextBox(300, 100, (RozmiarOknaX - 800) / 2, (RozmiarOknaY - 750), sf::Color(100, 100, 100, 255), &window, "Nazwa", 50);
+    TextBox haslo_button = TextBox(300, 100, (RozmiarOknaX + 200) / 2, (RozmiarOknaY - 750), sf::Color(100, 100, 100, 255), &window, "Haslo", 50);
+    Button zaloguj_sie_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Zaloguj sie", 50);
+    Button zarejestruj_sie_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Zarejestruj sie", 50);
     Button logowanie_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 150), sf::Color(100, 100, 100, 255), &window, "Cofnij", 50);
-    Button zaloguj_sie_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Zaloguj sie", 50);
 
     Button wznow_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Wznow", 50);
     Button gra_back_button = Button(400, 100, (RozmiarOknaX - 400) / 2, (RozmiarOknaY - 150), sf::Color(100, 100, 100, 255), &window, "Wyjdz do menu", 50);
 
+    TextBox dodawanie_nazwa_button = TextBox(300, 100, (RozmiarOknaX - 800) / 2, (RozmiarOknaY - 750), sf::Color(100, 100, 100, 255), &window, "Nazwa", 50);
+    TextBox dodawanie_haslo_button = TextBox(300, 100, (RozmiarOknaX + 200) / 2, (RozmiarOknaY - 750), sf::Color(100, 100, 100, 255), &window, "Haslo", 50);
+    Button dodaj_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Dodaj", 50);
+    Button dodawanie_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 150), sf::Color(100, 100, 100, 255), &window, "Cofnij", 50);
+
     int screen = 0;
 
+    std::fstream zapis;
+    std::fstream odczyt;
+    std::string nazwa;
+    std::string haslo;
     sf::RectangleShape player;
     sf::CircleShape haczyk;
     sf::Texture texture;
@@ -162,6 +174,7 @@ private:
     void initZanikanie();
     void przejscie(sf::Time deltaTime);
     void zlowRybe(Ryba& ryba);
+
 public:
     Game();
     void run();

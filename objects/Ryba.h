@@ -28,7 +28,7 @@ public:
     void update();
     void obrot();
 
-    //do ³owienia
+    //do lowienia
     bool czyNaHaczyku = false;
     void lapanie();
 };

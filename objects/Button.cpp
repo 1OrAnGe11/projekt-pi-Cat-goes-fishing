@@ -53,9 +53,9 @@ void Button::render()
 	window->draw(shape);
 }
 
-void Button::zmien_nazwe(float rozmiar_x, float rozmiar_y, float initialX, float initialY, sf::String napis)
+void Button::zmien_nazwe(sf::String napis)
 {
 	text.setString(napis);
 	text.setOrigin(text.getGlobalBounds().getSize() / 2.f + text.getLocalBounds().getPosition());
-	text.setPosition(initialX + (rozmiar_x / 2), initialY + (rozmiar_y / 2));
+	text.setPosition(x + (rozmiar_x / 2), y + (rozmiar_y / 2));
 }

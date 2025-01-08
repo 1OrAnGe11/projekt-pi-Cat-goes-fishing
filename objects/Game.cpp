@@ -218,10 +218,12 @@ void Game::przejscie(sf::Time deltaTime)
     zanikanie.setFillColor(sf::Color(0, 0, 0, static_cast<sf::Uint8>(alpha)));
     pomoc_przejscie = false;
 }
+
 void Game::zlowRybe(Ryba& ryba) {
     ryba.czyNaHaczyku = true;
     ryba.lapanie();
 }
+
 void Game::run() {
     while (window.isOpen())
     {
@@ -365,8 +367,44 @@ void Game::run() {
             case 7:     //logowanie do konta
                 nazwa_button.wpisywanie(event);
                 haslo_button.wpisywanie(event);
+
                 if (zaloguj_sie_button.clicked(event))
-                    std::cout << "Jeszce nie dziala lol" << std::endl;
+                {
+                    odczyt.open("konta.txt", std::ios::in);
+
+                    std::string konto_string;
+                    std::string ss;
+                    std::vector<std::string> seglist;
+                    while (getline(odczyt, konto_string))
+                    {
+                        std::stringstream s(konto_string);
+                        while (getline(s, ss, ';'))
+                        {
+                            seglist.push_back(ss);
+                        }
+                        if (nazwa_button.input == seglist[0] && haslo_button.input == seglist[1])
+                        {
+                            screen = 1;
+                            continue;
+                        }
+                        else
+                        {
+                            zaloguj_sie_button.zmien_nazwe("   Konto\nnie istnieje");
+                        }
+                        seglist.clear();
+                    }
+
+                    odczyt.close();
+                }
+                if (nazwa_button.clicked(event) || haslo_button.clicked(event))
+                {
+                    zaloguj_sie_button.zmien_nazwe("Zaloguj sie");
+                }
+                if (zarejestruj_sie_button.clicked(event))
+                {
+                    screen = 9;
+                    continue;
+                }
                 if (logowanie_back_button.clicked(event))
                 {
                     screen = 6;
@@ -394,6 +432,74 @@ void Game::run() {
                     continue;
                 }
                 break;
+            case 9:     //dodawanie konta
+
+                dodawanie_nazwa_button.wpisywanie(event);
+                dodawanie_haslo_button.wpisywanie(event);
+
+                if (dodaj_button.clicked(event))
+                {
+                    odczyt.open("konta.txt", std::ios::in);
+
+                    std::string konto_string;
+                    std::string ss;
+                    std::vector<std::string> seglist;
+                    bool pomoc_konta = false;
+
+                    odczyt.seekp(0, std::ios::end);
+                    size_t size = odczyt.tellg();
+
+                    odczyt.clear();  // Resetuje flagi błędu EOF
+                    odczyt.seekg(0, std::ios::beg);  // Ustawia wskaźnik odczytu na początek pliku
+
+
+                    if (size == 0)
+                    {
+                        pomoc_konta = true;
+                    }
+
+                    else
+                    {
+                        while (getline(odczyt, konto_string))
+                        {
+                            std::stringstream s(konto_string);
+                            while (getline(s, ss, ';'))
+                            {
+                                seglist.push_back(ss);
+                            }
+                            if (dodawanie_nazwa_button.input == seglist[0])
+                            {
+                                dodaj_button.zmien_nazwe("   Juz\nistnieje");
+                                pomoc_konta = false;
+                                break;
+                            }
+                            else
+                            {
+                                pomoc_konta = true;
+                            }
+                            seglist.clear();
+                        }
+                    }
+                    odczyt.close();
+
+                    if (pomoc_konta)
+                    {
+                        zapis.open("konta.txt", std::ios::out | std::ios::app);
+                        zapis << dodawanie_nazwa_button.input << ";" << dodawanie_haslo_button.input << ";" << std::endl;
+                        zapis.close();
+                    }
+                }
+
+                if (dodawanie_nazwa_button.clicked(event) || dodawanie_haslo_button.clicked(event))
+                {
+                    dodaj_button.zmien_nazwe("Dodaj");
+                }
+
+                if (dodawanie_back_button.clicked(event))
+                {
+                    screen = 7;
+                    continue;
+                }
             }
         }
         update(sf::seconds(1.f / 60.f)); 
@@ -562,16 +668,15 @@ void Game::update(sf::Time deltaTime)
         }
 
         //łowienie ryby
-         
+
         for (auto& ryba : ryby) {
             float haczykX = haczyk.getPosition().x;
             float haczykY = haczyk.getPosition().y;
-            float rybaX = ryba.x- 15;
-            float rybaY = ryba.y ;
-
+            float rybaX = ryba.x - 15;
+            float rybaY = ryba.y;
             float odleglosc = sqrt(pow(rybaX - haczykX, 2) + pow(rybaY - haczykY, 2));
-            if (odleglosc <= 10  && ryba.czyNaHaczyku==false) {
-                if( rybyNaHaczyku < maxRybyNaHaczyku)
+            if (odleglosc <= 10 && ryba.czyNaHaczyku == false) {
+                if (rybyNaHaczyku < maxRybyNaHaczyku)
                 {
                     zlowRybe(ryba);
                     rybyNaHaczyku++;
@@ -581,8 +686,7 @@ void Game::update(sf::Time deltaTime)
                 ryba.setPos(haczyk.getPosition().x, haczyk.getPosition().y);
             }
         }
-        
-        
+
         break;
     case 2: //sklepy
         if ((player.getPosition().x + predkosc) > 20 && (player.getPosition().x + predkosc) < RozmiarOknaX - 110) {
@@ -626,6 +730,8 @@ void Game::update(sf::Time deltaTime)
         break;
     case 8: //zatrzymanie (escape podczas gry)
         break;
+    case 9: //dodawanie konta
+        break;
     }
 }
 
@@ -637,10 +743,13 @@ void Game::render()
     {
     case 0:
         window.draw(menu_backgroundSprite);
+
         start_button.render();
         window.draw(start_button.text);
+
         options_button.render();
         window.draw(options_button.text);
+
         quit_button.render();
         window.draw(quit_button.text);
         break;
@@ -663,8 +772,10 @@ void Game::render()
         break;
     case 3:     // opcje
         window.draw(options_backgroundSprite);
+
         sterowanie_button.render();
         window.draw(sterowanie_button.text);
+
         options_back_button.render();
         window.draw(options_back_button.text);
         break;
@@ -703,32 +814,60 @@ void Game::render()
         break;
     case 6:     //wybor konta
         window.draw(sterowanie_backgroundSprite);
+
         gosc_button.render();
         window.draw(gosc_button.text);
+
         logowanie_button.render();
         window.draw(logowanie_button.text);
+
         start_back_button.render();
         window.draw(start_back_button.text);
         break;
     case 7:     //logowanie
         window.draw(sterowanie_backgroundSprite);
+
         nazwa_button.render();
         window.draw(nazwa_button.text);
+
         haslo_button.render();
         window.draw(haslo_button.text);
+
         zaloguj_sie_button.render();
         window.draw(zaloguj_sie_button.text);
+
+        zarejestruj_sie_button.render();
+        window.draw(zarejestruj_sie_button.text);
+
         logowanie_back_button.render();
         window.draw(logowanie_back_button.text);
         break;
     case 8:     //zatrzymanie (escape podczas gry)
         window.draw(sterowanie_backgroundSprite);
+
         wznow_button.render();
         window.draw(wznow_button.text);
+
         options_button.render();
         window.draw(options_button.text);
+
         gra_back_button.render();
         window.draw(gra_back_button.text);
+        break;
+    case 9:     //dodawanie konta
+        window.draw(sterowanie_backgroundSprite);
+
+        dodawanie_nazwa_button.render();
+        window.draw(dodawanie_nazwa_button.text);
+
+        dodawanie_haslo_button.render();
+        window.draw(dodawanie_haslo_button.text);
+
+        dodaj_button.render();
+        window.draw(dodaj_button.text);
+
+        dodawanie_back_button.render();
+        window.draw(dodawanie_back_button.text);
         break;
     }
     window.draw(zanikanie);

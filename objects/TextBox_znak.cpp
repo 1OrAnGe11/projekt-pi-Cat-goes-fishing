@@ -84,6 +84,8 @@ void TextBox_znak::key_bind(sf::Event event)
             && event.key.scancode != sf::Keyboard::Scancode::LSystem
             && event.key.scancode != sf::Keyboard::Scancode::RSystem)
 		{
+            if (klawisz_na_unicode(sf::Keyboard::localize(event.key.scancode)) == "Unknown")
+                return;
 			bind = sf::Keyboard::localize(event.key.scancode);
             zmien_nazwe(klawisz_na_unicode(bind));
             pomoc = false;
@@ -93,7 +95,7 @@ void TextBox_znak::key_bind(sf::Event event)
 	}
 }
 
-std::string TextBox_znak::klawisz_na_unicode(sf::Keyboard::Key& k)
+std::string TextBox_znak::klawisz_na_unicode(sf::Keyboard::Key k)
 {
         std::string ret;
         switch (k) {
@@ -507,9 +509,8 @@ std::string TextBox_znak::klawisz_na_unicode(sf::Keyboard::Key& k)
             ret = "KeyCount";
             break;
 
-
         default:
-            ret = "Unknow";
+            ret = "Unknown";
             break;
         }
         return ret;

@@ -33,7 +33,7 @@ public:
     void setPos(float x, float y);
     bool clicked(sf::Event event);
     sf::Vector2f getPos();
-    void zmien_nazwe(float rozmiar_x, float rozmiar_y, float initialX, float initialY, sf::String napis);
+    void zmien_nazwe(sf::String napis);
 };
 
 #endif

@@ -32,7 +32,7 @@ public:
     void zmien_nazwe(std::string napis);
     void wpisywanie(sf::Event event);
     void key_bind(sf::Event event);
-    std::string klawisz_na_unicode(sf::Keyboard::Key& k);
+    std::string klawisz_na_unicode(sf::Keyboard::Key k);
     void setPos(float x, float y);
     sf::Vector2f getPos();
     void render();

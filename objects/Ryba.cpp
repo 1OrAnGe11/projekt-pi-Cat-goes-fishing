@@ -44,40 +44,41 @@ sf::Vector2f Ryba::getPos()
 
 void Ryba::obrot()          // obrot sprite'a ryby, obrot jest od lewego dolnego piksela wiec trzeba pomnozyc wartosc x o w tym wypadku 0.07, zeby obrot byl mniej wiecej o srodek sprite'a
 {        
-    if(czyNaHaczyku==false){
-    if (!kierunek)
-    {
-        rybaSprite.setScale(sf::Vector2f(-3, 3));
-
-        switch (type)
+    if (czyNaHaczyku == false) {
+        if (!kierunek)
         {
-        case 0:
-            setPos(x + rybaSprite.getTexture()->getSize().x * 2, y);
-            break;
-        case 1:
-            setPos(x + rybaSprite.getTexture()->getSize().x * 2, y);
-            break;
-        case 2:
-            setPos(x + rybaSprite.getTexture()->getSize().x * 2, y);
-            break;
+            rybaSprite.setScale(sf::Vector2f(-3, 3));
+
+            switch (type)
+            {
+            case 0:
+                setPos(x + rybaSprite.getTexture()->getSize().x * 2, y);
+                break;
+            case 1:
+                setPos(x + rybaSprite.getTexture()->getSize().x * 2, y);
+                break;
+            case 2:
+                setPos(x + rybaSprite.getTexture()->getSize().x * 2, y);
+                break;
+            }
+        }
+        else
+        {
+            rybaSprite.setScale(sf::Vector2f(3, 3));
+            switch (type)
+            {
+            case 0:
+                setPos(x + rybaSprite.getTexture()->getSize().x * -0.3, y);
+                break;
+            case 1:
+                setPos(x + rybaSprite.getTexture()->getSize().x * -0.3, y);
+                break;
+            case 2:
+                setPos(x + rybaSprite.getTexture()->getSize().x * -0.3, y);
+                break;
+            }
         }
     }
-    else
-    {
-        rybaSprite.setScale(sf::Vector2f(3, 3));
-        switch (type)
-        {
-        case 0:
-            setPos(x + rybaSprite.getTexture()->getSize().x * -0.3, y);
-            break;
-        case 1:
-            setPos(x + rybaSprite.getTexture()->getSize().x * -0.3, y);
-            break;
-        case 2:
-            setPos(x + rybaSprite.getTexture()->getSize().x * -0.3, y);
-            break;
-        }
-    }}
 }
 
 
@@ -144,12 +145,8 @@ void Ryba::update()
     }
 }
 
-
-//
-
 void Ryba::lapanie() {
-    if(kierunek){ rybaSprite.setRotation(90); }
-    else{ rybaSprite.setRotation(270); }
-    
-}
+    if (kierunek) { rybaSprite.setRotation(90); }
+    else { rybaSprite.setRotation(270); }
 
+}
