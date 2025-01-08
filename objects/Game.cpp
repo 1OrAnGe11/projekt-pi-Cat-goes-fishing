@@ -218,7 +218,10 @@ void Game::przejscie(sf::Time deltaTime)
     zanikanie.setFillColor(sf::Color(0, 0, 0, static_cast<sf::Uint8>(alpha)));
     pomoc_przejscie = false;
 }
-
+void Game::zlowRybe(Ryba& ryba) {
+    ryba.czyNaHaczyku = true;
+    ryba.lapanie();
+}
 void Game::run() {
     while (window.isOpen())
     {
@@ -252,6 +255,7 @@ void Game::run() {
                 zarzucanie = true;
                 rzut = true;
                 czyTrzyma = false;
+                rybyNaHaczyku = 0;
             }
 
             if ( (screen == 1 || screen == 2) && event.type == sf::Event::KeyPressed && event.key.code == bind_przejscie && czyPrzejscie == false) {
@@ -452,10 +456,17 @@ void Game::update(sf::Time deltaTime)
         else {
             rzut = false;
         }
-        if (haczyk.getPosition().x < player.getPosition().x + 60 && haczyk.getPosition().y >player.getPosition().y && haczyk.getPosition().y <= player.getPosition().y + 80 && zarzucanie == false) {  //�apanie haczyka
+        if (haczyk.getPosition().x < player.getPosition().x + 60 && haczyk.getPosition().y >player.getPosition().y && haczyk.getPosition().y <= player.getPosition().y + 80 && zarzucanie == false) {  //lapanie haczyka
             czyTrzyma = true;
             haczyk.setPosition(player.getPosition().x + ConstHaczykInitX, player.getPosition().y - ConstHaczykInitY);
             speedY = ConstSpeedY;
+
+            //dla ryb
+            for (auto& ryba : ryby) {
+                if (ryba.czyNaHaczyku) {
+                    //kill
+                }
+            }
         }
 
 
@@ -549,7 +560,29 @@ void Game::update(sf::Time deltaTime)
         if (klatka > 10000) { //bo inaczej wyjdzie poza zakres int 
             klatka = 0;
         }
-        //std::cout << screen <<" " <<LokalizacjaRyby<< std::endl;
+
+        //łowienie ryby
+         
+        for (auto& ryba : ryby) {
+            float haczykX = haczyk.getPosition().x;
+            float haczykY = haczyk.getPosition().y;
+            float rybaX = ryba.x- 15;
+            float rybaY = ryba.y ;
+
+            float odleglosc = sqrt(pow(rybaX - haczykX, 2) + pow(rybaY - haczykY, 2));
+            if (odleglosc <= 10  && ryba.czyNaHaczyku==false) {
+                if( rybyNaHaczyku < maxRybyNaHaczyku)
+                {
+                    zlowRybe(ryba);
+                    rybyNaHaczyku++;
+                }
+            }
+            if (ryba.czyNaHaczyku == true) {
+                ryba.setPos(haczyk.getPosition().x, haczyk.getPosition().y);
+            }
+        }
+        
+        
         break;
     case 2: //sklepy
         if ((player.getPosition().x + predkosc) > 20 && (player.getPosition().x + predkosc) < RozmiarOknaX - 110) {

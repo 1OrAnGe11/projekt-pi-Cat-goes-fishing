@@ -27,6 +27,10 @@ public:
     sf::Vector2f getPos();
     void update();
     void obrot();
+
+    //do ³owienia
+    bool czyNaHaczyku = false;
+    void lapanie();
 };
 
 #endif

@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <cstdio>
 
+
 #define ConstHaczykInitX 122 //pozycja pocz�tkowa haczyka (gdzie trzyma)
 #define ConstHaczykInitY 1
 #define ConstWedkaInitX 125.0f
@@ -25,6 +26,10 @@
 class Game
 {
 private:
+    //do zmiany !!!!! (bo czytane z pliku)
+    int maxRybyNaHaczyku = 1;
+    
+    //
     sf::RenderWindow window;
     sf::Texture menu_backgroundTexture;
     sf::Sprite menu_backgroundSprite;
@@ -119,6 +124,7 @@ private:
     //ryby
     std::vector<Ryba> ryby;
 
+    int rybyNaHaczyku = 0;
     //przejscie ekranu
     sf::RectangleShape zanikanie;
     bool czyPrzejscie = false;
@@ -155,7 +161,7 @@ private:
     void initBackground();
     void initZanikanie();
     void przejscie(sf::Time deltaTime);
-
+    void zlowRybe(Ryba& ryba);
 public:
     Game();
     void run();

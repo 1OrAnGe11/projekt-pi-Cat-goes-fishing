@@ -44,7 +44,7 @@ sf::Vector2f Ryba::getPos()
 
 void Ryba::obrot()          // obrot sprite'a ryby, obrot jest od lewego dolnego piksela wiec trzeba pomnozyc wartosc x o w tym wypadku 0.07, zeby obrot byl mniej wiecej o srodek sprite'a
 {        
-
+    if(czyNaHaczyku==false){
     if (!kierunek)
     {
         rybaSprite.setScale(sf::Vector2f(-3, 3));
@@ -77,7 +77,7 @@ void Ryba::obrot()          // obrot sprite'a ryby, obrot jest od lewego dolnego
             setPos(x + rybaSprite.getTexture()->getSize().x * -0.3, y);
             break;
         }
-    }
+    }}
 }
 
 
@@ -143,3 +143,13 @@ void Ryba::update()
         obrot();
     }
 }
+
+
+//
+
+void Ryba::lapanie() {
+    if(kierunek){ rybaSprite.setRotation(90); }
+    else{ rybaSprite.setRotation(270); }
+    
+}
+
