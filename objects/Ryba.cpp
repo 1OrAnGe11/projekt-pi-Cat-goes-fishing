@@ -84,6 +84,7 @@ void Ryba::obrot()          // obrot sprite'a ryby, obrot jest od lewego dolnego
 
 void Ryba::update() 
 {
+    if(czyNaHaczyku == false){
     currentFrame++;
     if (rand() % 1501 == 1500 && x < 1550)  // szansa na obrocenie sie kierunku plyniecia ryby
     {
@@ -143,10 +144,26 @@ void Ryba::update()
         kierunek = true;
         obrot();
     }
+    }
 }
 
 void Ryba::lapanie() {
     if (kierunek) { rybaSprite.setRotation(90); }
     else { rybaSprite.setRotation(270); }
 
+}
+
+void Ryba::kill(Ryba ryba) {
+    
+    int x1 = rand() % 30 + 1650; 
+    int y1 = rand() % 230 + 610;
+
+    int r = (rand() % 255 + 0);     
+    int g = (rand() % 255 + 0);
+    int b = (rand() % 255 + 0);
+    rybaSprite.setColor(sf::Color(r, g, b, 255));
+    //ryba.x = x1;
+    //ryba.y = y1;
+    ryba.setPos(x1, y1);
+    rybaSprite.setRotation(0);
 }

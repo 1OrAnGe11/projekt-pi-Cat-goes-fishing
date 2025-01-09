@@ -222,6 +222,7 @@ void Game::przejscie(sf::Time deltaTime)
 void Game::zlowRybe(Ryba& ryba) {
     ryba.czyNaHaczyku = true;
     ryba.lapanie();
+    std::cout << "zlapana";
 }
 
 void Game::run() {
@@ -570,7 +571,12 @@ void Game::update(sf::Time deltaTime)
             //dla ryb
             for (auto& ryba : ryby) {
                 if (ryba.czyNaHaczyku) {
-                    //kill
+                    ryba.kill(ryba);
+                    ryba.czyNaHaczyku = false;  //nie może być w kill bo resetuje
+                    int x1 = rand() % 30 + 1650;//to też 
+                    int y1 = rand() % 230 + 610;
+                    ryba.setPos(x1, y1);
+                    std::cout << std::endl << ryba.x << std::endl;
                 }
             }
         }
@@ -675,7 +681,7 @@ void Game::update(sf::Time deltaTime)
             float rybaX = ryba.x - 15;
             float rybaY = ryba.y;
             float odleglosc = sqrt(pow(rybaX - haczykX, 2) + pow(rybaY - haczykY, 2));
-            if (odleglosc <= 10 && ryba.czyNaHaczyku == false) {
+            if (odleglosc <= 10 && ryba.czyNaHaczyku == false && haczyk.getPosition().y >powierzchniaWody &&rzut==false) {
                 if (rybyNaHaczyku < maxRybyNaHaczyku)
                 {
                     zlowRybe(ryba);
@@ -685,7 +691,8 @@ void Game::update(sf::Time deltaTime)
             if (ryba.czyNaHaczyku == true) {
                 ryba.setPos(haczyk.getPosition().x, haczyk.getPosition().y);
             }
-        }
+            //std::cout << ryba.czyNaHaczyku << " ";
+        }   //std::cout << std::endl;
 
         break;
     case 2: //sklepy

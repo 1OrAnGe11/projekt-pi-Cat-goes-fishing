@@ -31,6 +31,7 @@ public:
     //do lowienia
     bool czyNaHaczyku = false;
     void lapanie();
+    void kill(Ryba ryba);
 };
 
 #endif
