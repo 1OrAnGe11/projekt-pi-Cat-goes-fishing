@@ -240,11 +240,11 @@ void Game::run() {
                 screen_gra_pomoc = screen;
                 screen = 8;
             }
-            if (event.type == sf::Event::KeyPressed && event.key.code == bind_wciaganie && LokalizacjaRyby == true && screen == 1)//ci�gni�cie  
+            if (event.type == sf::Event::KeyPressed && event.key.code == bind_wciaganie && screen == 1)//ciagniecie  
             {
                 if (rzut == false && zarzucanie == false) {
                     promien -= 3;
-                    if (haczyk.getPosition().x < player.getPosition().x + 50) //bo inaczej nie da sie wci�ga� gdy koliduje z brzegiem
+                    if (haczyk.getPosition().y > 474) //bo inaczej nie da sie wci�ga� gdy koliduje z brzegiem
                     {
 
                         //float y = player.getPosition().y + player.getSize().y / 2 + promien * sin(angle);
@@ -254,7 +254,8 @@ void Game::run() {
                     }
                 }
             }
-            if (event.type == sf::Event::KeyPressed && event.key.code == bind_rzucanie && zarzucanie == false && rzut == false && czyTrzyma && LokalizacjaRyby == true && screen == 1) {//zarzu� w�dke (bind do zmiany)
+
+            if (event.type == sf::Event::KeyPressed && event.key.code == bind_rzucanie && zarzucanie == false && rzut == false && czyTrzyma && screen == 1) {//zarzu� w�dke (bind do zmiany)
                 zarzucanie = true;
                 rzut = true;
                 czyTrzyma = false;
@@ -354,7 +355,10 @@ void Game::run() {
                 break;
             case 6:     //wybor konta
                 if (gosc_button.clicked(event))
+                {
                     screen = screen_gra_pomoc;
+                    continue;
+                }
                 if (logowanie_button.clicked(event))
                 {
                     screen = 7;
@@ -366,8 +370,20 @@ void Game::run() {
                     continue;
                 }
             case 7:     //logowanie do konta
-                nazwa_button.wpisywanie(event);
+                if (nazwa_button.clicked(event))
+                {
+                    nazwa_button.pomoc = true;
+                    continue;
+                }
+
+                if (haslo_button.clicked(event))
+                {
+                    haslo_button.pomoc = true;
+                    continue;
+                }
+
                 haslo_button.wpisywanie(event);
+                nazwa_button.wpisywanie(event);
 
                 if (zaloguj_sie_button.clicked(event))
                 {
@@ -396,10 +412,12 @@ void Game::run() {
                     }
 
                     odczyt.close();
+                    continue;
                 }
                 if (nazwa_button.clicked(event) || haslo_button.clicked(event))
                 {
                     zaloguj_sie_button.zmien_nazwe("Zaloguj sie");
+                    continue;
                 }
                 if (zarejestruj_sie_button.clicked(event))
                 {
@@ -419,6 +437,7 @@ void Game::run() {
                 {
                     screen = screen_gra_pomoc;
                     pomoc_przejscie = true;
+                    continue;
                 }
                 if (options_button.clicked(event))
                 {
@@ -435,8 +454,20 @@ void Game::run() {
                 break;
             case 9:     //dodawanie konta
 
-                dodawanie_nazwa_button.wpisywanie(event);
+                if (dodawanie_nazwa_button.clicked(event))
+                {
+                    dodawanie_nazwa_button.pomoc = true;
+                    continue;
+                }
+
+                if (dodawanie_haslo_button.clicked(event))
+                {
+                    dodawanie_haslo_button.pomoc = true;
+                    continue;
+                }
+
                 dodawanie_haslo_button.wpisywanie(event);
+                dodawanie_nazwa_button.wpisywanie(event);
 
                 if (dodaj_button.clicked(event))
                 {
@@ -458,7 +489,6 @@ void Game::run() {
                     {
                         pomoc_konta = true;
                     }
-
                     else
                     {
                         while (getline(odczyt, konto_string))
@@ -489,11 +519,13 @@ void Game::run() {
                         zapis << dodawanie_nazwa_button.input << ";" << dodawanie_haslo_button.input << ";" << std::endl;
                         zapis.close();
                     }
+                    continue;
                 }
 
                 if (dodawanie_nazwa_button.clicked(event) || dodawanie_haslo_button.clicked(event))
                 {
                     dodaj_button.zmien_nazwe("Dodaj");
+                    continue;
                 }
 
                 if (dodawanie_back_button.clicked(event))
@@ -523,21 +555,22 @@ void Game::update(sf::Time deltaTime)
     case 0:
         break;
     case 1:
+        
         // Aktualizacja pozycji haczyka
         angle += predkoscKatowa;
         if (angle > 2 * M_PI)
             angle -= 2 * M_PI;
 
         if (rzut == false && czyTrzyma == false) {    //spadanie haczyka
-            if (haczyk.getPosition().x > player.getPosition().x + 50) {
+            if (haczyk.getPosition().x > player.getPosition().x + ConstHaczykInitX) {
                 float x = player.getPosition().x + player.getSize().x / 2 + promien * cos(angle);
                 float y = player.getPosition().y + player.getSize().y / 2 + promien * sin(angle);
                 haczyk.setPosition(x, y);
             }
         }
 
-        if (haczyk.getPosition().y <= powierzchniaWody && rzut == true) {  //zarzucenie w�dki
-            if (zarzucanie == true) {  //animacja zamachu do ty�u w�dk�
+        if (haczyk.getPosition().y <= powierzchniaWody && rzut == true) {  //zarzucenie wedki
+            if (zarzucanie == true) {  //animacja zamachu do tylu wedka
                 if (haczyk.getPosition().x > player.getPosition().x)
                 {
                     float x = haczyk.getPosition().x - 2;
@@ -563,7 +596,7 @@ void Game::update(sf::Time deltaTime)
         else {
             rzut = false;
         }
-        if (haczyk.getPosition().x < player.getPosition().x + 60 && haczyk.getPosition().y >player.getPosition().y && haczyk.getPosition().y <= player.getPosition().y + 80 && zarzucanie == false) {  //lapanie haczyka
+        if (haczyk.getPosition().x < player.getPosition().x + ConstHaczykInitX && haczyk.getPosition().y > 474 && haczyk.getPosition().y <= player.getPosition().y + 80 && zarzucanie == false) {  //lapanie haczyka
             czyTrzyma = true;
             haczyk.setPosition(player.getPosition().x + ConstHaczykInitX, player.getPosition().y - ConstHaczykInitY);
             speedY = ConstSpeedY;
@@ -571,6 +604,11 @@ void Game::update(sf::Time deltaTime)
             //dla ryb
             for (auto& ryba : ryby) {
                 if (ryba.czyNaHaczyku) {
+                    cena_ryby_napis.pomoc_popup = true;
+                    cena_ryby_napis.zmien_nazwe_miejsce(200, 380, ryba.cena);
+                    cala_kasa += ryba.cena;
+                    kasa_wartosc_napis.wartosc = cala_kasa;
+                    kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);
                     ryba.kill(ryba);
                     ryba.czyNaHaczyku = false;  //nie może być w kill bo resetuje
                     int x1 = rand() % 30 + 1650;//to też 
@@ -681,7 +719,7 @@ void Game::update(sf::Time deltaTime)
             float rybaX = ryba.x - 15;
             float rybaY = ryba.y;
             float odleglosc = sqrt(pow(rybaX - haczykX, 2) + pow(rybaY - haczykY, 2));
-            if (odleglosc <= 10 && ryba.czyNaHaczyku == false && haczyk.getPosition().y >powierzchniaWody &&rzut==false) {
+            if (odleglosc <= 10 && ryba.czyNaHaczyku == false && haczyk.getPosition().y > powierzchniaWody && rzut == false) {
                 if (rybyNaHaczyku < maxRybyNaHaczyku)
                 {
                     zlowRybe(ryba);
@@ -689,7 +727,11 @@ void Game::update(sf::Time deltaTime)
                 }
             }
             if (ryba.czyNaHaczyku == true) {
-                ryba.setPos(haczyk.getPosition().x, haczyk.getPosition().y);
+                if(ryba.kierunek)
+                    ryba.setPos(haczyk.getPosition().x + (26 + ryba.poprawka_wspolrzednych), haczyk.getPosition().y);
+                else
+                    ryba.setPos(haczyk.getPosition().x - (6 + ryba.poprawka_wspolrzednych), haczyk.getPosition().y);
+
             }
             //std::cout << ryba.czyNaHaczyku << " ";
         }   //std::cout << std::endl;
@@ -759,6 +801,7 @@ void Game::render()
 
         quit_button.render();
         window.draw(quit_button.text);
+
         break;
     case 1:      //ryby woda itp
         window.draw(tloSprite);
@@ -769,13 +812,26 @@ void Game::render()
         window.draw(wedkaSprite);
         window.draw(haczyk);
         window.draw(linka);
-        for (auto& ryba : ryby) {
+        for (auto& ryba : ryby) 
+        {
             window.draw(ryba.rybaSprite);
         }
+
+        if (cena_ryby_napis.pomoc_popup)
+        {
+            cena_ryby_napis.render();
+        }
+
+        window.draw(kasa_napis.text);
+        window.draw(kasa_wartosc_napis.text);
+
         break;
     case 2:     //sklepy
         window.draw(sklepy_backgroundSprite);
         window.draw(playerSprite);
+
+        window.draw(kasa_napis.text);
+        window.draw(kasa_wartosc_napis.text);
         break;
     case 3:     // opcje
         window.draw(options_backgroundSprite);

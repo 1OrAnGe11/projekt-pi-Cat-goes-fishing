@@ -6,6 +6,8 @@
 #include "Button.h"
 #include "TextBox.h"
 #include "TextBox_znak.h"
+#include "Popup.h"
+#include "Napis.h"
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
@@ -104,6 +106,14 @@ private:
     std::fstream odczyt;
     std::string nazwa;
     std::string haslo;
+
+    std::string cena_ryba;
+    Popup cena_ryby_napis = Popup(&window, 200, 380, "", 20);
+
+    Napis kasa_napis = Napis(&window, 1540, 20, "Pieniadze:", 20, sf::Color::Yellow, sf::Color::Red, -1);
+    Napis kasa_wartosc_napis = Napis(&window, 1540, 45, "", 20, sf::Color::Yellow, sf::Color::Red, 0);
+    int cala_kasa = 0;
+
     sf::RectangleShape player;
     sf::CircleShape haczyk;
     sf::Texture texture;

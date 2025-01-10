@@ -10,16 +10,22 @@ Ryba::Ryba(float initialX, float initialY, sf::Color color, float size, sf::Text
 
     switch (type)
     {
-    case 0:
+    case 0:             // wolne
         szybk_ryb = 1;
+        cena = 20;
+        poprawka_wspolrzednych = 10;
         rybaSprite.setTexture(texture3);
         break;
-    case 1:
+    case 1:             // srednie
         szybk_ryb = 1.5;
+        cena = 15;
+        poprawka_wspolrzednych = 5;
         rybaSprite.setTexture(texture2);
         break;
-    case 2:
+    case 2:             // szybkie
         szybk_ryb = 2;
+        cena = 10;
+        poprawka_wspolrzednych = 0;
         rybaSprite.setTexture(texture1);
         break;
     }
@@ -84,81 +90,86 @@ void Ryba::obrot()          // obrot sprite'a ryby, obrot jest od lewego dolnego
 
 void Ryba::update() 
 {
-    if(czyNaHaczyku == false){
-    currentFrame++;
-    if (rand() % 1501 == 1500 && x < 1550)  // szansa na obrocenie sie kierunku plyniecia ryby
-    {
-        kierunek = !kierunek;
-        obrot();
-    }
+    if (czyNaHaczyku == false) {
+        currentFrame++;
+        if (rand() % 1501 == 1500 && x < 1550)  // szansa na obrocenie sie kierunku plyniecia ryby
+        {
+            kierunek = !kierunek;
+            obrot();
+        }
 
-    if (rand() % 1501 == 1500)              // szansa na plyniecie do gory / na dol
-    {
-        if (rand() % 2 == 0)
-            gora_dol = 0;
+        if (rand() % 1501 == 1500)              // szansa na plyniecie do gory / na dol
+        {
+            if (rand() % 2 == 0)
+                gora_dol = 0;
+            else
+                gora_dol = 2;
+            licznik_gora_dol = rand() % 100 + 100;  // ile klatek plynie do gory / na dol
+        }
+
+        float _x, _y;
+
+        _y = y;
+
+        if (licznik_gora_dol > 0)               // ryby plyna gora dol, gora_dol = 0-plyna w gore; 1-plyna tylko poziomo; 2-plyna w dol
+        {
+            if (gora_dol == 0)
+                _y = y + 0.5 * szybk_ryb;
+            else if (gora_dol == 2)
+                _y = y - 0.5 * szybk_ryb;
+            licznik_gora_dol--;
+            if (_y >= 850)                      // maksymalne wspolrzedne do kiedy plyna w gore / dol
+            {
+                _y = y;
+                gora_dol = 2;
+            }
+            if (_y <= 600)
+            {
+                _y = y;
+                gora_dol = 0;
+            }
+        }
+
+        if (kierunek)                           // w ktora strone plyna ryby, w zaleznosci od wspolrzednych wielkosci wody (kiedy w lewo i kiedy w prawo)
+        {
+            _x = x - szybk_ryb;
+        }
         else
-            gora_dol = 2;
-        licznik_gora_dol = rand() % 100 + 100;  // ile klatek plynie do gory / na dol
-    }
-
-    float _x, _y;
-
-    _y = y;
-
-    if (licznik_gora_dol > 0)               // ryby plyna gora dol, gora_dol = 0-plyna w gore; 1-plyna tylko poziomo; 2-plyna w dol
-    {
-        if (gora_dol == 0)
-            _y = y + 0.5*szybk_ryb;
-        else if (gora_dol == 2)
-            _y = y - 0.5 * szybk_ryb;
-        licznik_gora_dol--;
-        if (_y >= 850)                      // maksymalne wspolrzedne do kiedy plyna w gore / dol
         {
-            _y = y;
-            gora_dol = 2;
+            _x = x + szybk_ryb;
         }
-        if (_y <= 600)
+        setPos(_x, _y);
+
+        if (x < 150)
         {
-            _y = y;
-            gora_dol = 0;
+            kierunek = false;
+            obrot();
         }
-    }
-
-    if (kierunek)                           // w ktora strone plyna ryby, w zaleznosci od wspolrzednych wielkosci wody (kiedy w lewo i kiedy w prawo)
-    {
-        _x = x - szybk_ryb;
-    }
-    else
-    {
-        _x = x + szybk_ryb;
-    }
-    setPos(_x, _y);
-
-    if (x < 150)
-    {
-        kierunek = false;
-        obrot();
-    }
-    else if (x > 1540 && !kierunek)
-    {
-        kierunek = true;
-        obrot();
-    }
+        else if (x > 1540 && !kierunek)
+        {
+            kierunek = true;
+            obrot();
+        }
     }
 }
 
 void Ryba::lapanie() {
-    if (kierunek) { rybaSprite.setRotation(90); }
-    else { rybaSprite.setRotation(270); }
+    if (kierunek) 
+    {
+        rybaSprite.setRotation(90);
+    }
+    else 
+    {
+        rybaSprite.setRotation(270);
+    }
 
 }
 
 void Ryba::kill(Ryba ryba) {
-    
-    int x1 = rand() % 30 + 1650; 
-    int y1 = rand() % 230 + 610;
 
-    int r = (rand() % 255 + 0);     
+    int x1 = rand() % 30 + 1650;
+    int y1 = rand() % 230 + 610;
+    int r = (rand() % 255 + 0);
     int g = (rand() % 255 + 0);
     int b = (rand() % 255 + 0);
     rybaSprite.setColor(sf::Color(r, g, b, 255));

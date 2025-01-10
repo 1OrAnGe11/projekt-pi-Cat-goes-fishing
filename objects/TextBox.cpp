@@ -44,14 +44,13 @@ bool TextBox::clicked(sf::Event event)
 
 	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 	{
-		if (!mouse_over()) {
-			pomoc = false;
-			pomoc1 = true;
-			if (input == "")
-				zmien_nazwe(napis);
-			return false;
-		}
-		return true;
+		if (mouse_over())
+			return true;
+		pomoc = false;
+		pomoc1 = true;
+		if (input == "")
+			zmien_nazwe(napis);
+		return false;
 	}
 	return false;
 }
@@ -70,8 +69,6 @@ void TextBox::zmien_nazwe(std::string napis)
 
 void TextBox::wpisywanie(sf::Event event)
 {
-	if (clicked(event))
-		pomoc = true;
 	if (pomoc && pomoc1)
 	{
 		pomoc1 = false;
