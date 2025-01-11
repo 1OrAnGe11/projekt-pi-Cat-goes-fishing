@@ -19,7 +19,7 @@ public:
     sf::Text text;
     sf::Font font;
 
-    Popup(sf::RenderWindow* window, float initialX, float initialY, std::string napis, int character_size);
+    Popup(sf::RenderWindow* window, float initialX, float initialY, std::string napis, int character_size, sf::Color kolor_wypelnienia, sf::Color kolor_obramowki);
     void zmien_nazwe_miejsce(float initialX, float initialY, int wartosc);
     void setPos(float x, float y);
     void render();

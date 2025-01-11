@@ -7,6 +7,7 @@ Button::Button(float rozmiar_x, float rozmiar_y, float initialX, float initialY,
 	shape.setFillColor(color);
 	if (!font.loadFromFile("fonts/ARIAL.TTF"))
 		std::cout << "Nie zaladowano fonta" << std::endl;
+	//shape.setTexture(texture);
 	text.setFont(font);
 	text.setString(napis);
 	text.setCharacterSize(character_size);

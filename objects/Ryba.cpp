@@ -48,7 +48,7 @@ sf::Vector2f Ryba::getPos()
     return sf::Vector2f(x, y);
 }
 
-void Ryba::obrot()          // obrot sprite'a ryby, obrot jest od lewego dolnego piksela wiec trzeba pomnozyc wartosc x o w tym wypadku 0.07, zeby obrot byl mniej wiecej o srodek sprite'a
+void Ryba::obrot()          // obrot sprite'a ryby, obrot jest od lewego dolnego piksela wiec trzeba pomnozyc wartosc x, zeby obrot byl mniej wiecej o srodek sprite'a
 {        
     if (czyNaHaczyku == false) {
         if (!kierunek)
@@ -92,6 +92,7 @@ void Ryba::update()
 {
     if (czyNaHaczyku == false) {
         currentFrame++;
+
         if (rand() % 1501 == 1500 && x < 1550)  // szansa na obrocenie sie kierunku plyniecia ryby
         {
             kierunek = !kierunek;
@@ -110,6 +111,11 @@ void Ryba::update()
         float _x, _y;
 
         _y = y;
+
+        /*if (_y > 840)
+        {
+            _y = y - 0.5 * szybk_ryb;
+        }*/
 
         if (licznik_gora_dol > 0)               // ryby plyna gora dol, gora_dol = 0-plyna w gore; 1-plyna tylko poziomo; 2-plyna w dol
         {
@@ -167,6 +173,7 @@ void Ryba::lapanie() {
 
 void Ryba::kill(Ryba ryba) {
 
+    type = rand() % 3;
     int x1 = rand() % 30 + 1650;
     int y1 = rand() % 230 + 610;
     int r = (rand() % 255 + 0);
@@ -177,4 +184,12 @@ void Ryba::kill(Ryba ryba) {
     //ryba.y = y1;
     ryba.setPos(x1, y1);
     rybaSprite.setRotation(0);
+}
+
+void Ryba::zerwana() {
+    czyNaHaczyku = false;
+    kierunek = false; //plyna w prawo
+    obrot();
+    rybaSprite.setRotation(0);
+    setPos(x+50, y);
 }

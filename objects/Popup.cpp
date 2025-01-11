@@ -1,15 +1,15 @@
 #include "Popup.h"
 
-Popup::Popup(sf::RenderWindow* window, float initialX, float initialY, std::string napis, int character_size)
+Popup::Popup(sf::RenderWindow* window, float initialX, float initialY, std::string napis, int character_size, sf::Color kolor_wypelnienia, sf::Color kolor_obramowki)
 {
 	if (!font.loadFromFile("fonts/ARIAL.TTF"))
 		std::cout << "Nie zaladowano fonta" << std::endl;
 	text.setFont(font);
 	text.setString(napis);
 	text.setCharacterSize(character_size);
-	text.setFillColor(sf::Color::Yellow);
+	text.setFillColor(kolor_wypelnienia);
 	text.setOutlineThickness(2);
-	text.setOutlineColor(sf::Color::Red);
+	text.setOutlineColor(kolor_obramowki);
 	text.setStyle(sf::Text::Bold);
 	text.setOrigin(text.getGlobalBounds().getSize() / 2.f + text.getLocalBounds().getPosition());
 	setPos(initialX, initialY);

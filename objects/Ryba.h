@@ -35,6 +35,7 @@ public:
     float poprawka_wspolrzednych;
     void lapanie();
     void kill(Ryba ryba);
+    void zerwana();
 };
 
 #endif
