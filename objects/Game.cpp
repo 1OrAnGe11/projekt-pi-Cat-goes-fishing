@@ -224,7 +224,30 @@ void Game::zlowRybe(Ryba& ryba) {
     ryba.lapanie();
     std::cout << "zlapana";
 }
-
+void Game::zerwijLinke() {
+    for (auto& ryba : ryby) {
+        if(ryba.czyNaHaczyku){
+        ryba.czyNaHaczyku = false;
+        ryba.kill(ryba);
+        ryba.czyNaHaczyku = false;  
+        int x1 = rand() % 30 + 1650;
+        int y1 = rand() % 230 + 610;
+        ryba.setPos(x1, y1);}
+    }
+    /*float xInit = player.getPosition().x + ConstHaczykInitX;
+    float yInit = player.getPosition().y - ConstHaczykInitY;
+    haczyk.setPosition(xInit, yInit);
+    czyTrzyma = true;
+    zarzucanie = false;
+    rzut = false;*/
+    czyTrzyma = true;
+    haczyk.setPosition(player.getPosition().x + ConstHaczykInitX, player.getPosition().y - ConstHaczykInitY);
+    speedY = ConstSpeedY;
+    linkaKolorR = 128;
+    linkaKolorG = 128;
+    linkaKolorB = 128;
+    linka.setFillColor(sf::Color(linkaKolorR,linkaKolorG,linkaKolorB));
+}
 void Game::run() {
     while (window.isOpen())
     {
@@ -242,8 +265,15 @@ void Game::run() {
             }
             if (event.type == sf::Event::KeyPressed && event.key.code == bind_wciaganie && screen == 1)//ciagniecie  
             {
+                czyCiagnie = true;
                 if (rzut == false && zarzucanie == false) {
                     promien -= 3;
+                    linkaKolorR += wytrzymaloscLinki;
+                    linkaKolorG -= wytrzymaloscLinki;
+                    linkaKolorB -= wytrzymaloscLinki;
+                    if (linkaKolorR>=255) {
+                        zerwijLinke();
+                    }
                     if (haczyk.getPosition().y > 474) //bo inaczej nie da sie wci�ga� gdy koliduje z brzegiem
                     {
 
@@ -254,12 +284,19 @@ void Game::run() {
                     }
                 }
             }
-
+            if (event.type == sf::Event::KeyReleased && event.key.code == bind_wciaganie && screen == 1) {
+                czyCiagnie = false;
+                
+            }
             if (event.type == sf::Event::KeyPressed && event.key.code == bind_rzucanie && zarzucanie == false && rzut == false && czyTrzyma && screen == 1) {//zarzu� w�dke (bind do zmiany)
                 zarzucanie = true;
                 rzut = true;
                 czyTrzyma = false;
                 rybyNaHaczyku = 0;
+                linkaKolorR = 128;
+                linkaKolorG = 128;
+                linkaKolorB = 128;
+                linka.setFillColor(sf::Color(linkaKolorR, linkaKolorG, linkaKolorB));
             }
 
             if ( (screen == 1 || screen == 2) && event.type == sf::Event::KeyPressed && event.key.code == bind_przejscie && czyPrzejscie == false) {
@@ -544,9 +581,19 @@ void Game::update(sf::Time deltaTime)
 {
 
     klatka++;
-
+    linka.setFillColor(sf::Color(linkaKolorR, linkaKolorG, linkaKolorB));
     float predkoscKatowa = predkoscLiniowa / promien;
 
+    if (czyCiagnie == false && linkaKolorR > 128) {
+        linkaKolorR -= resetLinki;
+        linkaKolorG += resetLinki;
+        linkaKolorB += resetLinki;
+    }
+    else if (czyCiagnie == false && linkaKolorR < 128) {
+        linkaKolorR = 128;
+        linkaKolorG = 128;
+        linkaKolorB = 128;
+    }
     if (czyPrzejscie) {
         przejscie(deltaTime);
     }
@@ -672,7 +719,7 @@ void Game::update(sf::Time deltaTime)
             float dx = haczyk.getPosition().x - (player.getPosition().x + ConstHaczykInitX);
             float dy = haczyk.getPosition().y - (player.getPosition().y - ConstHaczykInitY);
             float length = std::sqrt(dx * dx + dy * dy);
-            linka.setSize(sf::Vector2f(length, 3.0f)); // 3.0f to grubosc linki 
+            linka.setSize(sf::Vector2f(length, 4.0f)); // 3.0f to grubosc linki 
             if (animacjaWedka2 == false) {
                 linka.setPosition(player.getPosition().x + ConstHaczykInitX, player.getPosition().y - ConstHaczykInitY);
             }

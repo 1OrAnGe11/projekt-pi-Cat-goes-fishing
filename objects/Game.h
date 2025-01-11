@@ -32,7 +32,8 @@ class Game
 private:
     //do zmiany !!!!! (bo czytane z pliku)
     int maxRybyNaHaczyku = 1;
-
+    float wytrzymaloscLinki = 5;//prędkosc z jaka wartosci sie zmieniaja(mniejsze = bardzej wytrzymala)
+    float resetLinki = 0.8;
     //
     sf::RenderWindow window;
     sf::Texture menu_backgroundTexture;
@@ -143,6 +144,11 @@ private:
     sf::Texture wedkaTexture;
     bool animacjaWedka2 = false;
     float katWedki; //do animacji rzutu
+    bool czyCiagnie = false;
+
+    float linkaKolorR = 128;
+    float linkaKolorG = 128;
+    float linkaKolorB = 128;
     //ryby
     std::vector<Ryba> ryby;
 
@@ -184,7 +190,7 @@ private:
     void initZanikanie();
     void przejscie(sf::Time deltaTime);
     void zlowRybe(Ryba& ryba);
-
+    void zerwijLinke();
 public:
     Game();
     void run();
