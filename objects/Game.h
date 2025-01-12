@@ -27,6 +27,7 @@
 #define RozmiarOknaX 1600
 #define RozmiarOknaY 900
 #define ConstPlayerSpeed 5
+#define szybkoscWciagania 6
 
 class Game
 {
@@ -121,11 +122,13 @@ private:
     int czas_pekania = 0;     
     int lowienie_czas = 0;
     int lowienie_czas_klikniecie = 0;
-    int kolor_linki_pekanie1 = 128;
-    int kolor_linki_pekanie2_3 = 128;
-    float ucieczka_popup_x;
-    float ucieczka_popup_y;
-    Popup ucieczka_napis = Popup(&window, ucieczka_popup_x, ucieczka_popup_y, "Linka zerwana", 20, sf::Color::Color(128, 128, 128), sf::Color::Black);
+    int kolor_linki_R = 128;
+    int kolor_linki_G_B = 128;
+    int ilosc_klik_pekniecie = 26;
+    float odleglosc_rzutu = 0.05;     //im mniejsze tym dalej leci
+    int poprawka_ladowanie_haczyka = 35;    //mozliwe ze da sie to mateamatycznie ogarnac ale narazie niech tak bedzie (trzeba zmienic przy zmianie odleglosci rzutu)
+
+    Popup ucieczka_napis = Popup(&window, -100, -100, "Linka zerwana", 20, sf::Color::Color(128, 128, 128), sf::Color::Black);
 
     sf::RectangleShape player;
     sf::CircleShape haczyk;
@@ -167,7 +170,8 @@ private:
     sf::Time elapsed = sf::Time::Zero;
 
     float angle;
-    float promien;
+    float promien_x;
+    float promien_y;
     bool isKeyPressed;
     bool rzut = false;  //�eby podczas zarzucania w�dki nie spada� haczyk i nie da�o si� wci�ga�
     bool czyTrzyma = true;

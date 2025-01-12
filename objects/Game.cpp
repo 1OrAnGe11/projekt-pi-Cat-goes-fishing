@@ -127,7 +127,7 @@ void Game::initRyby() {
         std::cerr << "Blad wczytywania tekstury ryby!" << std::endl;
     }
 
-    while (ryby.size() <= 25)   // spawnuje ryby co 10 klatek, maksymalnie 25 ryb na raz
+    while (ryby.size() < 25)   // spawnuje ryby co 10 klatek, maksymalnie 25 ryb na raz
     {
         int x1 = rand() % 1390 + 150;    // losowe wspolrzedne ryb (takie, ze nie wychodza poza wode)
         //int x1 = rand() % 30 + 1650;    // losowe wspolrzedne ryb (takie, ze nie wychodza poza wode)
@@ -175,7 +175,6 @@ void Game::initHaczyk()       //koniec w�dki (haczyk)
     haczyk.setRadius(10.0f);
     haczyk.setFillColor(sf::Color::Red);
     angle = 0.0f;
-    promien = 100.0f;
     isKeyPressed = false;
     //pozycja(do zmiany)
     float xInit = player.getPosition().x + ConstHaczykInitX;
@@ -195,7 +194,6 @@ void Game::przejscie(sf::Time deltaTime)
     if (pomoc_przejscie)
     {
         alpha = 0;
-        std::cout << "duypa" << alpha << std::endl;
     }
     alpha += fadeSpeed * deltaTime.asSeconds();
     if (alpha > 256) {
@@ -268,18 +266,21 @@ void Game::run() {
                     pomoc_lowienie3 = false;
                     lowienie_czas_klikniecie = lowienie_czas;
                     czas_pekania++;
-                    kolor_linki_pekanie1 += 3;
-                    kolor_linki_pekanie2_3 -= 3;
-                    linka.setFillColor(sf::Color(kolor_linki_pekanie1, kolor_linki_pekanie2_3, kolor_linki_pekanie2_3));
+                    kolor_linki_R += int(127 / ilosc_klik_pekniecie);
+                    kolor_linki_G_B -= int(127 / ilosc_klik_pekniecie);
+                    linka.setFillColor(sf::Color(kolor_linki_R, kolor_linki_G_B, kolor_linki_G_B));
                     if (rzut == false && zarzucanie == false) {
-                        promien -= 3;
-                        if (haczyk.getPosition().y > 474) //bo inaczej nie da sie wci�ga� gdy koliduje z brzegiem
-                        {
-                            //float y = player.getPosition().y + player.getSize().y / 2 + promien * sin(angle);
-                            //opcja wyzej jest lepsza ale pobugowana
-                            float y = haczyk.getPosition().y - 5;
-                            haczyk.setPosition(haczyk.getPosition().x, y);
-                        }
+                        promien_x -= szybkoscWciagania;
+                        promien_y -= szybkoscWciagania;
+                        //if (haczyk.getPosition().y > 474) //bo inaczej nie da sie wci�ga� gdy koliduje z brzegiem
+                        //{
+                        //    //float y = player.getPosition().y + player.getSize().y / 2 + promien * sin(angle);
+                        //    //opcja wyzej jest lepsza ale pobugowana
+                        //    float y = haczyk.getPosition().y - szybkoscWciagania;
+                        //    //if()
+                        //    float x = haczyk.getPosition().x - szybkoscWciagania;
+                        //    haczyk.setPosition(x, y);
+                        //}
                     }
                 }
 
@@ -290,15 +291,18 @@ void Game::run() {
 
                 
 
-                if (czas_pekania == 40)
+                if (czas_pekania == ilosc_klik_pekniecie) //ile klikniec do pekniecia
                 {
+                    float ucieczka_popup_x = haczyk.getPosition().x;
+                    float ucieczka_popup_y = haczyk.getPosition().y;
+                    ucieczka_napis.zmien_nazwe_miejsce(ucieczka_popup_x, ucieczka_popup_y, -1);
                     ucieczka_napis.pomoc_popup = true;
                     czas_pekania = 0;
                     pomoc_lowienie2 = true;
                     pomoc_lowienie = false;
-                    kolor_linki_pekanie1 = 128;
-                    kolor_linki_pekanie2_3 = 128;
-                    linka.setFillColor(sf::Color(kolor_linki_pekanie1, kolor_linki_pekanie2_3, kolor_linki_pekanie2_3));
+                    kolor_linki_R = 128;
+                    kolor_linki_G_B = 128;
+                    linka.setFillColor(sf::Color(kolor_linki_R, kolor_linki_G_B, kolor_linki_G_B));
                 }
             }
             else
@@ -306,14 +310,16 @@ void Game::run() {
                 if (event.type == sf::Event::KeyPressed && event.key.code == bind_wciaganie && screen == 1)//ciagniecie bez ryby  
                 {
                     if (rzut == false && zarzucanie == false) {
-                        promien -= 3;
-                        if (haczyk.getPosition().y > 474) //bo inaczej nie da sie wci�ga� gdy koliduje z brzegiem
-                        {
-                            //float y = player.getPosition().y + player.getSize().y / 2 + promien * sin(angle);
-                            //opcja wyzej jest lepsza ale pobugowana
-                            float y = haczyk.getPosition().y - 5;
-                            haczyk.setPosition(haczyk.getPosition().x, y);
-                        }
+                        promien_x -= szybkoscWciagania;
+                        promien_y -= szybkoscWciagania;
+                        //if (haczyk.getPosition().y > 474) //bo inaczej nie da sie wci�ga� gdy koliduje z brzegiem
+                        //{
+                        //    //float y = player.getPosition().y + player.getSize().y / 2 + promien * sin(angle);
+                        //    //opcja wyzej jest lepsza ale pobugowana
+                        //    float y = haczyk.getPosition().y - szybkoscWciagania;
+                        //    float x = haczyk.getPosition().x - szybkoscWciagania;
+                        //    haczyk.setPosition(x, y);
+                        //}
                     }
                 }
             }
@@ -610,7 +616,7 @@ void Game::update(sf::Time deltaTime)
 
     klatka++;
 
-    float predkoscKatowa = predkoscLiniowa / promien;
+    float predkoscKatowa = predkoscLiniowa / ((promien_y + promien_x) / 2);
 
     if (czyPrzejscie) {
         przejscie(deltaTime);
@@ -626,32 +632,37 @@ void Game::update(sf::Time deltaTime)
             lowienie_czas++;
         }
 
-        if (lowienie_czas - lowienie_czas_klikniecie > 10 && czas_pekania != 0)
+        if (lowienie_czas - lowienie_czas_klikniecie > 20 && czas_pekania != 0)     //20 - odpowiada za czas, podczas ktorego nie mozna klikac, zeby linka sie zresetowala
         {
             czas_pekania--;
-            kolor_linki_pekanie1 -= 3;
-            kolor_linki_pekanie2_3 += 3;
-            linka.setFillColor(sf::Color(kolor_linki_pekanie1, kolor_linki_pekanie2_3, kolor_linki_pekanie2_3));
+            kolor_linki_R -= int(127 / ilosc_klik_pekniecie);
+            kolor_linki_G_B += int(127 / ilosc_klik_pekniecie);
+            linka.setFillColor(sf::Color(kolor_linki_R, kolor_linki_G_B, kolor_linki_G_B));
         }
         // Aktualizacja pozycji haczyka
-        angle += predkoscKatowa;
+
+        if (player.getPosition().x + player.getSize().x / 2 + promien_x * cos(angle) > player.getPosition().x + ConstHaczykInitX)
+            angle += predkoscKatowa;
         if (angle > 2 * M_PI)
             angle -= 2 * M_PI;
 
         if (rzut == false && czyTrzyma == false) {    //spadanie haczyka
-            if (haczyk.getPosition().x > player.getPosition().x + ConstHaczykInitX) {
-                float x = player.getPosition().x + player.getSize().x / 2 + promien * cos(angle);
-                float y = player.getPosition().y + player.getSize().y / 2 + promien * sin(angle);
-                haczyk.setPosition(x, y);
+            float x = player.getPosition().x + player.getSize().x / 2 + promien_x * cos(angle);
+            if (x <= player.getPosition().x + ConstHaczykInitX) {
+                x = player.getPosition().x + ConstHaczykInitX;
             }
+            float y = player.getPosition().y + player.getSize().y / 2 + promien_y  * sin(angle) + poprawka_ladowanie_haczyka;
+
+            //(RozmiarOknaY - powierzchniaWody)
+            haczyk.setPosition(x, y);
         }
 
-        if (haczyk.getPosition().y <= powierzchniaWody && rzut == true) {  //zarzucenie wedki
+        if (haczyk.getPosition().y <= powierzchniaWody + poprawka_ladowanie_haczyka && rzut == true) {  //zarzucenie wedki
             if (zarzucanie == true) {  //animacja zamachu do tylu wedka
                 if (haczyk.getPosition().x > player.getPosition().x)
                 {
-                    float x = haczyk.getPosition().x - 2;
-                    float y = haczyk.getPosition().y - 0.65;
+                    float x = haczyk.getPosition().x - 4;  //szybkosc animacji zarzucania
+                    float y = haczyk.getPosition().y - 1.3; //szybkosc animacji zarzucania
                     haczyk.setPosition(x, y);
                 }
                 else {
@@ -663,41 +674,40 @@ void Game::update(sf::Time deltaTime)
             {
                 float x = haczyk.getPosition().x + ConstSpeedX;
                 float y = haczyk.getPosition().y - speedY;
-                speedY -= 0.05;
+                speedY -= odleglosc_rzutu; //odleglosc rzutu
                 haczyk.setPosition(x, y);
             }
             czyTrzyma = false;
-            promien = sqrt((haczyk.getPosition().x - player.getPosition().x) * (haczyk.getPosition().x - player.getPosition().x) + (haczyk.getPosition().y - player.getPosition().y) * (haczyk.getPosition().y - player.getPosition().y));
+            promien_x = sqrt((haczyk.getPosition().x - player.getPosition().x) * (haczyk.getPosition().x - player.getPosition().x) + (haczyk.getPosition().y - player.getPosition().y) * (haczyk.getPosition().y - player.getPosition().y));
+            promien_y = RozmiarOknaY - powierzchniaWody;
             angle = atan2(haczyk.getPosition().y - player.getPosition().y, haczyk.getPosition().x - player.getPosition().x);
         }
         else {
             rzut = false;
         }
-        if (haczyk.getPosition().x < player.getPosition().x + ConstHaczykInitX && haczyk.getPosition().y > 474 && haczyk.getPosition().y <= player.getPosition().y + 80 && zarzucanie == false) {  //lapanie haczyka
+        if (promien_y < 20 && zarzucanie == false) {  //lapanie haczyka
             czyTrzyma = true;
             haczyk.setPosition(player.getPosition().x + ConstHaczykInitX, player.getPosition().y - ConstHaczykInitY);
             speedY = ConstSpeedY;
 
+            kolor_linki_R = 128;
+            kolor_linki_G_B = 128;
+            linka.setFillColor(sf::Color(kolor_linki_R, kolor_linki_G_B, kolor_linki_G_B));
+            pomoc_lowienie2 = false;
+            pomoc_lowienie = false;
+            czas_pekania = 0;
+            cena_ryby_napis.pomoc_popup = true;
+            rybyNaHaczyku--;
+            kasa_wartosc_napis.wartosc = cala_kasa;
+            kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);
+
             //dla ryb
             for (auto& ryba : ryby) {
                 if (ryba.czyNaHaczyku) {
-                    rybyNaHaczyku--;
-                    kolor_linki_pekanie1 = 128;
-                    kolor_linki_pekanie2_3 = 128;
-                    linka.setFillColor(sf::Color(kolor_linki_pekanie1, kolor_linki_pekanie2_3, kolor_linki_pekanie2_3));
-                    pomoc_lowienie2 = false;
-                    pomoc_lowienie = false;
-                    czas_pekania = 0;
-                    cena_ryby_napis.pomoc_popup = true;
+                    
                     cena_ryby_napis.zmien_nazwe_miejsce(200, 380, ryba.cena);
                     cala_kasa += ryba.cena;
-                    kasa_wartosc_napis.wartosc = cala_kasa;
-                    kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);
-                    ryba.kill(ryba);
-                    ryba.czyNaHaczyku = false;  //nie może być w kill bo resetuje
-                    int x1 = rand() % 30 + 1650;//to też 
-                    int y1 = rand() % 230 + 610;
-                    ryba.setPos(x1, y1);
+                    ryba.kill();
                     std::cout << std::endl << ryba.x << std::endl;
                 }
             }
@@ -810,7 +820,9 @@ void Game::update(sf::Time deltaTime)
                 {
                     ucieczkaRyby(ryba);
                     rybyNaHaczyku--;
-                    haczyk.setPosition(130, 475);
+                    czyTrzyma = true;
+                    haczyk.setPosition(player.getPosition().x + ConstHaczykInitX, player.getPosition().y - ConstHaczykInitY);
+                    speedY = ConstSpeedY;
                     pomoc_lowienie2 = false;
                 }
             }
@@ -909,9 +921,7 @@ void Game::render()
 
         if (ucieczka_napis.pomoc_popup)
         {
-            /*ucieczka_popup_x = haczyk.getGlobalBounds().getSize().x / 2.f + haczyk.getLocalBounds().getPosition().x;
-            ucieczka_popup_y = haczyk.getGlobalBounds().getSize().y / 2.f + haczyk.getLocalBounds().getPosition().y;
-            ucieczka_napis.render();*/
+            ucieczka_napis.render();
         }
 
         break;

@@ -34,7 +34,7 @@ public:
     bool czyNaHaczyku = false;
     float poprawka_wspolrzednych;
     void lapanie();
-    void kill(Ryba ryba);
+    void kill();
     void zerwana();
 };
 

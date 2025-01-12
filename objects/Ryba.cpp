@@ -93,13 +93,13 @@ void Ryba::update()
     if (czyNaHaczyku == false) {
         currentFrame++;
 
-        if (rand() % 1501 == 1500 && x < 1550)  // szansa na obrocenie sie kierunku plyniecia ryby
+        if (rand() % 751 == 750 && x < 1550)  // szansa na obrocenie sie kierunku plyniecia ryby
         {
             kierunek = !kierunek;
             obrot();
         }
 
-        if (rand() % 1501 == 1500)              // szansa na plyniecie do gory / na dol
+        if (rand() % 751 == 750)              // szansa na plyniecie do gory / na dol
         {
             if (rand() % 2 == 0)
                 gora_dol = 0;
@@ -171,8 +171,9 @@ void Ryba::lapanie() {
 
 }
 
-void Ryba::kill(Ryba ryba) {
+void Ryba::kill() {
 
+    czyNaHaczyku = false;
     type = rand() % 3;
     int x1 = rand() % 30 + 1650;
     int y1 = rand() % 230 + 610;
@@ -182,8 +183,8 @@ void Ryba::kill(Ryba ryba) {
     rybaSprite.setColor(sf::Color(r, g, b, 255));
     //ryba.x = x1;
     //ryba.y = y1;
-    ryba.setPos(x1, y1);
     rybaSprite.setRotation(0);
+    setPos(x1, y1);
 }
 
 void Ryba::zerwana() {

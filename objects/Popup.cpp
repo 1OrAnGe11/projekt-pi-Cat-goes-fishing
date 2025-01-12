@@ -42,8 +42,11 @@ void Popup::render()
 
 void Popup::zmien_nazwe_miejsce(float initialX, float initialY, int wartosc)
 {
-	std::string napis = std::to_string(wartosc);
-	napis += '$';
-	text.setString(napis);
+	if (wartosc != -1)
+	{
+		std::string napis = std::to_string(wartosc);
+		napis += '$';
+		text.setString(napis);
+	}
 	setPos(initialX, initialY);
 }
