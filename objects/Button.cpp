@@ -1,7 +1,7 @@
 #include "Button.h"
 
 Button::Button(float rozmiar_x, float rozmiar_y, float initialX, float initialY, sf::Color color, sf::RenderWindow* window, sf::String napis,
-	int character_size)
+	int character_size, sf::Texture& texture)
 {
 	shape.setSize(sf::Vector2f(rozmiar_x, rozmiar_y));
 	shape.setFillColor(color);
@@ -14,6 +14,7 @@ Button::Button(float rozmiar_x, float rozmiar_y, float initialX, float initialY,
 	text.setFillColor(sf::Color::Black);
 	text.setOrigin(text.getGlobalBounds().getSize() / 2.f + text.getLocalBounds().getPosition());
 	text.setPosition(initialX + rozmiar_x / 2, initialY + rozmiar_y / 2) ;
+	buttonSprite.setTexture(texture);
 	setPos(initialX , initialY);
 	this->window = window;
 	this->rozmiar_x = rozmiar_x;

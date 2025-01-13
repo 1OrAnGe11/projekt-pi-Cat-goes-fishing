@@ -26,9 +26,10 @@ public:
     sf::Text text;
     sf::Font font;
     sf::Keyboard::Key bind;
+    sf::Sprite buttonSprite;
 
     Button(float rozmiar_x, float rozmiar_y, float initialX, float initialY, sf::Color color, sf::RenderWindow* window, sf::String napis,
-        int character_size);
+        int character_size, sf::Texture& texture);
     void render();
     void setPos(float x, float y);
     bool clicked(sf::Event event);

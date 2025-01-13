@@ -1,7 +1,7 @@
 #include "TextBox.h"
 
 TextBox::TextBox(float rozmiar_x, float rozmiar_y, float initialX, float initialY, sf::Color color, sf::RenderWindow* window, sf::String napis,
-	int character_size)
+	int character_size, sf::Texture& texture)
 {
 	shape.setSize(sf::Vector2f(rozmiar_x, rozmiar_y));
 	shape.setFillColor(color);
@@ -11,6 +11,7 @@ TextBox::TextBox(float rozmiar_x, float rozmiar_y, float initialX, float initial
 	text.setString(napis);
 	text.setCharacterSize(character_size);
 	text.setFillColor(sf::Color::Black);
+	textboxSprite.setTexture(texture);
 	text.setOrigin(text.getGlobalBounds().getSize() / 2.f + text.getLocalBounds().getPosition());
 	text.setPosition(initialX + rozmiar_x / 2, initialY + rozmiar_y / 2);
 	setPos(initialX, initialY);

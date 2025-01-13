@@ -49,12 +49,21 @@ private:
     sf::Sprite sterowanie_backgroundSprite;
     sf::Texture sklepy_backgroundTexture;
     sf::Sprite sklepy_backgroundSprite;
-    Button start_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Graj", character_size_button);
-    Button options_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Opcje", character_size_button);
-    Button quit_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 150), sf::Color(100, 100, 100, 255), &window, "Wyjdz", character_size_button);
+    sf::Texture sklep1Texture;
+    sf::Sprite sklep1Sprite;
+    sf::Texture sklep2Texture;
+    sf::Sprite sklep2Sprite;
 
-    Button sterowanie_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Sterowanie", character_size_button);
-    Button options_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Cofnij", character_size_button);
+    sf::Texture menu_buttonTexture;
+    sf::Texture krotki_menu_buttonTexture;
+    sf::Texture dlugi_menu_buttonTexture;
+
+    Button start_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Graj", character_size_button, menu_buttonTexture);
+    Button options_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Opcje", character_size_button, menu_buttonTexture);
+    Button quit_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 150), sf::Color(100, 100, 100, 255), &window, "Wyjdz", character_size_button, menu_buttonTexture);
+
+    Button sterowanie_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Sterowanie", character_size_button, menu_buttonTexture);
+    Button options_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Cofnij", character_size_button, menu_buttonTexture);
 
     sf::Keyboard::Key bind_rzucanie = sf::Keyboard::E;
     sf::Keyboard::Key bind_wciaganie = sf::Keyboard::Space;
@@ -63,44 +72,79 @@ private:
     sf::Keyboard::Key bind_chodzenie_prawo = sf::Keyboard::D;
 
     TextBox_znak bind_rzucanie_wedka_button = TextBox_znak(270, 100, (RozmiarOknaX + 60) / 2, (RozmiarOknaY - 875), sf::Color(100, 100, 100, 255), &window, 
-        bind_rzucanie, character_size_button);
+        bind_rzucanie, character_size_button, menu_buttonTexture);
     Button rzucanie_wedka_button = Button(300, 100, (RozmiarOknaX - 650) / 2, (RozmiarOknaY - 875), sf::Color(100, 100, 100, 255), &window,
-        "Rzucanie\n   wedki", character_size_button);
+        "Rzucanie\n   wedki", character_size_button, menu_buttonTexture);
     TextBox_znak bind_wciaganie_wedka_button = TextBox_znak(270, 100, (RozmiarOknaX + 60) / 2, (RozmiarOknaY - 725), sf::Color(100, 100, 100, 255), &window,
-        bind_wciaganie, character_size_button);
+        bind_wciaganie, character_size_button, menu_buttonTexture);
     Button wciaganie_wedka_button = Button(300, 100, (RozmiarOknaX - 650) / 2, (RozmiarOknaY - 725), sf::Color(100, 100, 100, 255), &window,
-        "Wciaganie\n   wedki", character_size_button);
+        "Wciaganie\n   wedki", character_size_button, menu_buttonTexture);
     TextBox_znak bind_przejscie_button = TextBox_znak(270, 100, (RozmiarOknaX + 60) / 2, (RozmiarOknaY - 575), sf::Color(100, 100, 100, 255), &window,
-        bind_przejscie, character_size_button);
+        bind_przejscie, character_size_button, menu_buttonTexture);
     Button przejscie_button = Button(300, 100, (RozmiarOknaX - 650) / 2, (RozmiarOknaY - 575), sf::Color(100, 100, 100, 255), &window,
-        "Przejscie", character_size_button);
+        "Przejscie", character_size_button, menu_buttonTexture);
     TextBox_znak bind_chodzenie_lewo_button = TextBox_znak(270, 100, (RozmiarOknaX + 60) / 2, (RozmiarOknaY - 425), sf::Color(100, 100, 100, 255), &window,
-        bind_chodzenie_lewo, character_size_button);
+        bind_chodzenie_lewo, character_size_button, menu_buttonTexture);
     Button chodzenie_lewo_button = Button(300, 100, (RozmiarOknaX - 650) / 2, (RozmiarOknaY - 425), sf::Color(100, 100, 100, 255), &window,
-        "Chodzenie\n   w lewo", character_size_button);
+        "Chodzenie\n   w lewo", character_size_button, menu_buttonTexture);
     TextBox_znak bind_chodzenie_prawo_button = TextBox_znak(270, 100, (RozmiarOknaX + 60) / 2, (RozmiarOknaY - 275), sf::Color(100, 100, 100, 255), &window,
-        bind_chodzenie_prawo, character_size_button);
+        bind_chodzenie_prawo, character_size_button, menu_buttonTexture);
     Button chodzenie_prawo_button = Button(300, 100, (RozmiarOknaX - 650) / 2, (RozmiarOknaY - 275), sf::Color(100, 100, 100, 255), &window,
-        "Chodzenie\n  w prawo", character_size_button);
-    Button sterowanie_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 125), sf::Color(100, 100, 100, 255), &window, "Cofnij", character_size_button);
+        "Chodzenie\n  w prawo", character_size_button, menu_buttonTexture);
+    Button sterowanie_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 125), sf::Color(100, 100, 100, 255), &window, "Cofnij", character_size_button, menu_buttonTexture);
 
-    Button logowanie_button = Button(300, 100, (RozmiarOknaX + 150) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Konto", character_size_button);
-    Button gosc_button = Button(300, 100, (RozmiarOknaX - 750) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Gosc", character_size_button);
-    Button start_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Cofnij", character_size_button);
+    Button logowanie_button = Button(300, 100, (RozmiarOknaX + 150) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Konto", character_size_button, menu_buttonTexture);
+    Button gosc_button = Button(300, 100, (RozmiarOknaX - 750) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Gosc", character_size_button, menu_buttonTexture);
+    Button start_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Cofnij", character_size_button, menu_buttonTexture);
 
-    TextBox nazwa_button = TextBox(300, 100, (RozmiarOknaX - 800) / 2, (RozmiarOknaY - 750), sf::Color(100, 100, 100, 255), &window, "Nazwa", character_size_button);
-    TextBox haslo_button = TextBox(300, 100, (RozmiarOknaX + 200) / 2, (RozmiarOknaY - 750), sf::Color(100, 100, 100, 255), &window, "Haslo", character_size_button);
-    Button zaloguj_sie_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Zaloguj sie", character_size_button);
-    Button zarejestruj_sie_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Zarejestruj sie", character_size_button);
-    Button logowanie_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 150), sf::Color(100, 100, 100, 255), &window, "Cofnij", character_size_button);
+    TextBox nazwa_button = TextBox(300, 100, (RozmiarOknaX - 800) / 2, (RozmiarOknaY - 750), sf::Color(100, 100, 100, 255), &window, "Nazwa", character_size_button, menu_buttonTexture);
+    TextBox haslo_button = TextBox(300, 100, (RozmiarOknaX + 200) / 2, (RozmiarOknaY - 750), sf::Color(100, 100, 100, 255), &window, "Haslo", character_size_button, menu_buttonTexture);
+    Button zaloguj_sie_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Zaloguj sie", character_size_button, menu_buttonTexture);
+    Button zarejestruj_sie_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350), sf::Color(100, 100, 100, 255), &window, "Zarejestruj sie", character_size_button, menu_buttonTexture);
+    Button logowanie_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 150), sf::Color(100, 100, 100, 255), &window, "Cofnij", character_size_button, menu_buttonTexture);
 
-    Button wznow_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Wznow", character_size_button);
-    Button gra_back_button = Button(400, 100, (RozmiarOknaX - 400) / 2, (RozmiarOknaY - 150), sf::Color(100, 100, 100, 255), &window, "Wyjdz do menu", character_size_button);
+    Button wznow_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Wznow", character_size_button, menu_buttonTexture);
+    Button gra_back_button = Button(400, 100, (RozmiarOknaX - 400) / 2, (RozmiarOknaY - 150), sf::Color(100, 100, 100, 255), &window, "Wyjdz do menu", character_size_button, menu_buttonTexture);
 
-    TextBox dodawanie_nazwa_button = TextBox(300, 100, (RozmiarOknaX - 800) / 2, (RozmiarOknaY - 750), sf::Color(100, 100, 100, 255), &window, "Nazwa", character_size_button);
-    TextBox dodawanie_haslo_button = TextBox(300, 100, (RozmiarOknaX + 200) / 2, (RozmiarOknaY - 750), sf::Color(100, 100, 100, 255), &window, "Haslo", character_size_button);
-    Button dodaj_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Dodaj", character_size_button);
-    Button dodawanie_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 150), sf::Color(100, 100, 100, 255), &window, "Cofnij", character_size_button);
+    TextBox dodawanie_nazwa_button = TextBox(300, 100, (RozmiarOknaX - 800) / 2, (RozmiarOknaY - 750), sf::Color(100, 100, 100, 255), &window, "Nazwa", character_size_button, menu_buttonTexture);
+    TextBox dodawanie_haslo_button = TextBox(300, 100, (RozmiarOknaX + 200) / 2, (RozmiarOknaY - 750), sf::Color(100, 100, 100, 255), &window, "Haslo", character_size_button, menu_buttonTexture);
+    Button dodaj_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550), sf::Color(100, 100, 100, 255), &window, "Dodaj", character_size_button, menu_buttonTexture);
+    Button dodawanie_back_button = Button(300, 100, (RozmiarOknaX - 300) / 2, (RozmiarOknaY - 150), sf::Color(100, 100, 100, 255), &window, "Cofnij", character_size_button, menu_buttonTexture);
+
+    //sprite dla guzikow
+    sf::Sprite start_button_sprite;
+    sf::Sprite options_button_sprite;
+    sf::Sprite quit_button_sprite;
+    sf::Sprite sterowanie_button_sprite;
+    sf::Sprite options_back_button_sprite;
+    sf::Sprite rzucanie_wedka_button_sprite;
+    sf::Sprite wciaganie_wedka_button_sprite;
+    sf::Sprite przejscie_button_sprite;
+    sf::Sprite chodzenie_lewo_button_sprite;
+    sf::Sprite chodzenie_prawo_button_sprite;
+    sf::Sprite sterowanie_back_button_sprite;
+    sf::Sprite logowanie_button_sprite;
+    sf::Sprite gosc_button_sprite;
+    sf::Sprite start_back_button_sprite;
+    sf::Sprite zaloguj_sie_button_sprite;
+    sf::Sprite zarejestruj_sie_button_sprite;
+    sf::Sprite logowanie_back_button_sprite;
+    sf::Sprite wznow_button_sprite;
+    sf::Sprite gra_back_button_sprite;
+    sf::Sprite dodaj_button_sprite;
+    sf::Sprite dodawanie_back_button_sprite;
+
+    sf::Sprite nazwa_button_sprite;
+    sf::Sprite haslo_button_sprite;
+    sf::Sprite dodawanie_nazwa_button_sprite;
+    sf::Sprite dodawanie_haslo_button_sprite;
+
+    sf::Sprite bind_rzucanie_wedka_button_sprite;
+    sf::Sprite bind_wciaganie_wedka_button_sprite;
+    sf::Sprite bind_przejscie_button_sprite;
+    sf::Sprite bind_chodzenie_lewo_button_sprite;
+    sf::Sprite bind_chodzenie_prawo_button_sprite;
+
 
     int screen = 0;
 
@@ -185,6 +229,7 @@ private:
     bool skierowanyWprawo = true;
     bool pomoc_przejscie = false;
     int screen_options_pomoc;
+    int screen_zatrzymanie_pomoc;
     int screen_gra_pomoc = 1;
     bool escape_pomoc = true;
 
@@ -202,6 +247,7 @@ private:
     void przejscie(sf::Time deltaTime);
     void zlowRybe(Ryba& ryba);
     void ucieczkaRyby(Ryba& ryba);
+    void initButton();
 
 public:
     Game();

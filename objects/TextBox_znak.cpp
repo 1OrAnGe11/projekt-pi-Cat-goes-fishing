@@ -1,7 +1,7 @@
 #include "TextBox_znak.h"
 
 TextBox_znak::TextBox_znak(float rozmiar_x, float rozmiar_y, float initialX, float initialY, sf::Color color, sf::RenderWindow* window, sf::Keyboard::Key bind,
-	int character_size)
+	int character_size, sf::Texture& texture)
 {
 	shape.setSize(sf::Vector2f(rozmiar_x, rozmiar_y));
 	shape.setFillColor(color);
@@ -12,6 +12,7 @@ TextBox_znak::TextBox_znak(float rozmiar_x, float rozmiar_y, float initialX, flo
 	text.setString(klawisz_na_unicode(this->bind));
 	text.setCharacterSize(character_size);
 	text.setFillColor(sf::Color::Black);
+    textbox_znakSprite.setTexture(texture);
 	text.setOrigin(text.getGlobalBounds().getSize() / 2.f + text.getLocalBounds().getPosition());
 	text.setPosition(initialX + rozmiar_x / 2, initialY + rozmiar_y / 2);
 	setPos(initialX, initialY);

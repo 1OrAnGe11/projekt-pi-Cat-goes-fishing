@@ -156,6 +156,13 @@ void Ryba::update()
             kierunek = true;
             obrot();
         }
+
+
+        if (y < 600)        //jezeli linka peknie kiedy ryba bedzie poza woda
+        {
+            y = 601;
+            setPos(x, y);
+        }
     }
 }
 

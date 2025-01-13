@@ -15,6 +15,7 @@ Game::Game()
     initRyby();
     initZanikanie();
     initDrewno();
+    initButton();
 
     linka.setFillColor(sf::Color(128, 128, 128)); // Szary kolor 
     linka.setSize(sf::Vector2f(5.0f, 5.0f)); // Pogrubienie linii (szeroko��)
@@ -65,6 +66,20 @@ void Game::initBackground()
     }
     tloSprite.setTexture(tloTexture);
     tloSprite.setPosition(0, 0);
+
+    if (!sklep1Texture.loadFromFile("obrazy/sklep1_background.png"))
+    {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
+    sklep1Sprite.setTexture(sklep1Texture);
+    sklep1Sprite.setPosition(0, 0);
+
+    if (!sklep2Texture.loadFromFile("obrazy/sklep2_background.png"))
+    {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
+    sklep2Sprite.setTexture(sklep2Texture);
+    sklep2Sprite.setPosition(0, 0);
 }
 
 void Game::initDrewno()
@@ -242,6 +257,115 @@ void Game::ucieczkaRyby(Ryba& ryba)
     std::cout << "ucieczka" << std::endl;
 }
 
+void Game::initButton()
+{
+
+    if (!menu_buttonTexture.loadFromFile("obrazy/menu_button.png"))
+    {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
+
+    if (!krotki_menu_buttonTexture.loadFromFile("obrazy/menu_button_krotki.png"))
+    {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
+
+    if (!dlugi_menu_buttonTexture.loadFromFile("obrazy/menu_button_dlugi.png"))
+    {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
+
+    start_button_sprite.setTexture(menu_buttonTexture);
+    start_button_sprite.setPosition((RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550));
+
+    options_button_sprite.setTexture(menu_buttonTexture);
+    options_button_sprite.setPosition((RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350));
+
+    quit_button_sprite.setTexture(menu_buttonTexture);
+    quit_button_sprite.setPosition((RozmiarOknaX - 300) / 2, (RozmiarOknaY - 150));
+
+    sterowanie_button_sprite.setTexture(menu_buttonTexture);
+    sterowanie_button_sprite.setPosition((RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550));
+
+    options_back_button_sprite.setTexture(menu_buttonTexture);
+    options_back_button_sprite.setPosition((RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350));
+
+    rzucanie_wedka_button_sprite.setTexture(menu_buttonTexture);
+    rzucanie_wedka_button_sprite.setPosition((RozmiarOknaX - 650) / 2, (RozmiarOknaY - 875));
+
+    wciaganie_wedka_button_sprite.setTexture(menu_buttonTexture);
+    wciaganie_wedka_button_sprite.setPosition((RozmiarOknaX - 650) / 2, (RozmiarOknaY - 725));
+
+    przejscie_button_sprite.setTexture(menu_buttonTexture);
+    przejscie_button_sprite.setPosition((RozmiarOknaX - 650) / 2, (RozmiarOknaY - 575));
+
+    chodzenie_lewo_button_sprite.setTexture(menu_buttonTexture);
+    chodzenie_lewo_button_sprite.setPosition((RozmiarOknaX - 650) / 2, (RozmiarOknaY - 425));
+
+    chodzenie_prawo_button_sprite.setTexture(menu_buttonTexture);
+    chodzenie_prawo_button_sprite.setPosition((RozmiarOknaX - 650) / 2, (RozmiarOknaY - 275));
+
+    sterowanie_back_button_sprite.setTexture(menu_buttonTexture);
+    sterowanie_back_button_sprite.setPosition((RozmiarOknaX - 300) / 2, (RozmiarOknaY - 125));
+
+    logowanie_button_sprite.setTexture(menu_buttonTexture);
+    logowanie_button_sprite.setPosition((RozmiarOknaX + 150) / 2, (RozmiarOknaY - 550));
+
+    gosc_button_sprite.setTexture(menu_buttonTexture);
+    gosc_button_sprite.setPosition((RozmiarOknaX - 750) / 2, (RozmiarOknaY - 550));
+
+    start_back_button_sprite.setTexture(menu_buttonTexture);
+    start_back_button_sprite.setPosition((RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350));
+
+    zaloguj_sie_button_sprite.setTexture(menu_buttonTexture);
+    zaloguj_sie_button_sprite.setPosition((RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550));
+
+    zarejestruj_sie_button_sprite.setTexture(menu_buttonTexture);
+    zarejestruj_sie_button_sprite.setPosition((RozmiarOknaX - 300) / 2, (RozmiarOknaY - 350));
+
+    logowanie_back_button_sprite.setTexture(menu_buttonTexture);
+    logowanie_back_button_sprite.setPosition((RozmiarOknaX - 300) / 2, (RozmiarOknaY - 150));
+
+    wznow_button_sprite.setTexture(menu_buttonTexture);
+    wznow_button_sprite.setPosition((RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550));
+
+    gra_back_button_sprite.setTexture(dlugi_menu_buttonTexture);
+    gra_back_button_sprite.setPosition((RozmiarOknaX - 400) / 2, (RozmiarOknaY - 150));
+
+    dodaj_button_sprite.setTexture(menu_buttonTexture);
+    dodaj_button_sprite.setPosition((RozmiarOknaX - 300) / 2, (RozmiarOknaY - 550));
+
+    dodawanie_back_button_sprite.setTexture(menu_buttonTexture);
+    dodawanie_back_button_sprite.setPosition((RozmiarOknaX - 300) / 2, (RozmiarOknaY - 150));
+
+    nazwa_button_sprite.setTexture(menu_buttonTexture);
+    nazwa_button_sprite.setPosition((RozmiarOknaX - 800) / 2, (RozmiarOknaY - 750));
+
+    haslo_button_sprite.setTexture(menu_buttonTexture);
+    haslo_button_sprite.setPosition((RozmiarOknaX + 200) / 2, (RozmiarOknaY - 750));
+
+    dodawanie_nazwa_button_sprite.setTexture(menu_buttonTexture);
+    dodawanie_nazwa_button_sprite.setPosition((RozmiarOknaX - 800) / 2, (RozmiarOknaY - 750));
+
+    dodawanie_haslo_button_sprite.setTexture(menu_buttonTexture);
+    dodawanie_haslo_button_sprite.setPosition((RozmiarOknaX + 200) / 2, (RozmiarOknaY - 750));
+
+    bind_rzucanie_wedka_button_sprite.setTexture(krotki_menu_buttonTexture);
+    bind_rzucanie_wedka_button_sprite.setPosition((RozmiarOknaX + 60) / 2, (RozmiarOknaY - 875));
+
+    bind_wciaganie_wedka_button_sprite.setTexture(krotki_menu_buttonTexture);
+    bind_wciaganie_wedka_button_sprite.setPosition((RozmiarOknaX + 60) / 2, (RozmiarOknaY - 725));
+
+    bind_przejscie_button_sprite.setTexture(krotki_menu_buttonTexture);
+    bind_przejscie_button_sprite.setPosition((RozmiarOknaX + 60) / 2, (RozmiarOknaY - 575));
+
+    bind_chodzenie_lewo_button_sprite.setTexture(krotki_menu_buttonTexture);
+    bind_chodzenie_lewo_button_sprite.setPosition((RozmiarOknaX + 60) / 2, (RozmiarOknaY - 425));
+
+    bind_chodzenie_prawo_button_sprite.setTexture(krotki_menu_buttonTexture);
+    bind_chodzenie_prawo_button_sprite.setPosition((RozmiarOknaX + 60) / 2, (RozmiarOknaY - 275));
+}
+
 void Game::run() {
     while (window.isOpen())
     {
@@ -252,18 +376,23 @@ void Game::run() {
             {
                 window.close();
             }
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape && (screen == 1 || screen == 2))//zatrzymanie gry
+
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape && (screen == 1 || screen == 2))  //zatrzymanie gry
             {
                 screen_gra_pomoc = screen;
                 screen = 8;
             }
 
+            //if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape && screen == 8)   // wznowienie gry za pomoca przycisku Escape
+            //{
+            //    screen = screen_gra_pomoc;
+            //}
+
             if (pomoc_lowienie)
             {
-
-                if (event.type == sf::Event::KeyPressed && event.key.code == bind_wciaganie && screen == 1 && pomoc_lowienie3)//ciagniecie z ryba
+                if (event.type == sf::Event::KeyPressed && event.key.code == bind_wciaganie && screen == 1 /*&& pomoc_lowienie3*/)//ciagniecie z ryba
                 {
-                    pomoc_lowienie3 = false;
+                    //pomoc_lowienie3 = false;
                     lowienie_czas_klikniecie = lowienie_czas;
                     czas_pekania++;
                     kolor_linki_R += int(127 / ilosc_klik_pekniecie);
@@ -284,12 +413,10 @@ void Game::run() {
                     }
                 }
 
-                if (event.type == sf::Event::KeyReleased && event.key.code == bind_wciaganie && screen == 1)
+                /*if (event.type == sf::Event::KeyReleased && event.key.code == bind_wciaganie && screen == 1)
                 {
                     pomoc_lowienie3 = true;
-                }
-
-                
+                }*/
 
                 if (czas_pekania == ilosc_klik_pekniecie) //ile klikniec do pekniecia
                 {
@@ -357,6 +484,11 @@ void Game::run() {
             if (event.type == sf::Event::KeyReleased && (event.key.code == bind_chodzenie_lewo || event.key.code == bind_chodzenie_prawo)) {
                 predkosc = 0;
             }
+
+
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape && (screen ==10 || screen == 11))//wychodzenie ze sklepu po nacisnieciu Escape
+                screen = 2;
+
             switch (screen)
             {
             case 0:     //menu
@@ -380,6 +512,19 @@ void Game::run() {
             case 1:     //gra
                 break;
             case 2:     //sklepy
+
+                if (player.getPosition().x >= 1340 && player.getPosition().x <= 1400 && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F)
+                {
+                    screen = 10;    //sklep 1
+                    continue;
+                }
+
+                if (player.getPosition().x >= 250 && player.getPosition().x <= 320 && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F)
+                {
+                screen = 11;    //sklep 2
+                continue;
+                }
+
                 break;
             case 3:     //opcje
                 if (sterowanie_button.clicked(event))
@@ -604,6 +749,7 @@ void Game::run() {
                     screen = 7;
                     continue;
                 }
+                break;
             }
         }
         update(sf::seconds(1.f / 60.f)); 
@@ -708,7 +854,6 @@ void Game::update(sf::Time deltaTime)
                     cena_ryby_napis.zmien_nazwe_miejsce(200, 380, ryba.cena);
                     cala_kasa += ryba.cena;
                     ryba.kill();
-                    std::cout << std::endl << ryba.x << std::endl;
                 }
             }
         }
@@ -832,11 +977,12 @@ void Game::update(sf::Time deltaTime)
 
         break;
     case 2: //sklepy
+            //std::cout << player.getPosition().x << std::endl;
         if ((player.getPosition().x + predkosc) > 20 && (player.getPosition().x + predkosc) < RozmiarOknaX - 110) {
             player.setPosition(player.getPosition().x + predkosc, player.getPosition().y);
             playerSprite.setPosition(player.getPosition().x + predkosc, player.getPosition().y);
         }
-
+        
         czas += deltaTime.asSeconds();
         if (predkosc != 0) {    //animacja chodzenia
 
@@ -850,7 +996,7 @@ void Game::update(sf::Time deltaTime)
                 playerFrameRect.left = playerKlatki * 100;
             }
 
-            std::cout << playerFrameRect.left << " " << playerKlatki << " " << czas << std::endl;
+            //std::cout << playerFrameRect.left << " " << playerKlatki << " " << czas << std::endl;
             playerSprite.setTextureRect(playerFrameRect);
 
         }
@@ -887,14 +1033,14 @@ void Game::render()
     case 0:
         window.draw(menu_backgroundSprite);
 
-        start_button.render();
-        window.draw(start_button.text);
+        window.draw(start_button_sprite);
+        window.draw(start_button.text); // tekst
 
-        options_button.render();
-        window.draw(options_button.text);
+        window.draw(options_button_sprite);
+        window.draw(options_button.text); // tekst
 
-        quit_button.render();
-        window.draw(quit_button.text);
+        window.draw(quit_button_sprite);
+        window.draw(quit_button.text); // tekst
 
         break;
     case 1:      //ryby woda itp
@@ -906,7 +1052,7 @@ void Game::render()
         window.draw(wedkaSprite);
         window.draw(haczyk);
         window.draw(linka);
-        for (auto& ryba : ryby) 
+        for (auto& ryba : ryby)
         {
             window.draw(ryba.rybaSprite);
         }
@@ -935,101 +1081,107 @@ void Game::render()
     case 3:     // opcje
         window.draw(options_backgroundSprite);
 
-        sterowanie_button.render();
-        window.draw(sterowanie_button.text);
+        window.draw(sterowanie_button_sprite);
+        window.draw(sterowanie_button.text); // tekst
 
-        options_back_button.render();
-        window.draw(options_back_button.text);
+        window.draw(options_back_button_sprite);
+        window.draw(options_back_button.text); // tekst
         break;
     case 4:     // wyjscie
         window.close();
     case 5:     // zmiana sterowania
         window.draw(sterowanie_backgroundSprite);
 
-        rzucanie_wedka_button.render();
-        window.draw(rzucanie_wedka_button.text);
-        bind_rzucanie_wedka_button.render();
-        window.draw(bind_rzucanie_wedka_button.text);
+        window.draw(rzucanie_wedka_button_sprite);
+        window.draw(rzucanie_wedka_button.text); // tekst
+        window.draw(bind_rzucanie_wedka_button_sprite);
+        window.draw(bind_rzucanie_wedka_button.text); // tekst
 
-        wciaganie_wedka_button.render();
-        window.draw(wciaganie_wedka_button.text);
-        bind_wciaganie_wedka_button.render();
-        window.draw(bind_wciaganie_wedka_button.text);
+        window.draw(wciaganie_wedka_button_sprite);
+        window.draw(wciaganie_wedka_button.text); // tekst
+        window.draw(bind_wciaganie_wedka_button_sprite);
+        window.draw(bind_wciaganie_wedka_button.text); // tekst
 
-        przejscie_button.render();
-        window.draw(przejscie_button.text);
-        bind_przejscie_button.render();
-        window.draw(bind_przejscie_button.text);
+        window.draw(przejscie_button_sprite);
+        window.draw(przejscie_button.text); // tekst
+        window.draw(bind_przejscie_button_sprite);
+        window.draw(bind_przejscie_button.text); // tekst
 
-        chodzenie_lewo_button.render();
-        window.draw(chodzenie_lewo_button.text);
-        bind_chodzenie_lewo_button.render();
-        window.draw(bind_chodzenie_lewo_button.text);
+        window.draw(chodzenie_lewo_button_sprite);
+        window.draw(chodzenie_lewo_button.text); // tekst
+        window.draw(bind_chodzenie_lewo_button_sprite);
+        window.draw(bind_chodzenie_lewo_button.text); // tekst
 
-        chodzenie_prawo_button.render();
-        window.draw(chodzenie_prawo_button.text);
-        bind_chodzenie_prawo_button.render();
-        window.draw(bind_chodzenie_prawo_button.text);
+        window.draw(chodzenie_prawo_button_sprite);
+        window.draw(chodzenie_prawo_button.text); // tekst
+        window.draw(bind_chodzenie_prawo_button_sprite);
+        window.draw(bind_chodzenie_prawo_button.text); // tekst
 
-        sterowanie_back_button.render();
-        window.draw(sterowanie_back_button.text);
+        window.draw(sterowanie_back_button_sprite);
+        window.draw(sterowanie_back_button.text); // tekst
         break;
     case 6:     //wybor konta
         window.draw(sterowanie_backgroundSprite);
 
-        gosc_button.render();
-        window.draw(gosc_button.text);
+        window.draw(gosc_button_sprite);
+        window.draw(gosc_button.text); // tekst
 
-        logowanie_button.render();
-        window.draw(logowanie_button.text);
+        window.draw(logowanie_button_sprite);
+        window.draw(logowanie_button.text); // tekst
 
-        start_back_button.render();
-        window.draw(start_back_button.text);
+        window.draw(start_back_button_sprite);
+        window.draw(start_back_button.text); // tekst
         break;
     case 7:     //logowanie
         window.draw(sterowanie_backgroundSprite);
 
-        nazwa_button.render();
-        window.draw(nazwa_button.text);
+        window.draw(nazwa_button_sprite);
+        window.draw(nazwa_button.text); // tekst
 
-        haslo_button.render();
-        window.draw(haslo_button.text);
+        window.draw(haslo_button_sprite);
+        window.draw(haslo_button.text); // tekst
 
-        zaloguj_sie_button.render();
-        window.draw(zaloguj_sie_button.text);
+        window.draw(zaloguj_sie_button_sprite);
+        window.draw(zaloguj_sie_button.text); // tekst
 
-        zarejestruj_sie_button.render();
-        window.draw(zarejestruj_sie_button.text);
+        window.draw(zarejestruj_sie_button_sprite);
+        window.draw(zarejestruj_sie_button.text); // tekst
 
-        logowanie_back_button.render();
-        window.draw(logowanie_back_button.text);
+        window.draw(logowanie_back_button_sprite);
+        window.draw(logowanie_back_button.text); // tekst
         break;
     case 8:     //zatrzymanie (escape podczas gry)
         window.draw(sterowanie_backgroundSprite);
 
-        wznow_button.render();
-        window.draw(wznow_button.text);
+        window.draw(wznow_button_sprite);
+        window.draw(wznow_button.text); // tekst
 
-        options_button.render();
-        window.draw(options_button.text);
+        window.draw(options_button_sprite);
+        window.draw(options_button.text); // tekst
 
-        gra_back_button.render();
-        window.draw(gra_back_button.text);
+        window.draw(gra_back_button_sprite);
+        window.draw(gra_back_button.text); // tekst
         break;
     case 9:     //dodawanie konta
         window.draw(sterowanie_backgroundSprite);
 
-        dodawanie_nazwa_button.render();
-        window.draw(dodawanie_nazwa_button.text);
+        window.draw(dodawanie_nazwa_button_sprite);
+        window.draw(dodawanie_nazwa_button.text); // tekst
 
-        dodawanie_haslo_button.render();
-        window.draw(dodawanie_haslo_button.text);
+        window.draw(dodawanie_haslo_button_sprite);
+        window.draw(dodawanie_haslo_button.text); // tekst
 
-        dodaj_button.render();
-        window.draw(dodaj_button.text);
+        window.draw(dodaj_button_sprite);
+        window.draw(dodaj_button.text); // tekst
 
-        dodawanie_back_button.render();
-        window.draw(dodawanie_back_button.text);
+        window.draw(dodawanie_back_button_sprite);
+        window.draw(dodawanie_back_button.text); // tekst
+        break;
+    case 10:
+        window.draw(sklep1Sprite);
+        break;
+    case 11:
+        window.draw(sklep2Sprite);
         break;
     }
     window.draw(zanikanie);

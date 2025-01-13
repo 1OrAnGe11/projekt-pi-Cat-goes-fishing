@@ -18,6 +18,8 @@ public:
     sf::Text text;
     std::string napis;
     std::string input;
+    sf::Sprite textboxSprite;
+
     float x = 0;
     float y = 0;
     float rozmiar_x = 0;
@@ -26,7 +28,7 @@ public:
     bool pomoc1 = true;
     float rozmiar_text_x;
     float rozmiar_text_y;
-    TextBox(float rozmiar_x, float rozmiar_y, float initialX, float initialY, sf::Color color, sf::RenderWindow* window, sf::String napis, int character_size);
+    TextBox(float rozmiar_x, float rozmiar_y, float initialX, float initialY, sf::Color color, sf::RenderWindow* window, sf::String napis, int character_size, sf::Texture& texture);
     bool clicked(sf::Event event);
     void zmien_nazwe(std::string napis);
     void wpisywanie(sf::Event event);
