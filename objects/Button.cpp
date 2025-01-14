@@ -7,14 +7,13 @@ Button::Button(float rozmiar_x, float rozmiar_y, float initialX, float initialY,
 	shape.setFillColor(color);
 	if (!font.loadFromFile("fonts/ARIAL.TTF"))
 		std::cout << "Nie zaladowano fonta" << std::endl;
-	//shape.setTexture(texture);
+	buttonSprite.setTexture(texture);
 	text.setFont(font);
 	text.setString(napis);
 	text.setCharacterSize(character_size);
 	text.setFillColor(sf::Color::Black);
 	text.setOrigin(text.getGlobalBounds().getSize() / 2.f + text.getLocalBounds().getPosition());
 	text.setPosition(initialX + rozmiar_x / 2, initialY + rozmiar_y / 2) ;
-	buttonSprite.setTexture(texture);
 	setPos(initialX , initialY);
 	this->window = window;
 	this->rozmiar_x = rozmiar_x;

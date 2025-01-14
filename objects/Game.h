@@ -53,6 +53,8 @@ private:
     sf::Sprite sklep1Sprite;
     sf::Texture sklep2Texture;
     sf::Sprite sklep2Sprite;
+    sf::Texture domTexture;
+    sf::Sprite domSprite;
 
     sf::Texture menu_buttonTexture;
     sf::Texture krotki_menu_buttonTexture;
@@ -174,6 +176,43 @@ private:
 
     Popup ucieczka_napis = Popup(&window, -100, -100, "Linka zerwana", 20, sf::Color::Color(128, 128, 128), sf::Color::Black);
 
+    sf::Sprite dom_playerSprite;
+    sf::Texture dom_playerTexture;
+
+    //czapki
+    int typ_czapki = 0;
+    bool zalozona = false;      //ogolnie dla czapek
+    bool zalozona1 = false;     //dla poszczegolnych czapek
+    bool zalozona2 = false;
+    bool zalozona3 = false;
+    bool zalozona4 = false;
+    bool zalozona5 = false;
+    bool zalozona6 = false;
+
+    Button czapka1 = Button(270, 132, 170, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, czapka1Texture);
+    sf::Sprite czapka1Sprite;
+    sf::Texture czapka1Texture;
+
+    Button czapka2 = Button(270, 132, 170, 192, sf::Color(0, 0, 0, 0), &window, "", character_size_button, czapka2Texture);
+    sf::Sprite czapka2Sprite;
+    sf::Texture czapka2Texture;
+
+    Button czapka3 = Button(270, 132, 170, 347, sf::Color(0, 0, 0, 0), &window, "", character_size_button, czapka3Texture);
+    sf::Sprite czapka3Sprite;
+    sf::Texture czapka3Texture;
+
+    Button czapka4 = Button(270, 132, 1160, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, czapka4Texture);
+    sf::Sprite czapka4Sprite;
+    sf::Texture czapka4Texture;
+
+    Button czapka5 = Button(270, 132, 1160, 192, sf::Color(0, 0, 0, 0), &window, "", character_size_button, czapka5Texture);
+    sf::Sprite czapka5Sprite;
+    sf::Texture czapka5Texture;
+
+    Button czapka6 = Button(270, 132, 1160, 347, sf::Color(0, 0, 0, 0), &window, "", character_size_button, czapka6Texture);
+    sf::Sprite czapka6Sprite;
+    sf::Texture czapka6Texture;
+
     sf::RectangleShape player;
     sf::CircleShape haczyk;
     sf::Texture texture;
@@ -248,6 +287,7 @@ private:
     void zlowRybe(Ryba& ryba);
     void ucieczkaRyby(Ryba& ryba);
     void initButton();
+    void initCzapki();
 
 public:
     Game();
