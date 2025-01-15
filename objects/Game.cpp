@@ -217,6 +217,7 @@ void Game::initZanikanie() {
     zanikanie.setSize(sf::Vector2f(RozmiarOknaX, RozmiarOknaY));
     zanikanie.setFillColor(sf::Color(0, 0, 0, 0));
 }
+
 void Game::przejscie(sf::Time deltaTime)
 {
     static float alpha = 0; // Aktualna przezroczystość 
@@ -431,6 +432,10 @@ void Game::initCzapki()
     czapka6Sprite.setTexture(czapka6Texture);
     czapka6Sprite.setScale(sf::Vector2f(1.5, 1.5));
     czapka6Sprite.setPosition(1160, 347);
+}
+
+void Game::wczytajDaneGracza() {
+
 }
 
 void Game::run() {
@@ -703,6 +708,7 @@ void Game::run() {
                 haslo_button.wpisywanie(event);
                 nazwa_button.wpisywanie(event);
 
+
                 if (zaloguj_sie_button.clicked(event))
                 {
                     odczyt.open("konta.txt", std::ios::in);
@@ -720,6 +726,9 @@ void Game::run() {
                         if (nazwa_button.input == seglist[0] && haslo_button.input == seglist[1])
                         {
                             screen = 1;
+                            nazwa1 = nazwa_button.input; 
+                            haslo1 = haslo_button.input;
+                            wczytajDaneGracza();
                             continue;
                         }
                         else
@@ -825,6 +834,13 @@ void Game::run() {
                             else
                             {
                                 pomoc_konta = true;
+                                /*nazwa1 = nazwa_button.input;
+                                std::cout << nazwa1 << std::endl;
+                                nazwa1 += ".txt";
+                                std::cout << nazwa1 <<std::endl;
+                                zapis.open(nazwa1,std::ios::out);
+                                zapis << 0 <<";" << maxRybyNaHaczyku << ";" << szybkoscWciagania << ";" << linkaResetUpgrade << ";" << ilosc_klik_pekniecie;
+                                zapis.close();*/
                             }
                             seglist.clear();
                         }
@@ -995,7 +1011,7 @@ void Game::update(sf::Time deltaTime)
             lowienie_czas++;
         }
 
-        if (lowienie_czas - lowienie_czas_klikniecie > 20 && czas_pekania != 0)     //20 - odpowiada za czas, podczas ktorego nie mozna klikac, zeby linka sie zresetowala
+        if (lowienie_czas - lowienie_czas_klikniecie > linkaResetUpgrade && czas_pekania != 0)     // linkaResetUpgrade- odpowiada za czas, podczas ktorego nie mozna klikac, zeby linka sie zresetowala
         {
             czas_pekania--;
             kolor_linki_R -= int(127 / ilosc_klik_pekniecie);

@@ -27,15 +27,19 @@
 #define RozmiarOknaX 1600
 #define RozmiarOknaY 900
 #define ConstPlayerSpeed 5
-#define szybkoscWciagania 6
 
 class Game
 {
 private:
     //do zmiany !!!!! (bo czytane z pliku)
     int maxRybyNaHaczyku = 1;
-
+    int szybkoscWciagania = 3;
+    int linkaResetUpgrade = 45;
+    int ilosc_klik_pekniecie = 20;
     //
+    std::string haslo1;
+    std::string nazwa1;
+
     sf::RenderWindow window;
     sf::Texture menu_backgroundTexture;
     sf::Sprite menu_backgroundSprite;
@@ -170,7 +174,6 @@ private:
     int lowienie_czas_klikniecie = 0;
     int kolor_linki_R = 128;
     int kolor_linki_G_B = 128;
-    int ilosc_klik_pekniecie = 26;
     float odleglosc_rzutu = 0.05;     //im mniejsze tym dalej leci
     int poprawka_ladowanie_haczyka = 35;    //mozliwe ze da sie to mateamatycznie ogarnac ale narazie niech tak bedzie (trzeba zmienic przy zmianie odleglosci rzutu)
 
@@ -288,7 +291,8 @@ private:
     void ucieczkaRyby(Ryba& ryba);
     void initButton();
     void initCzapki();
-
+    void wczytajDaneGracza();
+    void upgrade();
 public:
     Game();
     void run();
