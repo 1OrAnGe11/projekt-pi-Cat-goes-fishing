@@ -36,10 +36,10 @@ private:
     int szybkoscWciagania = 3;
     int linkaResetUpgrade = 45;
     int ilosc_klik_pekniecie = 20;
+
     //
     std::string haslo1;
     std::string nazwa1;
-
     sf::RenderWindow window;
     sf::Texture menu_backgroundTexture;
     sf::Sprite menu_backgroundSprite;
@@ -59,6 +59,10 @@ private:
     sf::Sprite sklep2Sprite;
     sf::Texture domTexture;
     sf::Sprite domSprite;
+    sf::Texture ceny_1Texture;
+    sf::Sprite ceny_1Sprite;
+    sf::Texture ceny_2Texture;
+    sf::Sprite ceny_2Sprite;
 
     sf::Texture menu_buttonTexture;
     sf::Texture krotki_menu_buttonTexture;
@@ -163,7 +167,7 @@ private:
     Popup cena_ryby_napis = Popup(&window, 200, 380, "", 20, sf::Color::Yellow, sf::Color::Red);
 
     Napis kasa_napis = Napis(&window, 1540, 20, "Pieniadze:", 20, sf::Color::Yellow, sf::Color::Red, -1);
-    Napis kasa_wartosc_napis = Napis(&window, 1540, 45, "", 20, sf::Color::Yellow, sf::Color::Red, 0);
+    Napis kasa_wartosc_napis = Napis(&window, 1540, 45, "", 20, sf::Color::Yellow, sf::Color::Red, cala_kasa);
     int cala_kasa = 0;
 
     bool pomoc_lowienie = false;    //jak true to lowimy rybe, jak nie to pusty haczyk
@@ -181,16 +185,30 @@ private:
 
     sf::Sprite dom_playerSprite;
     sf::Texture dom_playerTexture;
+    sf::IntRect dom_playerFrameRect;
+
+    //itemy
+    Button item = Button(270, 132, 170, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, itemTexture);
+    sf::Sprite itemSprite;
+    sf::Texture itemTexture;
+
 
     //czapki
     int typ_czapki = 0;
-    bool zalozona = false;      //ogolnie dla czapek
-    bool zalozona1 = false;     //dla poszczegolnych czapek
-    bool zalozona2 = false;
-    bool zalozona3 = false;
-    bool zalozona4 = false;
-    bool zalozona5 = false;
-    bool zalozona6 = false;
+
+    bool czapka1_kupiona = false;
+    bool czapka2_kupiona = false;
+    bool czapka3_kupiona = false;
+    bool czapka4_kupiona = false;
+    bool czapka5_kupiona = false;
+    bool czapka6_kupiona = false;
+
+    bool zalozona1_pierwszyraz = false;
+    bool zalozona2_pierwszyraz = false;
+    bool zalozona3_pierwszyraz = false;
+    bool zalozona4_pierwszyraz = false;
+    bool zalozona5_pierwszyraz = false;
+    bool zalozona6_pierwszyraz = false;
 
     Button czapka1 = Button(270, 132, 170, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, czapka1Texture);
     sf::Sprite czapka1Sprite;
@@ -291,8 +309,11 @@ private:
     void ucieczkaRyby(Ryba& ryba);
     void initButton();
     void initCzapki();
+    void initItems();
     void wczytajDaneGracza();
     void upgrade();
+
+
 public:
     Game();
     void run();

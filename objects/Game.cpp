@@ -16,6 +16,7 @@ Game::Game()
     initZanikanie();
     initDrewno();
     initButton();
+    initItems();
     initCzapki();
 
     linka.setFillColor(sf::Color(128, 128, 128)); // Szary kolor 
@@ -88,6 +89,20 @@ void Game::initBackground()
     }
     domSprite.setTexture(domTexture);
     domSprite.setPosition(0, 0);
+
+    if (!ceny_1Texture.loadFromFile("obrazy/ceny_sklep1.png"))
+    {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
+    ceny_1Sprite.setTexture(ceny_1Texture);
+    ceny_1Sprite.setPosition(0, 0);
+
+    if (!ceny_2Texture.loadFromFile("obrazy/ceny_sklep2.png"))
+    {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
+    ceny_2Sprite.setTexture(ceny_2Texture);
+    ceny_2Sprite.setPosition(0, 0);
 }
 
 void Game::initDrewno()
@@ -102,7 +117,6 @@ void Game::initDrewno()
 
 void Game::initPlayer()       //do ustawienia pozycji i sprite
 {
-
     if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny.png"))
     {
         std::cout << "Blad wczytywania tekstury!" << std::endl;
@@ -124,8 +138,10 @@ void Game::initPlayer()       //do ustawienia pozycji i sprite
         std::cout << "Blad wczytywania tekstury!" << std::endl;
     }
     dom_playerSprite.setScale(sf::Vector2f(6, 6));
-    dom_playerSprite.setTexture(dom_playerTexture);
     dom_playerSprite.setPosition(610, 200);
+    dom_playerSprite.setTexture(dom_playerTexture);
+    dom_playerFrameRect = sf::IntRect(0, 0, 64, 100);
+    dom_playerSprite.setTextureRect(dom_playerFrameRect);
 }
 
 void Game::initWedka() {
@@ -217,7 +233,6 @@ void Game::initZanikanie() {
     zanikanie.setSize(sf::Vector2f(RozmiarOknaX, RozmiarOknaY));
     zanikanie.setFillColor(sf::Color(0, 0, 0, 0));
 }
-
 void Game::przejscie(sf::Time deltaTime)
 {
     static float alpha = 0; // Aktualna przezroczystość 
@@ -232,7 +247,7 @@ void Game::przejscie(sf::Time deltaTime)
         alpha = 0;
         czyPrzejscie = false;
         if (LokalizacjaRyby == true) {
-            player.setPosition(RozmiarOknaX - 150.0f, 475.0f);
+            player.setPosition(RozmiarOknaX - 150.0f, 600.0f);
             screen = 2;
             LokalizacjaRyby = false; 
             playerSprite.setScale(-1.f, 1.f); // Odbicie poziome
@@ -434,7 +449,19 @@ void Game::initCzapki()
     czapka6Sprite.setPosition(1160, 347);
 }
 
-void Game::wczytajDaneGracza() {
+void Game::initItems()
+{
+    if (!itemTexture.loadFromFile("obrazy/item.png"))          //czapa 1
+    {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
+    itemSprite.setTexture(itemTexture);
+    itemSprite.setScale(sf::Vector2f(1.5, 1.5));
+    itemSprite.setPosition(170, 37);
+}
+
+void Game::wczytajDaneGracza() 
+{
 
 }
 
@@ -444,6 +471,12 @@ void Game::run() {
         sf::Event event;
         while (window.pollEvent(event))
         {
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F1)  //dodawanie kasy, do testowania
+            {
+                cala_kasa += 100;
+                kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);
+            }
+
             if (event.type == sf::Event::Closed)//zamknij okno
             {
                 window.close();
@@ -560,7 +593,6 @@ void Game::run() {
 
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape && (screen == 10 || screen == 11 || screen == 12))
             {
-                playerSprite.setScale(sf::Vector2f(1, 1));
                 screen = 2;         //wychodzenie ze sklepu po nacisnieciu Escape
             }
             switch (screen)
@@ -584,8 +616,12 @@ void Game::run() {
                 }
                 break;
             case 1:     //gra
+                kasa_wartosc_napis.wartosc = cala_kasa;
+                kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);
                 break;
             case 2:     //sklepy
+                kasa_wartosc_napis.wartosc = cala_kasa;
+                kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);
 
                 //sklep 1 (prawy)
                 if (player.getPosition().x >= 1270 && player.getPosition().x <= 1365 && event.type == sf::Event::KeyPressed 
@@ -708,7 +744,6 @@ void Game::run() {
                 haslo_button.wpisywanie(event);
                 nazwa_button.wpisywanie(event);
 
-
                 if (zaloguj_sie_button.clicked(event))
                 {
                     odczyt.open("konta.txt", std::ios::in);
@@ -726,7 +761,7 @@ void Game::run() {
                         if (nazwa_button.input == seglist[0] && haslo_button.input == seglist[1])
                         {
                             screen = 1;
-                            nazwa1 = nazwa_button.input; 
+                            nazwa1 = nazwa_button.input;
                             haslo1 = haslo_button.input;
                             wczytajDaneGracza();
                             continue;
@@ -868,119 +903,184 @@ void Game::run() {
                     continue;
                 }
                 break;
-            case 10:
-                break;
-            case 11:
-                break;
-            case 12:
-                //zalozona standardowo na false
-                if (czapka1.clicked(event) && !zalozona && typ_czapki == 0)    //czapka 1
+            case 10:        //sklep 1
+                kasa_wartosc_napis.wartosc = cala_kasa;
+                kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);
+
+                if (item.clicked(event) && cala_kasa >= 50)
                 {
-                    typ_czapki = 1;
-                    zalozona1 = true;
-                    zalozona = true;
+                    cala_kasa -= 50;
+                    itemSprite.setPosition(0, -300);
+                    continue;
+                }
+
+                break;
+            case 11:        //sklep 2
+                kasa_wartosc_napis.wartosc = cala_kasa;
+                kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);
+
+                if (czapka1.clicked(event) && !czapka1_kupiona && cala_kasa >= 50)    //czapka 1
+                {
+                    cala_kasa -= 50;
+                    czapka1_kupiona = true;
                     czapka1Sprite.setPosition(0, -300);
                     continue;
                 }
 
-                if (czapka1.clicked(event) && zalozona1)
+                if (czapka2.clicked(event) && !czapka2_kupiona && cala_kasa >= 50)    //czapka 2
                 {
-                    typ_czapki = 0;
-                    zalozona1 = false;
-                    zalozona = false;
-                    czapka1Sprite.setPosition(170, 37);
-                    continue;
-                }
-
-                if (czapka2.clicked(event) && !zalozona && typ_czapki == 0)    //czapka 2
-                {
-                    typ_czapki = 2;
-                    zalozona2 = true;
-                    zalozona = true;
+                    cala_kasa -= 50;
+                    czapka2_kupiona = true;
                     czapka2Sprite.setPosition(0, -300);
                     continue;
                 }
 
-                if (czapka2.clicked(event) && zalozona2)
+                if (czapka3.clicked(event) && !czapka3_kupiona && cala_kasa >= 50)    //czapka 3
                 {
-                    typ_czapki = 0;
-                    zalozona2 = false;
-                    zalozona = false;
-                    czapka2Sprite.setPosition(170, 192);
-                    continue;
-                }
-
-                if (czapka3.clicked(event) && !zalozona && typ_czapki == 0)    //czapka 3
-                {
-                    typ_czapki = 3;
-                    zalozona3 = true;
-                    zalozona = true;
+                    cala_kasa -= 50;
+                    czapka3_kupiona = true;
                     czapka3Sprite.setPosition(0, -300);
                     continue;
                 }
 
-                if (czapka3.clicked(event) && zalozona3)
+                if (czapka4.clicked(event) && !czapka4_kupiona && cala_kasa >= 50)    //czapka 4
                 {
-                    typ_czapki = 0;
-                    zalozona3 = false;
-                    zalozona = false;
-                    czapka3Sprite.setPosition(170, 347);
-                    continue;
-                }
-
-                if (czapka4.clicked(event) && !zalozona && typ_czapki == 0)    //czapka 4
-                {
-                    typ_czapki = 4;
-                    zalozona4 = true;
-                    zalozona = true;
+                    cala_kasa -= 50;
+                    czapka4_kupiona = true;
                     czapka4Sprite.setPosition(0, -300);
                     continue;
                 }
 
-                if (czapka4.clicked(event) && zalozona4)
+                if (czapka5.clicked(event) && !czapka5_kupiona && cala_kasa >= 50)    //czapka 5
                 {
-                    typ_czapki = 0;
-                    zalozona4 = false;
-                    zalozona = false;
-                    czapka4Sprite.setPosition(1160, 37);
-                    continue;
-                }
-
-                if (czapka5.clicked(event) && !zalozona && typ_czapki == 0)    //czapka 5
-                {
-                    typ_czapki = 5;
-                    zalozona5 = true;
-                    zalozona = true;
+                    cala_kasa -= 50;
+                    czapka5_kupiona = true;
                     czapka5Sprite.setPosition(0, -300);
                     continue;
                 }
 
-                if (czapka5.clicked(event) && zalozona5)
+                if (czapka6.clicked(event) && !czapka6_kupiona && cala_kasa >= 50)    //czapka 6
                 {
-                    typ_czapki = 0;
-                    zalozona5 = false;
-                    zalozona = false;
-                    czapka5Sprite.setPosition(1160, 192);
-                    continue;
-                }
-
-                if (czapka6.clicked(event) && !zalozona && typ_czapki == 0)    //czapka 6
-                {
-                    typ_czapki = 6;
-                    zalozona6 = true;
-                    zalozona = true;
+                    cala_kasa -= 50;
+                    czapka6_kupiona = true;
                     czapka6Sprite.setPosition(0, -300);
                     continue;
                 }
 
-                if (czapka6.clicked(event) && zalozona6)
+                break;
+            case 12:        //dom
+                kasa_wartosc_napis.wartosc = cala_kasa;
+                kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);
+
+                if (czapka1.clicked(event) && typ_czapki == 0 && czapka1_kupiona)    //czapka 1
+                {
+                    zalozona1_pierwszyraz = true;
+                    typ_czapki = 1;
+                    czapka1Sprite.setPosition(0, -300);
+                    continue;
+                }
+
+                if (czapka1.clicked(event) && typ_czapki == 1)
                 {
                     typ_czapki = 0;
-                    zalozona6 = false;
-                    zalozona = false;
+                    czapka1Sprite.setPosition(170, 37);
+                    continue;
+                }
+
+                if (czapka1_kupiona && !zalozona1_pierwszyraz)
+                    czapka1Sprite.setPosition(170, 37);
+
+                if (czapka2.clicked(event) && typ_czapki == 0 && czapka2_kupiona)    //czapka 2
+                {
+                    zalozona2_pierwszyraz = true;
+                    typ_czapki = 2;
+                    czapka2Sprite.setPosition(0, -300);
+                    continue;
+                }
+
+                if (czapka2.clicked(event) && typ_czapki == 2)
+                {
+                    typ_czapki = 0;
+                    czapka2Sprite.setPosition(170, 192);
+                    continue;
+                }
+
+                if (czapka2_kupiona && !zalozona2_pierwszyraz)
+                {
+                    czapka2Sprite.setPosition(170, 192);
+                }
+
+                if (czapka3.clicked(event) && typ_czapki == 0 && czapka3_kupiona)    //czapka 3
+                {
+                    zalozona3_pierwszyraz = true;
+                    typ_czapki = 3;
+                    czapka3Sprite.setPosition(0, -300);
+                    continue;
+                }
+
+                if (czapka3.clicked(event) && typ_czapki == 3)
+                {
+                    typ_czapki = 0;
+                    czapka3Sprite.setPosition(170, 347);
+                    continue;
+                }
+
+                if (czapka3_kupiona && !zalozona3_pierwszyraz)
+                    czapka3Sprite.setPosition(170, 347);
+
+                if (czapka4.clicked(event) && typ_czapki == 0 && czapka4_kupiona)    //czapka 4
+                {
+                    zalozona4_pierwszyraz = true;
+                    typ_czapki = 4;
+                    czapka4Sprite.setPosition(0, -300);
+                    continue;
+                }
+
+                if (czapka4.clicked(event) && typ_czapki == 4)
+                {
+                    typ_czapki = 0;
+                    czapka4Sprite.setPosition(1160, 37);
+                    continue;
+                }
+
+                if (czapka4_kupiona && !zalozona4_pierwszyraz)
+                    czapka4Sprite.setPosition(1160, 37);
+
+                if (czapka5.clicked(event) && typ_czapki == 0 && czapka5_kupiona)    //czapka 5
+                {
+                    zalozona5_pierwszyraz = true;
+                    typ_czapki = 5;
+                    czapka5Sprite.setPosition(0, -300);
+                    continue;
+                }
+
+                if (czapka5.clicked(event) && typ_czapki == 5)
+                {
+                    typ_czapki = 0;
+                    czapka5Sprite.setPosition(1160, 192);
+                    continue;
+                }
+
+                if (czapka5_kupiona && !zalozona5_pierwszyraz)
+                    czapka5Sprite.setPosition(1160, 192);
+
+                if (czapka6.clicked(event) && typ_czapki == 0 && czapka6_kupiona)    //czapka 6
+                {
+                    zalozona6_pierwszyraz = true;
+                    typ_czapki = 6;
+                    czapka6Sprite.setPosition(0, -300);
+                    continue;
+                }
+
+                if (czapka6.clicked(event) && typ_czapki == 6)
+                {
+                    typ_czapki = 0;
                     czapka6Sprite.setPosition(1160, 347);
                     continue;
                 }
+
+                if (czapka6_kupiona && !zalozona6_pierwszyraz)
+                    czapka6Sprite.setPosition(1160, 347);
                 break;
             }
 
@@ -1011,7 +1111,7 @@ void Game::update(sf::Time deltaTime)
             lowienie_czas++;
         }
 
-        if (lowienie_czas - lowienie_czas_klikniecie > linkaResetUpgrade && czas_pekania != 0)     // linkaResetUpgrade- odpowiada za czas, podczas ktorego nie mozna klikac, zeby linka sie zresetowala
+        if (lowienie_czas - lowienie_czas_klikniecie > linkaResetUpgrade && czas_pekania != 0)     // linkaResetUpgrade - odpowiada za czas, podczas ktorego nie mozna klikac, zeby linka sie zresetowala
         {
             czas_pekania--;
             kolor_linki_R -= int(127 / ilosc_klik_pekniecie);
@@ -1078,7 +1178,7 @@ void Game::update(sf::Time deltaTime)
             cena_ryby_napis.pomoc_popup = true;
             rybyNaHaczyku--;
             kasa_wartosc_napis.wartosc = cala_kasa;
-            kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);
+            kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);  //dupa
 
             //dla ryb
             for (auto& ryba : ryby) {
@@ -1160,10 +1260,6 @@ void Game::update(sf::Time deltaTime)
             }
             linka.setRotation(std::atan2(dy, dx) * 180 / M_PI);
         }
-
-
-
-        
 
         for (auto& ryba : ryby) {
             ryba.update();
@@ -1416,22 +1512,116 @@ void Game::render()
         window.draw(dodawanie_back_button_sprite);
         window.draw(dodawanie_back_button.text); // tekst
         break;
-    case 10:
+    case 10:        //sklep 1
         window.draw(sklep1Sprite);
+        window.draw(ceny_1Sprite);
+        window.draw(itemSprite);
+
+        window.draw(kasa_napis.text);
+        window.draw(kasa_wartosc_napis.text);
         break;
-    case 11:
+    case 11:        //sklep 2
         window.draw(sklep2Sprite);
+
+        if (!czapka1_kupiona)
+            window.draw(czapka1Sprite);
+        if (!czapka2_kupiona)
+            window.draw(czapka2Sprite);
+        if (!czapka3_kupiona)
+            window.draw(czapka3Sprite);
+        if (!czapka4_kupiona)
+            window.draw(czapka4Sprite);
+        if (!czapka5_kupiona)
+            window.draw(czapka5Sprite);
+        if (!czapka6_kupiona)
+            window.draw(czapka6Sprite);
+
+        window.draw(ceny_2Sprite);
+
+        window.draw(kasa_napis.text);
+        window.draw(kasa_wartosc_napis.text);
         break;
-    case 12:
+    case 12:        //dom
         window.draw(domSprite);
         window.draw(dom_playerSprite);
 
-        window.draw(czapka1Sprite);
-        window.draw(czapka2Sprite);
-        window.draw(czapka3Sprite);
-        window.draw(czapka4Sprite);
-        window.draw(czapka5Sprite);
-        window.draw(czapka6Sprite);
+        if(czapka1_kupiona)
+            window.draw(czapka1Sprite);
+        if (czapka2_kupiona)
+            window.draw(czapka2Sprite);
+        if (czapka3_kupiona)
+            window.draw(czapka3Sprite);
+        if (czapka4_kupiona)
+            window.draw(czapka4Sprite);
+        if (czapka5_kupiona)
+            window.draw(czapka5Sprite);
+        if (czapka6_kupiona)
+            window.draw(czapka6Sprite);
+
+        switch (typ_czapki)
+        {
+        case 0:
+            if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny.png"))
+            {
+                std::cout << "Blad wczytywania tekstury!" << std::endl;
+            }
+            dom_playerTexture.loadFromFile("obrazy/player_bezkasy.png");
+            playerFrameRect = sf::IntRect(0, 0, 100, 100); // 2 pierwsze to x,y , 2 ostatnie to wymiary 
+            dom_playerFrameRect = sf::IntRect(0, 0, 64, 100);
+            dom_playerSprite.setPosition(610, 200);
+
+            break;
+        case 1:
+            if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny1.png"))
+            {
+                std::cout << "Blad wczytywania tekstury!" << std::endl;
+            }
+            dom_playerTexture.loadFromFile("obrazy/player_bezkasy1.png");
+            break;
+        case 2:
+            if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny2.png"))
+            {
+                std::cout << "Blad wczytywania tekstury!" << std::endl;
+            }
+            dom_playerTexture.loadFromFile("obrazy/player_bezkasy2.png");
+            break;
+        case 3:
+            if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny.png"))
+            {
+                std::cout << "Blad wczytywania tekstury!" << std::endl;
+            }
+            break;
+        case 4:
+            if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny.png"))
+            {
+                std::cout << "Blad wczytywania tekstury!" << std::endl;
+            }
+            break;
+        case 5:
+            if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny.png"))
+            {
+                std::cout << "Blad wczytywania tekstury!" << std::endl;
+            }
+            break;
+        case 6:
+            if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny.png"))
+            {
+                std::cout << "Blad wczytywania tekstury!" << std::endl;
+            }
+            break;
+        }
+        if (typ_czapki != 0)
+        {
+            playerFrameRect = sf::IntRect(0, 0, 100, 108); // 2 pierwsze to x,y , 2 ostatnie to wymiary 
+            dom_playerFrameRect = sf::IntRect(0, 0, 64, 107);
+            dom_playerSprite.setPosition(610, 158);
+        }
+        dom_playerSprite.setTextureRect(dom_playerFrameRect);
+        dom_playerSprite.setTexture(dom_playerTexture);
+        playerSprite.setTexture(playerTexture);
+        playerSprite.setTextureRect(playerFrameRect);
+        window.draw(kasa_napis.text);
+        window.draw(kasa_wartosc_napis.text);
         break;
     }
 
