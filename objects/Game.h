@@ -162,6 +162,9 @@ private:
     std::fstream odczyt;
     std::string nazwa;
     std::string haslo;
+    int numer_konta_ogolny = 1;
+    int numb_lines_konta = 0;
+    bool zaloguj_sie_pomoc = false;
 
     std::string cena_ryba;
     Popup cena_ryby_napis = Popup(&window, 200, 380, "", 20, sf::Color::Yellow, sf::Color::Red);
@@ -188,20 +191,48 @@ private:
     sf::IntRect dom_playerFrameRect;
 
     //itemy
+
+    int upgrade1_kupiona = 0;
+    int upgrade2_kupiona = 0;
+    int upgrade3_kupiona = 0;
+    int upgrade4_kupiona = 0;
+    int upgrade5_kupiona = 0;
+    int upgrade6_kupiona = 0;
+
+    Button linkaResetUpgrade1_button = Button(270, 132, 170, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, linkaResetUpgrade1_buttonTexture);
+    sf::Sprite linkaResetUpgrade1_buttonSprite;
+    sf::Texture linkaResetUpgrade1_buttonTexture;
+
+    /*Button item = Button(270, 132, 170, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, itemTexture);
+    sf::Sprite itemSprite;
+    sf::Texture itemTexture;
+
     Button item = Button(270, 132, 170, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, itemTexture);
     sf::Sprite itemSprite;
     sf::Texture itemTexture;
+
+    Button item = Button(270, 132, 170, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, itemTexture);
+    sf::Sprite itemSprite;
+    sf::Texture itemTexture;
+
+    Button item = Button(270, 132, 170, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, itemTexture);
+    sf::Sprite itemSprite;
+    sf::Texture itemTexture;
+
+    Button item = Button(270, 132, 170, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, itemTexture);
+    sf::Sprite itemSprite;
+    sf::Texture itemTexture;*/
 
 
     //czapki
     int typ_czapki = 0;
 
-    bool czapka1_kupiona = false;
-    bool czapka2_kupiona = false;
-    bool czapka3_kupiona = false;
-    bool czapka4_kupiona = false;
-    bool czapka5_kupiona = false;
-    bool czapka6_kupiona = false;
+    int czapka1_kupiona = 0;
+    int czapka2_kupiona = 0;
+    int czapka3_kupiona = 0;
+    int czapka4_kupiona = 0;
+    int czapka5_kupiona = 0;
+    int czapka6_kupiona = 0;
 
     bool zalozona1_pierwszyraz = false;
     bool zalozona2_pierwszyraz = false;
@@ -312,6 +343,7 @@ private:
     void initItems();
     void wczytajDaneGracza();
     void upgrade();
+    void update_do_pliku();
 
 
 public:

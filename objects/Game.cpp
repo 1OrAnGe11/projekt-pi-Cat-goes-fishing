@@ -451,13 +451,73 @@ void Game::initCzapki()
 
 void Game::initItems()
 {
-    if (!itemTexture.loadFromFile("obrazy/item.png"))          //czapa 1
+    if (!linkaResetUpgrade1_buttonTexture.loadFromFile("obrazy/item.png"))          //czapa 1
     {
         std::cout << "Blad wczytywania tekstury!" << std::endl;
     }
-    itemSprite.setTexture(itemTexture);
-    itemSprite.setScale(sf::Vector2f(1.5, 1.5));
-    itemSprite.setPosition(170, 37);
+    linkaResetUpgrade1_buttonSprite.setTexture(linkaResetUpgrade1_buttonTexture);
+    linkaResetUpgrade1_buttonSprite.setScale(sf::Vector2f(1.5, 1.5));
+    linkaResetUpgrade1_buttonSprite.setPosition(170, 37);
+}
+
+void Game::update_do_pliku()
+{
+    //maxRybyNaHaczyku, szybkoscWciagania, linkaResetUpgrade, ilosc_klik_pekniecie
+                        //numer_konta_ogolny
+    int numer_konta = 1;
+    std::string plik;
+    std::string line;
+
+    odczyt.open("konta.txt", std::ios::in);
+
+    while (!odczyt.eof())
+    {
+        getline(odczyt, line);
+        numb_lines_konta++;
+    }
+
+    odczyt.clear();  // Resetuje flagi błędu EOF
+    odczyt.seekg(0, std::ios::beg);  // Ustawia wskaźnik odczytu na początek pliku
+    line = "";
+
+    while (numer_konta <= numb_lines_konta)
+    {
+        getline(odczyt, line);
+        if (numer_konta != numer_konta_ogolny)
+        {
+            if(numer_konta == numb_lines_konta)
+                plik += line;
+            else
+                plik += line + '\n';
+        }
+        else
+        {
+            if (numer_konta == numb_lines_konta)
+            {
+                plik += nazwa1 + ';' + haslo1 + ';' + std::to_string(maxRybyNaHaczyku) + ';' + std::to_string(szybkoscWciagania)
+                    + ';' + std::to_string(linkaResetUpgrade) + ';' + std::to_string(ilosc_klik_pekniecie) + ';' + std::to_string(czapka1_kupiona)
+                    + ';' + std::to_string(czapka2_kupiona) + ';' + std::to_string(czapka3_kupiona) + ';' + std::to_string(czapka4_kupiona)
+                    + ';' + std::to_string(czapka5_kupiona) + ';' + std::to_string(czapka6_kupiona) + ';' + std::to_string(cala_kasa) + ';';
+            }
+            else
+            {
+                plik += nazwa1 + ';' + haslo1 + ';' + std::to_string(maxRybyNaHaczyku) + ';' + std::to_string(szybkoscWciagania)
+                    + ';' + std::to_string(linkaResetUpgrade) + ';' + std::to_string(ilosc_klik_pekniecie) + ';' + std::to_string(czapka1_kupiona)
+                    + ';' + std::to_string(czapka2_kupiona) + ';' + std::to_string(czapka3_kupiona) + ';' + std::to_string(czapka4_kupiona)
+                    + ';' + std::to_string(czapka5_kupiona) + ';' + std::to_string(czapka6_kupiona) + ';' + std::to_string(cala_kasa) + ';' + '\n';
+            }
+        }
+        numer_konta++;
+    }
+    odczyt.close();
+
+    remove("konta.txt");
+
+    zapis.open("konta.txt", std::ios::out | std::ios::app);
+
+    zapis << plik;
+    
+    zapis.close();
 }
 
 void Game::wczytajDaneGracza() 
@@ -487,11 +547,6 @@ void Game::run() {
                 screen_gra_pomoc = screen;
                 screen = 8;
             }
-
-            //if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape && screen == 8)   // wznowienie gry za pomoca przycisku Escape
-            //{
-            //    screen = screen_gra_pomoc;
-            //}
 
             if (pomoc_lowienie)
             {
@@ -611,8 +666,11 @@ void Game::run() {
                 }
                 if (quit_button.clicked(event))
                 {
-                    screen = 4;
-                    continue;
+                    if (zaloguj_sie_pomoc)
+                    {
+                        update_do_pliku();
+                    }
+                    return;
                 }
                 break;
             case 1:     //gra
@@ -746,6 +804,7 @@ void Game::run() {
 
                 if (zaloguj_sie_button.clicked(event))
                 {
+                    zaloguj_sie_pomoc = true;
                     odczyt.open("konta.txt", std::ios::in);
 
                     std::string konto_string;
@@ -761,13 +820,27 @@ void Game::run() {
                         if (nazwa_button.input == seglist[0] && haslo_button.input == seglist[1])
                         {
                             screen = 1;
-                            nazwa1 = nazwa_button.input;
-                            haslo1 = haslo_button.input;
+                            nazwa1 = seglist[0];
+                            haslo1 = seglist[1];
+                            maxRybyNaHaczyku = stoi(seglist[2]);        //stoi - string to int
+                            szybkoscWciagania = stoi(seglist[3]);
+                            linkaResetUpgrade = stoi(seglist[4]);
+                            ilosc_klik_pekniecie = stoi(seglist[5]);
+                            czapka1_kupiona = stoi(seglist[6]);
+                            czapka2_kupiona = stoi(seglist[7]);
+                            czapka3_kupiona = stoi(seglist[8]);
+                            czapka4_kupiona = stoi(seglist[9]);
+                            czapka5_kupiona = stoi(seglist[10]);
+                            czapka6_kupiona = stoi(seglist[11]);
+                            cala_kasa = stoi(seglist[12]);
+
+
                             wczytajDaneGracza();
                             continue;
                         }
                         else
                         {
+                            numer_konta_ogolny++;
                             zaloguj_sie_button.zmien_nazwe("   Konto\nnie istnieje");
                         }
                         seglist.clear();
@@ -869,13 +942,6 @@ void Game::run() {
                             else
                             {
                                 pomoc_konta = true;
-                                /*nazwa1 = nazwa_button.input;
-                                std::cout << nazwa1 << std::endl;
-                                nazwa1 += ".txt";
-                                std::cout << nazwa1 <<std::endl;
-                                zapis.open(nazwa1,std::ios::out);
-                                zapis << 0 <<";" << maxRybyNaHaczyku << ";" << szybkoscWciagania << ";" << linkaResetUpgrade << ";" << ilosc_klik_pekniecie;
-                                zapis.close();*/
                             }
                             seglist.clear();
                         }
@@ -885,7 +951,9 @@ void Game::run() {
                     if (pomoc_konta)
                     {
                         zapis.open("konta.txt", std::ios::out | std::ios::app);
-                        zapis << dodawanie_nazwa_button.input << ";" << dodawanie_haslo_button.input << ";" << std::endl;
+                        zapis << dodawanie_nazwa_button.input << ";" << dodawanie_haslo_button.input 
+                            << ";" << 1 << ";" << 3 << ";" << 45 << ";" << 20 << ";" << 0 << ";" << 0 
+                            << ";" << 0 << ";" << 0 << ";" << 0 << ";" << 0 << ";" << 0 << ";" << std::endl;
                         zapis.close();
                     }
                     continue;
@@ -907,10 +975,11 @@ void Game::run() {
                 kasa_wartosc_napis.wartosc = cala_kasa;
                 kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);
 
-                if (item.clicked(event) && cala_kasa >= 50)
+                if (linkaResetUpgrade1_button.clicked(event) && cala_kasa >= 50)
                 {
                     cala_kasa -= 50;
-                    itemSprite.setPosition(0, -300);
+                    linkaResetUpgrade += 20;
+                    linkaResetUpgrade1_buttonSprite.setPosition(0, -300);
                     continue;
                 }
 
@@ -922,7 +991,7 @@ void Game::run() {
                 if (czapka1.clicked(event) && !czapka1_kupiona && cala_kasa >= 50)    //czapka 1
                 {
                     cala_kasa -= 50;
-                    czapka1_kupiona = true;
+                    czapka1_kupiona = 1;
                     czapka1Sprite.setPosition(0, -300);
                     continue;
                 }
@@ -930,7 +999,7 @@ void Game::run() {
                 if (czapka2.clicked(event) && !czapka2_kupiona && cala_kasa >= 50)    //czapka 2
                 {
                     cala_kasa -= 50;
-                    czapka2_kupiona = true;
+                    czapka2_kupiona = 1;
                     czapka2Sprite.setPosition(0, -300);
                     continue;
                 }
@@ -938,7 +1007,7 @@ void Game::run() {
                 if (czapka3.clicked(event) && !czapka3_kupiona && cala_kasa >= 50)    //czapka 3
                 {
                     cala_kasa -= 50;
-                    czapka3_kupiona = true;
+                    czapka3_kupiona = 1;
                     czapka3Sprite.setPosition(0, -300);
                     continue;
                 }
@@ -946,7 +1015,7 @@ void Game::run() {
                 if (czapka4.clicked(event) && !czapka4_kupiona && cala_kasa >= 50)    //czapka 4
                 {
                     cala_kasa -= 50;
-                    czapka4_kupiona = true;
+                    czapka4_kupiona = 1;
                     czapka4Sprite.setPosition(0, -300);
                     continue;
                 }
@@ -954,7 +1023,7 @@ void Game::run() {
                 if (czapka5.clicked(event) && !czapka5_kupiona && cala_kasa >= 50)    //czapka 5
                 {
                     cala_kasa -= 50;
-                    czapka5_kupiona = true;
+                    czapka5_kupiona = 1;
                     czapka5Sprite.setPosition(0, -300);
                     continue;
                 }
@@ -962,7 +1031,7 @@ void Game::run() {
                 if (czapka6.clicked(event) && !czapka6_kupiona && cala_kasa >= 50)    //czapka 6
                 {
                     cala_kasa -= 50;
-                    czapka6_kupiona = true;
+                    czapka6_kupiona = 1;
                     czapka6Sprite.setPosition(0, -300);
                     continue;
                 }
@@ -1178,7 +1247,7 @@ void Game::update(sf::Time deltaTime)
             cena_ryby_napis.pomoc_popup = true;
             rybyNaHaczyku--;
             kasa_wartosc_napis.wartosc = cala_kasa;
-            kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);  //dupa
+            kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);
 
             //dla ryb
             for (auto& ryba : ryby) {
@@ -1423,7 +1492,7 @@ void Game::render()
         window.draw(options_back_button.text); // tekst
         break;
     case 4:     // wyjscie
-        window.close();
+        return;
     case 5:     // zmiana sterowania
         window.draw(sterowanie_backgroundSprite);
 
@@ -1515,7 +1584,7 @@ void Game::render()
     case 10:        //sklep 1
         window.draw(sklep1Sprite);
         window.draw(ceny_1Sprite);
-        window.draw(itemSprite);
+        window.draw(linkaResetUpgrade1_buttonSprite);
 
         window.draw(kasa_napis.text);
         window.draw(kasa_wartosc_napis.text);
