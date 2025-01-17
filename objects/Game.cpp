@@ -142,6 +142,10 @@ void Game::initPlayer()       //do ustawienia pozycji i sprite
     dom_playerSprite.setTexture(dom_playerTexture);
     dom_playerFrameRect = sf::IntRect(0, 0, 64, 100);
     dom_playerSprite.setTextureRect(dom_playerFrameRect);
+    if (!skierowanyWprawo)
+    {
+        playerSprite.setScale(-1.f, 1.f); // Odbicie poziome
+    }
 }
 
 void Game::initWedka() {
@@ -472,9 +476,12 @@ void Game::update_do_pliku()
 
     while (!odczyt.eof())
     {
-        getline(odczyt, line);
-        numb_lines_konta++;
+        getline(odczyt, line, '\n');
+        std::cout << line << std::endl;
+        if(line != "" && line != "\n")
+            numb_lines_konta++;
     }
+    //numb_lines_konta -= 1;
 
     odczyt.clear();  // Resetuje flagi błędu EOF
     odczyt.seekg(0, std::ios::beg);  // Ustawia wskaźnik odczytu na początek pliku
@@ -482,33 +489,26 @@ void Game::update_do_pliku()
 
     while (numer_konta <= numb_lines_konta)
     {
-        getline(odczyt, line);
+        getline(odczyt, line, '\n');
         if (numer_konta != numer_konta_ogolny)
         {
-            if(numer_konta == numb_lines_konta)
-                plik += line;
-            else
-                plik += line + '\n';
+            plik += line;
         }
         else
         {
-            if (numer_konta == numb_lines_konta)
-            {
-                plik += nazwa1 + ';' + haslo1 + ';' + std::to_string(maxRybyNaHaczyku) + ';' + std::to_string(szybkoscWciagania)
-                    + ';' + std::to_string(linkaResetUpgrade) + ';' + std::to_string(ilosc_klik_pekniecie) + ';' + std::to_string(czapka1_kupiona)
-                    + ';' + std::to_string(czapka2_kupiona) + ';' + std::to_string(czapka3_kupiona) + ';' + std::to_string(czapka4_kupiona)
-                    + ';' + std::to_string(czapka5_kupiona) + ';' + std::to_string(czapka6_kupiona) + ';' + std::to_string(cala_kasa) + ';';
-            }
-            else
-            {
-                plik += nazwa1 + ';' + haslo1 + ';' + std::to_string(maxRybyNaHaczyku) + ';' + std::to_string(szybkoscWciagania)
-                    + ';' + std::to_string(linkaResetUpgrade) + ';' + std::to_string(ilosc_klik_pekniecie) + ';' + std::to_string(czapka1_kupiona)
-                    + ';' + std::to_string(czapka2_kupiona) + ';' + std::to_string(czapka3_kupiona) + ';' + std::to_string(czapka4_kupiona)
-                    + ';' + std::to_string(czapka5_kupiona) + ';' + std::to_string(czapka6_kupiona) + ';' + std::to_string(cala_kasa) + ';' + '\n';
-            }
+            plik += nazwa1 + ';' + haslo1 + ';' + std::to_string(maxRybyNaHaczyku) + ';' + std::to_string(szybkoscWciagania)
+                + ';' + std::to_string(linkaResetUpgrade) + ';' + std::to_string(ilosc_klik_pekniecie) + ';' + std::to_string(czapka1_kupiona)
+                + ';' + std::to_string(czapka2_kupiona) + ';' + std::to_string(czapka3_kupiona) + ';' + std::to_string(czapka4_kupiona)
+                + ';' + std::to_string(czapka5_kupiona) + ';' + std::to_string(czapka6_kupiona) + ';' + std::to_string(cala_kasa) + ';';
         }
+        plik += '\n';
+        printf("lines %i\nnumer konta %i\nnumer_konta_ogolny %i\n", numb_lines_konta, numer_konta, numer_konta_ogolny);
         numer_konta++;
     }
+    /*if (numer_konta == numb_lines_konta+1)
+    {
+        printf("elo\n");
+    }*/
     odczyt.close();
 
     remove("konta.txt");
@@ -518,6 +518,49 @@ void Game::update_do_pliku()
     zapis << plik;
     
     zapis.close();
+    numb_lines_konta = 0;
+    numer_konta_ogolny = 1;
+}
+
+void Game::reset()
+{
+    //resetuje gracza
+    playerTexture.loadFromFile("obrazy/player spritesheet pelny.png");
+    dom_playerTexture.loadFromFile("obrazy/player_bezkasy.png");
+
+    playerFrameRect = sf::IntRect(0, 0, 100, 100); // 2 pierwsze to x,y , 2 ostatnie to wymiary 
+    dom_playerFrameRect = sf::IntRect(0, 0, 64, 100);
+    dom_playerSprite.setPosition(610, 200);
+
+    playerFrameRect.left = 300;
+    playerSprite.setTextureRect(playerFrameRect);
+    player.setPosition(75.0f, 475.0f);
+    playerSprite.setPosition(75.0f, 475.0f);
+    if (skierowanyWprawo == false) {
+        playerSprite.setScale(1.f, 1.f);
+        skierowanyWprawo = true;
+    }
+    playerSprite.setTexture(playerTexture);
+
+    //reset ryb
+    initRyby();
+
+    //reset linki
+    rzut = false;
+    zarzucanie = false;
+    promien_y = 0;
+    rybyNaHaczyku = 0;
+
+    //reset czapek
+    typ_czapki = 0;
+    czapka1Sprite.setPosition(170, 37);
+    czapka2Sprite.setPosition(170, 192);
+    czapka3Sprite.setPosition(170, 347);
+    czapka4Sprite.setPosition(1160, 37);
+    czapka5Sprite.setPosition(1160, 192);
+    czapka6Sprite.setPosition(1160, 347);
+
+    LokalizacjaRyby = true;
 }
 
 void Game::wczytajDaneGracza() 
@@ -666,10 +709,6 @@ void Game::run() {
                 }
                 if (quit_button.clicked(event))
                 {
-                    if (zaloguj_sie_pomoc)
-                    {
-                        update_do_pliku();
-                    }
                     return;
                 }
                 break;
@@ -773,7 +812,35 @@ void Game::run() {
             case 6:     //wybor konta
                 if (gosc_button.clicked(event))
                 {
-                    screen = screen_gra_pomoc;
+                    //reset zapisanych informacji przy wyborze goscia
+                    maxRybyNaHaczyku = 1;
+                    szybkoscWciagania = 3;
+                    linkaResetUpgrade = 45;
+                    ilosc_klik_pekniecie = 20;
+
+                    czapka1_kupiona = 0;
+                    czapka2_kupiona = 0;
+                    czapka3_kupiona = 0;
+                    czapka4_kupiona = 0;
+                    czapka5_kupiona = 0;
+                    czapka6_kupiona = 0;
+
+                    zalozona1_pierwszyraz = false;
+                    zalozona2_pierwszyraz = false;
+                    zalozona3_pierwszyraz = false;
+                    zalozona4_pierwszyraz = false;
+                    zalozona5_pierwszyraz = false;
+                    zalozona6_pierwszyraz = false;
+
+                    typ_czapki = 0;
+
+                    cala_kasa = 0;
+
+                    wczytywanie_info_pomc = false;
+
+                    reset();
+                    
+                    screen = 1;
                     continue;
                 }
                 if (logowanie_button.clicked(event))
@@ -790,12 +857,18 @@ void Game::run() {
                 if (nazwa_button.clicked(event))
                 {
                     nazwa_button.pomoc = true;
+                    haslo_button.pomoc = false;
+                    if(haslo_button.input == "")
+                        haslo_button.zmien_nazwe("Haslo");
                     continue;
                 }
 
                 if (haslo_button.clicked(event))
                 {
                     haslo_button.pomoc = true;
+                    nazwa_button.pomoc = false;
+                    if (nazwa_button.input == "")
+                        nazwa_button.zmien_nazwe("Nazwa");
                     continue;
                 }
 
@@ -804,63 +877,99 @@ void Game::run() {
 
                 if (zaloguj_sie_button.clicked(event))
                 {
-                    zaloguj_sie_pomoc = true;
                     odczyt.open("konta.txt", std::ios::in);
 
                     std::string konto_string;
                     std::string ss;
                     std::vector<std::string> seglist;
-                    while (getline(odczyt, konto_string))
-                    {
-                        std::stringstream s(konto_string);
-                        while (getline(s, ss, ';'))
-                        {
-                            seglist.push_back(ss);
-                        }
-                        if (nazwa_button.input == seglist[0] && haslo_button.input == seglist[1])
-                        {
-                            screen = 1;
-                            nazwa1 = seglist[0];
-                            haslo1 = seglist[1];
-                            maxRybyNaHaczyku = stoi(seglist[2]);        //stoi - string to int
-                            szybkoscWciagania = stoi(seglist[3]);
-                            linkaResetUpgrade = stoi(seglist[4]);
-                            ilosc_klik_pekniecie = stoi(seglist[5]);
-                            czapka1_kupiona = stoi(seglist[6]);
-                            czapka2_kupiona = stoi(seglist[7]);
-                            czapka3_kupiona = stoi(seglist[8]);
-                            czapka4_kupiona = stoi(seglist[9]);
-                            czapka5_kupiona = stoi(seglist[10]);
-                            czapka6_kupiona = stoi(seglist[11]);
-                            cala_kasa = stoi(seglist[12]);
+                    std::string line;
+                    int liczba_linijek = 0;
 
-
-                            wczytajDaneGracza();
-                            continue;
-                        }
-                        else
+                    try {
+                        while (getline(odczyt, konto_string))
                         {
-                            numer_konta_ogolny++;
-                            zaloguj_sie_button.zmien_nazwe("   Konto\nnie istnieje");
+                            std::stringstream s(konto_string);
+                            while (getline(s, ss, ';'))
+                            {
+                                seglist.push_back(ss);
+                            }
+                            if (seglist.size() != 13) {
+                                std::cout << "Blad wczytywania konta, dlugosc " << seglist.size() << std::endl;
+                                continue;
+                            }
+                            if (nazwa_button.input == seglist[0] && haslo_button.input == seglist[1])
+                            {
+                                nazwa_button.input = "";
+                                nazwa_button.zmien_nazwe("Nazwa");
+
+                                haslo_button.input = "";
+                                haslo_button.zmien_nazwe("Haslo");
+
+                                zaloguj_sie_button.zmien_nazwe("Zaloguj sie");
+
+                                screen = 1;
+                                reset();
+                                nazwa1 = seglist[0];
+                                haslo1 = seglist[1];
+                                maxRybyNaHaczyku = stoi(seglist[2]);        //stoi - string to int
+                                szybkoscWciagania = stoi(seglist[3]);
+                                linkaResetUpgrade = stoi(seglist[4]);
+                                ilosc_klik_pekniecie = stoi(seglist[5]);
+                                czapka1_kupiona = stoi(seglist[6]);
+                                czapka2_kupiona = stoi(seglist[7]);
+                                czapka3_kupiona = stoi(seglist[8]);
+                                czapka4_kupiona = stoi(seglist[9]);
+                                czapka5_kupiona = stoi(seglist[10]);
+                                czapka6_kupiona = stoi(seglist[11]);
+                                cala_kasa = stoi(seglist[12]);
+
+                                wczytywanie_info_pomc = true;
+                                //wczytajDaneGracza();
+                                continue;
+                            }
+                            else
+                            {
+                                numer_konta_ogolny++;
+                                zaloguj_sie_button.zmien_nazwe("   Konto\nnie istnieje");
+                            }
+                            seglist.clear();
                         }
-                        seglist.clear();
+                    }
+                    catch (...) {
+                        std::cout << "Blad wczytywania kont" << std::endl;
                     }
 
                     odczyt.close();
                     continue;
                 }
-                if (nazwa_button.clicked(event) || haslo_button.clicked(event))
+                if (nazwa_button.pomoc || haslo_button.pomoc)
                 {
                     zaloguj_sie_button.zmien_nazwe("Zaloguj sie");
                     continue;
                 }
                 if (zarejestruj_sie_button.clicked(event))
                 {
+                    nazwa_button.input = "";
+                    nazwa_button.zmien_nazwe("Nazwa");
+
+                    haslo_button.input = "";
+                    haslo_button.zmien_nazwe("Haslo");
+
+                    zaloguj_sie_button.zmien_nazwe("Zaloguj sie");
+
                     screen = 9;
                     continue;
                 }
                 if (logowanie_back_button.clicked(event))
                 {
+                    nazwa_button.input = "";
+                    nazwa_button.zmien_nazwe("Nazwa");
+
+                    haslo_button.input = "";
+                    haslo_button.zmien_nazwe("Haslo");
+
+                    zaloguj_sie_button.zmien_nazwe("Zaloguj sie");
+
                     screen = 6;
                     continue;
                 }
@@ -882,6 +991,8 @@ void Game::run() {
                 }
                 if (gra_back_button.clicked(event))
                 {
+                    if(wczytywanie_info_pomc)
+                        update_do_pliku();
                     pomoc_przejscie = true;
                     screen = 0;
                     continue;
@@ -892,12 +1003,18 @@ void Game::run() {
                 if (dodawanie_nazwa_button.clicked(event))
                 {
                     dodawanie_nazwa_button.pomoc = true;
+                    dodawanie_haslo_button.pomoc = false;
+                    if (dodawanie_haslo_button.input == "")
+                        dodawanie_haslo_button.zmien_nazwe("Haslo");
                     continue;
                 }
 
                 if (dodawanie_haslo_button.clicked(event))
                 {
                     dodawanie_haslo_button.pomoc = true;
+                    dodawanie_nazwa_button.pomoc = false;
+                    if (dodawanie_nazwa_button.input == "")
+                        dodawanie_nazwa_button.zmien_nazwe("Nazwa");
                     continue;
                 }
 
@@ -959,7 +1076,7 @@ void Game::run() {
                     continue;
                 }
 
-                if (dodawanie_nazwa_button.clicked(event) || dodawanie_haslo_button.clicked(event))
+                if (dodawanie_nazwa_button.pomoc || dodawanie_haslo_button.pomoc)
                 {
                     dodaj_button.zmien_nazwe("Dodaj");
                     continue;
@@ -967,6 +1084,13 @@ void Game::run() {
 
                 if (dodawanie_back_button.clicked(event))
                 {
+                    dodawanie_nazwa_button.input = "";
+                    dodawanie_nazwa_button.zmien_nazwe("Nazwa");
+
+                    dodawanie_haslo_button.input = "";
+                    dodawanie_haslo_button.zmien_nazwe("Haslo");
+
+                    dodaj_button.zmien_nazwe("Dodaj");
                     screen = 7;
                     continue;
                 }
@@ -1149,7 +1273,9 @@ void Game::run() {
                 }
 
                 if (czapka6_kupiona && !zalozona6_pierwszyraz)
+                {
                     czapka6Sprite.setPosition(1160, 347);
+                }
                 break;
             }
 
@@ -1434,7 +1560,7 @@ void Game::render()
     
     switch (screen)
     {
-    case 0:
+    case 0:     //glowne menu
         window.draw(menu_backgroundSprite);
 
         window.draw(start_button_sprite);

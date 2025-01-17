@@ -164,7 +164,6 @@ private:
     std::string haslo;
     int numer_konta_ogolny = 1;
     int numb_lines_konta = 0;
-    bool zaloguj_sie_pomoc = false;
 
     std::string cena_ryba;
     Popup cena_ryby_napis = Popup(&window, 200, 380, "", 20, sf::Color::Yellow, sf::Color::Red);
@@ -189,6 +188,8 @@ private:
     sf::Sprite dom_playerSprite;
     sf::Texture dom_playerTexture;
     sf::IntRect dom_playerFrameRect;
+
+    bool wczytywanie_info_pomc = false;
 
     //itemy
 
@@ -227,12 +228,12 @@ private:
     //czapki
     int typ_czapki = 0;
 
-    int czapka1_kupiona = 0;
-    int czapka2_kupiona = 0;
-    int czapka3_kupiona = 0;
-    int czapka4_kupiona = 0;
-    int czapka5_kupiona = 0;
-    int czapka6_kupiona = 0;
+    bool czapka1_kupiona = 0;
+    bool czapka2_kupiona = 0;
+    bool czapka3_kupiona = 0;
+    bool czapka4_kupiona = 0;
+    bool czapka5_kupiona = 0;
+    bool czapka6_kupiona = 0;
 
     bool zalozona1_pierwszyraz = false;
     bool zalozona2_pierwszyraz = false;
@@ -344,6 +345,7 @@ private:
     void wczytajDaneGracza();
     void upgrade();
     void update_do_pliku();
+    void reset();
 
 
 public:
