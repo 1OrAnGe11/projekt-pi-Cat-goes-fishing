@@ -16,7 +16,7 @@
 #include <sstream>
 #include <string>
 
-#define character_size_button 45
+#define character_size_button 50
 #define ConstHaczykInitX 122 //pozycja pocz�tkowa haczyka (gdzie trzyma)
 #define ConstHaczykInitY 1
 #define ConstWedkaInitX 125.0f

@@ -48,7 +48,7 @@ void Game::initBackground()
     options_backgroundSprite.setTexture(options_backgroundTexture);
     options_backgroundSprite.setPosition(0, 0);
 
-    if (!sterowanie_backgroundTexture.loadFromFile("obrazy/sterowanie_background.png"))
+    if (!sterowanie_backgroundTexture.loadFromFile("obrazy/options_background.png"))
     {
         std::cout << "Blad wczytywania tekstury!" << std::endl;
     }

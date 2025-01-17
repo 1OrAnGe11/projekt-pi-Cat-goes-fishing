@@ -5,13 +5,13 @@ TextBox_znak::TextBox_znak(float rozmiar_x, float rozmiar_y, float initialX, flo
 {
 	shape.setSize(sf::Vector2f(rozmiar_x, rozmiar_y));
 	shape.setFillColor(color);
-	if (!font.loadFromFile("fonts/ARIAL.TTF"))
+	if (!font.loadFromFile("fonts/DRACUTAZ.TTF"))
 		std::cout << "Nie zaladowano fonta" << std::endl;
 	text.setFont(font);
     this->bind = bind;
 	text.setString(klawisz_na_unicode(this->bind));
 	text.setCharacterSize(character_size);
-	text.setFillColor(sf::Color::Black);
+	text.setFillColor(sf::Color(231, 181, 135));
     textbox_znakSprite.setTexture(texture);
 	text.setOrigin(text.getGlobalBounds().getSize() / 2.f + text.getLocalBounds().getPosition());
 	text.setPosition(initialX + rozmiar_x / 2, initialY + rozmiar_y / 2);
@@ -331,7 +331,7 @@ std::string TextBox_znak::klawisz_na_unicode(sf::Keyboard::Key k)
             break;
         case sf::Keyboard::Space:
 
-            ret = "Space";
+            ret = "Spacja";
             break;
         case sf::Keyboard::Return:
 
