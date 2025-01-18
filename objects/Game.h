@@ -193,16 +193,30 @@ private:
 
     //itemy
 
-    int upgrade1_kupiona = 0;
-    int upgrade2_kupiona = 0;
-    int upgrade3_kupiona = 0;
-    int upgrade4_kupiona = 0;
+    int upgrade1_kupiona = 0;   //linkaResetUpgrade +
+    int upgrade2_kupiona = 0;   //ilosc_klik_pekniecie +
+    int upgrade3_kupiona = 0;   //maxRybyNaHaczyku +
+    int upgrade4_kupiona = 0;   //szybkoscWciagania +
     int upgrade5_kupiona = 0;
     int upgrade6_kupiona = 0;
+    
+    sf::Texture linkaResetUpgrade0_buttonTexture;
 
     Button linkaResetUpgrade1_button = Button(270, 132, 170, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, linkaResetUpgrade1_buttonTexture);
     sf::Sprite linkaResetUpgrade1_buttonSprite;
     sf::Texture linkaResetUpgrade1_buttonTexture;
+
+    Button linkaResetUpgrade2_button = Button(270, 132, 170, 192, sf::Color(0, 0, 0, 0), &window, "", character_size_button, linkaResetUpgrade2_buttonTexture);
+    sf::Sprite linkaResetUpgrade2_buttonSprite;
+    sf::Texture linkaResetUpgrade2_buttonTexture;
+
+    Button linkaResetUpgrade3_button = Button(270, 132, 170, 347, sf::Color(0, 0, 0, 0), &window, "", character_size_button, linkaResetUpgrade3_buttonTexture);
+    sf::Sprite linkaResetUpgrade3_buttonSprite;
+    sf::Texture linkaResetUpgrade3_buttonTexture;
+
+    Button linkaResetUpgrade4_button = Button(270, 132, 1160, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, linkaResetUpgrade4_buttonTexture);
+    sf::Sprite linkaResetUpgrade4_buttonSprite;
+    sf::Texture linkaResetUpgrade4_buttonTexture;
 
     /*Button item = Button(270, 132, 170, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, itemTexture);
     sf::Sprite itemSprite;

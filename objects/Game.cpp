@@ -455,13 +455,40 @@ void Game::initCzapki()
 
 void Game::initItems()
 {
-    if (!linkaResetUpgrade1_buttonTexture.loadFromFile("obrazy/item.png"))          //czapa 1
+    if (!linkaResetUpgrade0_buttonTexture.loadFromFile("obrazy/item.png"))
     {
         std::cout << "Blad wczytywania tekstury!" << std::endl;
     }
+    if (!linkaResetUpgrade1_buttonTexture.loadFromFile("obrazy/upgrade1.png")) {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
+    if (!linkaResetUpgrade2_buttonTexture.loadFromFile("obrazy/upgrade2.png"))
+    {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
+    if (!linkaResetUpgrade3_buttonTexture.loadFromFile("obrazy/upgrade3.png")) {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
+    if (!linkaResetUpgrade4_buttonTexture.loadFromFile("obrazy/upgrade4.png"))
+    {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
+    
     linkaResetUpgrade1_buttonSprite.setTexture(linkaResetUpgrade1_buttonTexture);
     linkaResetUpgrade1_buttonSprite.setScale(sf::Vector2f(1.5, 1.5));
     linkaResetUpgrade1_buttonSprite.setPosition(170, 37);
+
+    linkaResetUpgrade2_buttonSprite.setTexture(linkaResetUpgrade2_buttonTexture);
+    linkaResetUpgrade2_buttonSprite.setScale(sf::Vector2f(1.5, 1.5));
+    linkaResetUpgrade2_buttonSprite.setPosition(170, 192);
+
+    linkaResetUpgrade3_buttonSprite.setTexture(linkaResetUpgrade3_buttonTexture);
+    linkaResetUpgrade3_buttonSprite.setScale(sf::Vector2f(1.5, 1.5));
+    linkaResetUpgrade3_buttonSprite.setPosition(170, 327);//347
+
+    linkaResetUpgrade4_buttonSprite.setTexture(linkaResetUpgrade4_buttonTexture);
+    linkaResetUpgrade4_buttonSprite.setScale(sf::Vector2f(1.5, 1.5));
+    linkaResetUpgrade4_buttonSprite.setPosition(1160, 37);
 }
 
 void Game::update_do_pliku()
@@ -1099,14 +1126,38 @@ void Game::run() {
                 kasa_wartosc_napis.wartosc = cala_kasa;
                 kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);
 
-                if (linkaResetUpgrade1_button.clicked(event) && cala_kasa >= 50)
+                if (linkaResetUpgrade1_button.clicked(event) && cala_kasa >= 50 && upgrade1_kupiona==false)
                 {
                     cala_kasa -= 50;
-                    linkaResetUpgrade += 20;
+                    linkaResetUpgrade -= 15;
                     linkaResetUpgrade1_buttonSprite.setPosition(0, -300);
+                    upgrade1_kupiona = 1;
                     continue;
                 }
-
+                if (linkaResetUpgrade2_button.clicked(event) && cala_kasa >= 50 && upgrade2_kupiona == false)
+                {
+                    cala_kasa -= 50;
+                    ilosc_klik_pekniecie += 15;
+                    linkaResetUpgrade2_buttonSprite.setPosition(0, -300);
+                    upgrade2_kupiona = 1;
+                    continue;
+                }
+                if (linkaResetUpgrade3_button.clicked(event) && cala_kasa >= 50 && upgrade3_kupiona == false)
+                {
+                    cala_kasa -= 50;
+                    maxRybyNaHaczyku++;
+                    linkaResetUpgrade3_buttonSprite.setPosition(0, -300);
+                    upgrade3_kupiona = 1;
+                    continue;
+                }
+                if (linkaResetUpgrade4_button.clicked(event) && cala_kasa >= 50 && upgrade4_kupiona == false)
+                {
+                    cala_kasa -= 50;
+                    szybkoscWciagania += 2;
+                    linkaResetUpgrade4_buttonSprite.setPosition(0, -300);
+                    upgrade4_kupiona = 1;
+                    continue;
+                }
                 break;
             case 11:        //sklep 2
                 kasa_wartosc_napis.wartosc = cala_kasa;
@@ -1711,6 +1762,9 @@ void Game::render()
         window.draw(sklep1Sprite);
         window.draw(ceny_1Sprite);
         window.draw(linkaResetUpgrade1_buttonSprite);
+        window.draw(linkaResetUpgrade2_buttonSprite);
+        window.draw(linkaResetUpgrade3_buttonSprite);
+        window.draw(linkaResetUpgrade4_buttonSprite);
 
         window.draw(kasa_napis.text);
         window.draw(kasa_wartosc_napis.text);
