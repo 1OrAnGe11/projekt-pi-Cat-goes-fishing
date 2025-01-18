@@ -35,7 +35,7 @@ private:
     int maxRybyNaHaczyku = 1;
     int szybkoscWciagania = 3;
     int linkaResetUpgrade = 45;
-    int ilosc_klik_pekniecie = 20;
+    int ilosc_klik_pekniecie = 30;
 
     //
     std::string haslo1;
@@ -63,6 +63,8 @@ private:
     sf::Sprite ceny_1Sprite;
     sf::Texture ceny_2Texture;
     sf::Sprite ceny_2Sprite;
+    sf::Texture ulozenie_czapekTexture;
+    sf::Sprite ulozenie_czapekSprite;
 
     sf::Texture menu_buttonTexture;
     sf::Texture krotki_menu_buttonTexture;
@@ -180,7 +182,7 @@ private:
     int lowienie_czas_klikniecie = 0;
     int kolor_linki_R = 128;
     int kolor_linki_G_B = 128;
-    float odleglosc_rzutu = 0.05;     //im mniejsze tym dalej leci
+    float odleglosc_rzutu = 0.045;     //im mniejsze tym dalej leci
     int poprawka_ladowanie_haczyka = 35;    //mozliwe ze da sie to mateamatycznie ogarnac ale narazie niech tak bedzie (trzeba zmienic przy zmianie odleglosci rzutu)
 
     Popup ucieczka_napis = Popup(&window, -100, -100, "Linka zerwana", 20, sf::Color::Color(128, 128, 128), sf::Color::Black);
@@ -197,8 +199,6 @@ private:
     int upgrade2_kupiona = 0;   //ilosc_klik_pekniecie +
     int upgrade3_kupiona = 0;   //maxRybyNaHaczyku +
     int upgrade4_kupiona = 0;   //szybkoscWciagania +
-    int upgrade5_kupiona = 0;
-    int upgrade6_kupiona = 0;
     
     sf::Texture linkaResetUpgrade0_buttonTexture;
 
@@ -210,34 +210,13 @@ private:
     sf::Sprite linkaResetUpgrade2_buttonSprite;
     sf::Texture linkaResetUpgrade2_buttonTexture;
 
-    Button linkaResetUpgrade3_button = Button(270, 132, 170, 347, sf::Color(0, 0, 0, 0), &window, "", character_size_button, linkaResetUpgrade3_buttonTexture);
+    Button linkaResetUpgrade3_button = Button(270, 132, 1160, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, linkaResetUpgrade3_buttonTexture);
     sf::Sprite linkaResetUpgrade3_buttonSprite;
     sf::Texture linkaResetUpgrade3_buttonTexture;
 
-    Button linkaResetUpgrade4_button = Button(270, 132, 1160, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, linkaResetUpgrade4_buttonTexture);
+    Button linkaResetUpgrade4_button = Button(270, 132, 1160, 192, sf::Color(0, 0, 0, 0), &window, "", character_size_button, linkaResetUpgrade4_buttonTexture);
     sf::Sprite linkaResetUpgrade4_buttonSprite;
     sf::Texture linkaResetUpgrade4_buttonTexture;
-
-    /*Button item = Button(270, 132, 170, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, itemTexture);
-    sf::Sprite itemSprite;
-    sf::Texture itemTexture;
-
-    Button item = Button(270, 132, 170, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, itemTexture);
-    sf::Sprite itemSprite;
-    sf::Texture itemTexture;
-
-    Button item = Button(270, 132, 170, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, itemTexture);
-    sf::Sprite itemSprite;
-    sf::Texture itemTexture;
-
-    Button item = Button(270, 132, 170, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, itemTexture);
-    sf::Sprite itemSprite;
-    sf::Texture itemTexture;
-
-    Button item = Button(270, 132, 170, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, itemTexture);
-    sf::Sprite itemSprite;
-    sf::Texture itemTexture;*/
-
 
     //czapki
     int typ_czapki = 0;

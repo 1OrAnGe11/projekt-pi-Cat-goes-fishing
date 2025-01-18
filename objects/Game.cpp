@@ -103,6 +103,13 @@ void Game::initBackground()
     }
     ceny_2Sprite.setTexture(ceny_2Texture);
     ceny_2Sprite.setPosition(0, 0);
+
+    if (!ulozenie_czapekTexture.loadFromFile("obrazy/ulozenie_czapek.png"))
+    {
+        std::cout << "Blad wczytywania tekstury!" << std::endl;
+    }
+    ulozenie_czapekSprite.setTexture(ulozenie_czapekTexture);
+    ulozenie_czapekSprite.setPosition(0, 0);
 }
 
 void Game::initDrewno()
@@ -484,11 +491,11 @@ void Game::initItems()
 
     linkaResetUpgrade3_buttonSprite.setTexture(linkaResetUpgrade3_buttonTexture);
     linkaResetUpgrade3_buttonSprite.setScale(sf::Vector2f(1.5, 1.5));
-    linkaResetUpgrade3_buttonSprite.setPosition(170, 327);//347
+    linkaResetUpgrade3_buttonSprite.setPosition(1160, 37);
 
     linkaResetUpgrade4_buttonSprite.setTexture(linkaResetUpgrade4_buttonTexture);
     linkaResetUpgrade4_buttonSprite.setScale(sf::Vector2f(1.5, 1.5));
-    linkaResetUpgrade4_buttonSprite.setPosition(1160, 37);
+    linkaResetUpgrade4_buttonSprite.setPosition(1160, 192);
 }
 
 void Game::update_do_pliku()
@@ -504,7 +511,6 @@ void Game::update_do_pliku()
     while (!odczyt.eof())
     {
         getline(odczyt, line, '\n');
-        std::cout << line << std::endl;
         if(line != "" && line != "\n")
             numb_lines_konta++;
     }
@@ -523,19 +529,16 @@ void Game::update_do_pliku()
         }
         else
         {
-            plik += nazwa1 + ';' + haslo1 + ';' + std::to_string(maxRybyNaHaczyku) + ';' + std::to_string(szybkoscWciagania)
-                + ';' + std::to_string(linkaResetUpgrade) + ';' + std::to_string(ilosc_klik_pekniecie) + ';' + std::to_string(czapka1_kupiona)
+            plik += nazwa1 + ';' + haslo1 + ';' + std::to_string(upgrade1_kupiona) + ';' + std::to_string(upgrade2_kupiona)
+                + ';' + std::to_string(upgrade3_kupiona) + ';' + std::to_string(upgrade4_kupiona) + ';' + std::to_string(czapka1_kupiona)
                 + ';' + std::to_string(czapka2_kupiona) + ';' + std::to_string(czapka3_kupiona) + ';' + std::to_string(czapka4_kupiona)
                 + ';' + std::to_string(czapka5_kupiona) + ';' + std::to_string(czapka6_kupiona) + ';' + std::to_string(cala_kasa) + ';';
         }
         plik += '\n';
-        printf("lines %i\nnumer konta %i\nnumer_konta_ogolny %i\n", numb_lines_konta, numer_konta, numer_konta_ogolny);
+        //printf("lines %i\nnumer konta %i\nnumer_konta_ogolny %i\n", numb_lines_konta, numer_konta, numer_konta_ogolny);
         numer_konta++;
+        std::cout << line << std::endl;
     }
-    /*if (numer_konta == numb_lines_konta+1)
-    {
-        printf("elo\n");
-    }*/
     odczyt.close();
 
     remove("konta.txt");
@@ -587,6 +590,7 @@ void Game::reset()
     czapka5Sprite.setPosition(1160, 192);
     czapka6Sprite.setPosition(1160, 347);
 
+    
     LokalizacjaRyby = true;
 }
 
@@ -843,7 +847,7 @@ void Game::run() {
                     maxRybyNaHaczyku = 1;
                     szybkoscWciagania = 3;
                     linkaResetUpgrade = 45;
-                    ilosc_klik_pekniecie = 20;
+                    ilosc_klik_pekniecie = 30;
 
                     czapka1_kupiona = 0;
                     czapka2_kupiona = 0;
@@ -851,6 +855,11 @@ void Game::run() {
                     czapka4_kupiona = 0;
                     czapka5_kupiona = 0;
                     czapka6_kupiona = 0;
+
+                    upgrade1_kupiona = 0;
+                    upgrade2_kupiona = 0;
+                    upgrade3_kupiona = 0;
+                    upgrade4_kupiona = 0;
 
                     zalozona1_pierwszyraz = false;
                     zalozona2_pierwszyraz = false;
@@ -864,6 +873,11 @@ void Game::run() {
                     cala_kasa = 0;
 
                     wczytywanie_info_pomc = false;
+
+                    linkaResetUpgrade1_buttonSprite.setPosition(170, 37);
+                    linkaResetUpgrade2_buttonSprite.setPosition(170, 192);
+                    linkaResetUpgrade3_buttonSprite.setPosition(1160, 37);
+                    linkaResetUpgrade4_buttonSprite.setPosition(1160, 192);
 
                     reset();
                     
@@ -935,13 +949,12 @@ void Game::run() {
                                 zaloguj_sie_button.zmien_nazwe("Zaloguj sie");
 
                                 screen = 1;
-                                reset();
                                 nazwa1 = seglist[0];
                                 haslo1 = seglist[1];
-                                maxRybyNaHaczyku = stoi(seglist[2]);        //stoi - string to int
-                                szybkoscWciagania = stoi(seglist[3]);
-                                linkaResetUpgrade = stoi(seglist[4]);
-                                ilosc_klik_pekniecie = stoi(seglist[5]);
+                                upgrade1_kupiona = stoi(seglist[2]);        //stoi - string to int
+                                upgrade2_kupiona = stoi(seglist[3]);
+                                upgrade3_kupiona = stoi(seglist[4]);
+                                upgrade4_kupiona = stoi(seglist[5]);
                                 czapka1_kupiona = stoi(seglist[6]);
                                 czapka2_kupiona = stoi(seglist[7]);
                                 czapka3_kupiona = stoi(seglist[8]);
@@ -949,6 +962,20 @@ void Game::run() {
                                 czapka5_kupiona = stoi(seglist[10]);
                                 czapka6_kupiona = stoi(seglist[11]);
                                 cala_kasa = stoi(seglist[12]);
+
+                                if (!upgrade1_kupiona)
+                                {
+                                    printf("DUAP\n");
+                                    linkaResetUpgrade1_buttonSprite.setPosition(170, 37);
+                                }
+                                if (!upgrade2_kupiona)
+                                    linkaResetUpgrade2_buttonSprite.setPosition(170, 192);
+                                if (!upgrade3_kupiona)
+                                    linkaResetUpgrade3_buttonSprite.setPosition(1160, 37);
+                                if (!upgrade4_kupiona)
+                                    linkaResetUpgrade4_buttonSprite.setPosition(1160, 192);
+
+                                reset();
 
                                 wczytywanie_info_pomc = true;
                                 //wczytajDaneGracza();
@@ -1096,7 +1123,7 @@ void Game::run() {
                     {
                         zapis.open("konta.txt", std::ios::out | std::ios::app);
                         zapis << dodawanie_nazwa_button.input << ";" << dodawanie_haslo_button.input 
-                            << ";" << 1 << ";" << 3 << ";" << 45 << ";" << 20 << ";" << 0 << ";" << 0 
+                            << ";" << 0 << ";" << 0 << ";" << 0 << ";" << 0 << ";" << 0 << ";" << 0 
                             << ";" << 0 << ";" << 0 << ";" << 0 << ";" << 0 << ";" << 0 << ";" << std::endl;
                         zapis.close();
                     }
@@ -1126,10 +1153,10 @@ void Game::run() {
                 kasa_wartosc_napis.wartosc = cala_kasa;
                 kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);
 
-                if (linkaResetUpgrade1_button.clicked(event) && cala_kasa >= 50 && upgrade1_kupiona==false)
+                if (linkaResetUpgrade1_button.clicked(event) && cala_kasa >= 50 && upgrade1_kupiona == false)
                 {
                     cala_kasa -= 50;
-                    linkaResetUpgrade -= 15;
+                    linkaResetUpgrade -= 25;
                     linkaResetUpgrade1_buttonSprite.setPosition(0, -300);
                     upgrade1_kupiona = 1;
                     continue;
@@ -1163,49 +1190,49 @@ void Game::run() {
                 kasa_wartosc_napis.wartosc = cala_kasa;
                 kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);
 
-                if (czapka1.clicked(event) && !czapka1_kupiona && cala_kasa >= 50)    //czapka 1
+                if (czapka1.clicked(event) && !czapka1_kupiona && cala_kasa >= 25)    //czapka 1
                 {
-                    cala_kasa -= 50;
+                    cala_kasa -= 25;
                     czapka1_kupiona = 1;
                     czapka1Sprite.setPosition(0, -300);
                     continue;
                 }
 
-                if (czapka2.clicked(event) && !czapka2_kupiona && cala_kasa >= 50)    //czapka 2
+                if (czapka2.clicked(event) && !czapka2_kupiona && cala_kasa >= 25)    //czapka 2
                 {
-                    cala_kasa -= 50;
+                    cala_kasa -= 25;
                     czapka2_kupiona = 1;
                     czapka2Sprite.setPosition(0, -300);
                     continue;
                 }
 
-                if (czapka3.clicked(event) && !czapka3_kupiona && cala_kasa >= 50)    //czapka 3
+                if (czapka3.clicked(event) && !czapka3_kupiona && cala_kasa >= 25)    //czapka 3
                 {
-                    cala_kasa -= 50;
+                    cala_kasa -= 25;
                     czapka3_kupiona = 1;
                     czapka3Sprite.setPosition(0, -300);
                     continue;
                 }
 
-                if (czapka4.clicked(event) && !czapka4_kupiona && cala_kasa >= 50)    //czapka 4
+                if (czapka4.clicked(event) && !czapka4_kupiona && cala_kasa >= 25)    //czapka 4
                 {
-                    cala_kasa -= 50;
+                    cala_kasa -= 25;
                     czapka4_kupiona = 1;
                     czapka4Sprite.setPosition(0, -300);
                     continue;
                 }
 
-                if (czapka5.clicked(event) && !czapka5_kupiona && cala_kasa >= 50)    //czapka 5
+                if (czapka5.clicked(event) && !czapka5_kupiona && cala_kasa >= 25)    //czapka 5
                 {
-                    cala_kasa -= 50;
+                    cala_kasa -= 25;
                     czapka5_kupiona = 1;
                     czapka5Sprite.setPosition(0, -300);
                     continue;
                 }
 
-                if (czapka6.clicked(event) && !czapka6_kupiona && cala_kasa >= 50)    //czapka 6
+                if (czapka6.clicked(event) && !czapka6_kupiona && cala_kasa >= 25)    //czapka 6
                 {
-                    cala_kasa -= 50;
+                    cala_kasa -= 25;
                     czapka6_kupiona = 1;
                     czapka6Sprite.setPosition(0, -300);
                     continue;
@@ -1427,14 +1454,16 @@ void Game::update(sf::Time deltaTime)
             kasa_wartosc_napis.render("", kasa_wartosc_napis.wartosc);
 
             //dla ryb
+            int kasa_ryby = 0;
             for (auto& ryba : ryby) {
                 if (ryba.czyNaHaczyku) {
-                    
-                    cena_ryby_napis.zmien_nazwe_miejsce(200, 380, ryba.cena);
+                    kasa_ryby += ryba.cena;
                     cala_kasa += ryba.cena;
                     ryba.kill();
                 }
             }
+            if (kasa_ryby != 0)
+                cena_ryby_napis.zmien_nazwe_miejsce(200, 380, kasa_ryby);
         }
 
         czas += deltaTime.asSeconds();
@@ -1530,7 +1559,7 @@ void Game::update(sf::Time deltaTime)
                     rybyNaHaczyku++;
                 }
             }
-            if (ryba.czyNaHaczyku == true) {
+            if (ryba.czyNaHaczyku) {
                 if(ryba.kierunek)
                     ryba.setPos(haczyk.getPosition().x + (26 + ryba.poprawka_wspolrzednych), haczyk.getPosition().y);
                 else
@@ -1538,7 +1567,9 @@ void Game::update(sf::Time deltaTime)
 
                 if (pomoc_lowienie2 && rybyNaHaczyku > 0)
                 {
-                    ucieczkaRyby(ryba);
+                    for (auto& ryba2 : ryby)
+                        if (ryba2.czyNaHaczyku)
+                            ucieczkaRyby(ryba2);
                     rybyNaHaczyku--;
                     czyTrzyma = true;
                     haczyk.setPosition(player.getPosition().x + ConstHaczykInitX, player.getPosition().y - ConstHaczykInitY);
@@ -1806,6 +1837,8 @@ void Game::render()
             window.draw(czapka5Sprite);
         if (czapka6_kupiona)
             window.draw(czapka6Sprite);
+
+        window.draw(ulozenie_czapekSprite);
 
         switch (typ_czapki)
         {
