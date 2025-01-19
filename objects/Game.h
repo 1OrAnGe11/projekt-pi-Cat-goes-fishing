@@ -31,6 +31,7 @@
 class Game
 {
 private:
+
     //do zmiany !!!!! (bo czytane z pliku)
     int maxRybyNaHaczyku = 1;
     int szybkoscWciagania = 3;
@@ -247,7 +248,7 @@ private:
     sf::Sprite czapka3Sprite;
     sf::Texture czapka3Texture;
 
-    Button czapka4 = Button(270, 132, 1160, 37, sf::Color(0, 0, 0, 0), &window, "", character_size_button, czapka4Texture);
+    Button czapka4 = Button(239, 122, 1160, 48, sf::Color(0, 0, 0, 0), &window, "", character_size_button, czapka4Texture);
     sf::Sprite czapka4Sprite;
     sf::Texture czapka4Texture;
 

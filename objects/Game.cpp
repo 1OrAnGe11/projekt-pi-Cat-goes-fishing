@@ -114,11 +114,12 @@ void Game::initBackground()
 
 void Game::initDrewno()
 {
-    if (!drewnoTexture.loadFromFile("obrazy/drewno.png"))
+    if (!drewnoTexture.loadFromFile("obrazy/drewnonowe.png"))
     {
         std::cout << "Blad wczytywania tekstury!" << std::endl;
     }
     drewnoSprite.setTexture(drewnoTexture);
+    drewnoSprite.setScale(sf::Vector2f(0.32, 0.32));
     drewnoSprite.setPosition(-70, player.getPosition().y + 80);
 }
 
@@ -144,10 +145,9 @@ void Game::initPlayer()       //do ustawienia pozycji i sprite
     {
         std::cout << "Blad wczytywania tekstury!" << std::endl;
     }
-    dom_playerSprite.setScale(sf::Vector2f(6, 6));
     dom_playerSprite.setPosition(610, 200);
     dom_playerSprite.setTexture(dom_playerTexture);
-    dom_playerFrameRect = sf::IntRect(0, 0, 64, 100);
+    dom_playerFrameRect = sf::IntRect(0, 0, 384, 600);
     dom_playerSprite.setTextureRect(dom_playerFrameRect);
     if (!skierowanyWprawo)
     {
@@ -170,17 +170,17 @@ void Game::initRyby() {
 
     ryby = {};
  
-    if (!rybaTexture3.loadFromFile("obrazy/ryba3.png", sf::IntRect(0, 0, 23, 12)))
+    if (!rybaTexture3.loadFromFile("obrazy/ryba3nowa.png", sf::IntRect(0, 0, 2300, 1200)))
     {
         std::cerr << "Blad wczytywania tekstury ryby!" << std::endl;
     }
        
-    if (!rybaTexture2.loadFromFile("obrazy/ryba2.png", sf::IntRect(0, 0, 21, 11)))
+    if (!rybaTexture2.loadFromFile("obrazy/ryba2nowa.png", sf::IntRect(0, 0, 2100, 1100)))
     {
         std::cerr << "Blad wczytywania tekstury ryby!" << std::endl;
     }
         
-    if (!rybaTexture1.loadFromFile("obrazy/ryba1.png", sf::IntRect(0, 0, 18, 10)))
+    if (!rybaTexture1.loadFromFile("obrazy/ryba1nowa.png", sf::IntRect(0, 0, 1800, 1000)))
     {
         std::cerr << "Blad wczytywania tekstury ryby!" << std::endl;
     }
@@ -441,7 +441,7 @@ void Game::initCzapki()
     }
     czapka4Sprite.setTexture(czapka4Texture);
     czapka4Sprite.setScale(sf::Vector2f(1.5, 1.5));
-    czapka4Sprite.setPosition(1160, 37);
+    czapka4Sprite.setPosition(1160, 44);
 
     if (!czapka5Texture.loadFromFile("obrazy/czapa5.png"))          //czapa 5
     {
@@ -559,7 +559,7 @@ void Game::reset()
     dom_playerTexture.loadFromFile("obrazy/player_bezkasy.png");
 
     playerFrameRect = sf::IntRect(0, 0, 100, 100); // 2 pierwsze to x,y , 2 ostatnie to wymiary 
-    dom_playerFrameRect = sf::IntRect(0, 0, 64, 100);
+    dom_playerFrameRect = sf::IntRect(0, 0, 384, 600);
     dom_playerSprite.setPosition(610, 200);
 
     playerFrameRect.left = 300;
@@ -586,7 +586,7 @@ void Game::reset()
     czapka1Sprite.setPosition(170, 37);
     czapka2Sprite.setPosition(170, 192);
     czapka3Sprite.setPosition(170, 347);
-    czapka4Sprite.setPosition(1160, 37);
+    czapka4Sprite.setPosition(1160, 44);
     czapka5Sprite.setPosition(1160, 192);
     czapka6Sprite.setPosition(1160, 347);
 
@@ -1310,12 +1310,12 @@ void Game::run() {
                 if (czapka4.clicked(event) && typ_czapki == 4)
                 {
                     typ_czapki = 0;
-                    czapka4Sprite.setPosition(1160, 37);
+                    czapka4Sprite.setPosition(1160, 44);
                     continue;
                 }
 
                 if (czapka4_kupiona && !zalozona4_pierwszyraz)
-                    czapka4Sprite.setPosition(1160, 37);
+                    czapka4Sprite.setPosition(1160, 44);
 
                 if (czapka5.clicked(event) && typ_czapki == 0 && czapka5_kupiona)    //czapka 5
                 {
@@ -1849,7 +1849,7 @@ void Game::render()
             }
             dom_playerTexture.loadFromFile("obrazy/player_bezkasy.png");
             playerFrameRect = sf::IntRect(0, 0, 100, 100); // 2 pierwsze to x,y , 2 ostatnie to wymiary 
-            dom_playerFrameRect = sf::IntRect(0, 0, 64, 100);
+            dom_playerFrameRect = sf::IntRect(0, 0, 384, 600);
             dom_playerSprite.setPosition(610, 200);
 
             break;
@@ -1868,35 +1868,45 @@ void Game::render()
             dom_playerTexture.loadFromFile("obrazy/player_bezkasy2.png");
             break;
         case 3:
-            if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny.png"))
+            if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny3.png"))
             {
                 std::cout << "Blad wczytywania tekstury!" << std::endl;
             }
+            dom_playerTexture.loadFromFile("obrazy/player_bezkasy3.png");
             break;
         case 4:
-            if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny.png"))
+            if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny4.png"))
             {
                 std::cout << "Blad wczytywania tekstury!" << std::endl;
             }
+            dom_playerTexture.loadFromFile("obrazy/player_bezkasy4.png");
             break;
         case 5:
-            if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny.png"))
+            if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny5.png"))
             {
                 std::cout << "Blad wczytywania tekstury!" << std::endl;
             }
+            dom_playerTexture.loadFromFile("obrazy/player_bezkasy5.png");
             break;
         case 6:
-            if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny.png"))
+            if (!playerTexture.loadFromFile("obrazy/player spritesheet pelny6.png"))
             {
                 std::cout << "Blad wczytywania tekstury!" << std::endl;
             }
+            dom_playerTexture.loadFromFile("obrazy/player_bezkasy6.png");
             break;
         }
-        if (typ_czapki != 0)
+        if (typ_czapki != 0 && typ_czapki != 4)
         {
             playerFrameRect = sf::IntRect(0, 0, 100, 108); // 2 pierwsze to x,y , 2 ostatnie to wymiary 
-            dom_playerFrameRect = sf::IntRect(0, 0, 64, 107);
-            dom_playerSprite.setPosition(610, 158);
+            dom_playerFrameRect = sf::IntRect(0, 0, 384, 631);
+            dom_playerSprite.setPosition(610, 169);
+        }
+        if (typ_czapki == 4)
+        {
+            playerFrameRect = sf::IntRect(0, 0, 100, 108); // 2 pierwsze to x,y , 2 ostatnie to wymiary 
+            dom_playerFrameRect = sf::IntRect(0, 0, 384, 655);
+            dom_playerSprite.setPosition(610, 145);
         }
         dom_playerSprite.setTextureRect(dom_playerFrameRect);
         dom_playerSprite.setTexture(dom_playerTexture);

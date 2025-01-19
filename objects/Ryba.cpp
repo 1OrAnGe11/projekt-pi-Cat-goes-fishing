@@ -5,7 +5,7 @@ Ryba::Ryba(float initialX, float initialY, sf::Color color, float size, sf::Text
     type = rand() % 3;
 
     
-    rybaSprite.setScale(sf::Vector2f(3, 3));
+    rybaSprite.setScale(sf::Vector2f(0.3, 0.3));
     rybaSprite.setColor(color);
 
     switch (type)
@@ -53,24 +53,24 @@ void Ryba::obrot()          // obrot sprite'a ryby, obrot jest od lewego dolnego
     if (czyNaHaczyku == false) {
         if (!kierunek)
         {
-            rybaSprite.setScale(sf::Vector2f(-3, 3));
+            rybaSprite.setScale(sf::Vector2f(-0.3, 0.3));
 
             switch (type)
             {
             case 0:
-                setPos(x + rybaSprite.getTexture()->getSize().x * 2, y);
+                setPos(x + rybaSprite.getTexture()->getSize().x * 0.3, y);
                 break;
             case 1:
-                setPos(x + rybaSprite.getTexture()->getSize().x * 2, y);
+                setPos(x + rybaSprite.getTexture()->getSize().x * 0.3, y);
                 break;
             case 2:
-                setPos(x + rybaSprite.getTexture()->getSize().x * 2, y);
+                setPos(x + rybaSprite.getTexture()->getSize().x * 0.3, y);
                 break;
             }
         }
         else
         {
-            rybaSprite.setScale(sf::Vector2f(3, 3));
+            rybaSprite.setScale(sf::Vector2f(0.3, 0.3));
             switch (type)
             {
             case 0:
