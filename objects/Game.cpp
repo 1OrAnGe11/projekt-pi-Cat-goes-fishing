@@ -24,7 +24,119 @@ Game::Game()
 
 }
 
+template <int rozmiar>
+class wirnik {
+private:
+    std::string tablica[rozmiar];
 
+public:
+    wirnik(std::string wartosci[rozmiar]) {
+        for (int i = 0; i < rozmiar; ++i) {
+            tablica[i] = wartosci[i];
+        }
+    }
+
+    std::string pobierz(int indeks) const {
+        int zapetlonyIndeks = indeks % rozmiar;
+        return tablica[zapetlonyIndeks];
+    }
+};
+
+string alfab = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+string tab_I[26] =     { "E","K","M","F","L","G","D","Q","V","Z","N","T","O","W","Y","H","X","U","S","P","A","I","B","R","C","J" };
+string tab_II[26] =    { "A","J","D","K","S","I","R","U","X","B","L","H","W","T","M","C","Q","G","Z","N","P","Y","F","V","O","E" };
+string tab_III[26] =   { "B","D","F","H","J","L","C","P","R","T","X","V","Z","N","Y","E","I","W","G","A","K","M","U","S","Q","O" };
+
+string tab_gamma[26] = { "F","S","O","K","A","N","U","E","R","H","M","B","T","I","Y","C","W","L","Q","P","Z","X","V","G","J","D" };
+
+string tab_B[26] =     { "E","N","K","Q","A","U","Y","W","J","I","C","O","P","B","L","M","D","X","Z","V","F","T","H","R","G","S" };
+
+wirnik<26> rot1(tab_I);
+wirnik<26> rot2(tab_II);
+wirnik<26> rot3(tab_III);
+wirnik<26> rot4(tab_gamma);
+wirnik<26> UKW(tab_B);
+
+string alfab_m = "abcdefghijklmnopqrstuvwxyz";
+
+string tab_I_m[26] =     { "e","k","m","f","l","g","d","q","v","z","n","t","o","w","y","h","x","u","s","p","a","i","b","r","c","j" };
+string tab_II_m[26] =    { "a","j","d","k","s","i","r","u","x","b","l","h","w","t","m","c","q","g","z","n","p","y","f","v","o","e" };
+string tab_III_m[26] =   { "b","d","f","h","j","l","c","p","r","t","x","v","z","n","y","e","i","w","g","a","k","m","u","s","q","o" };
+
+string tab_gamma_m[26] = { "f","s","o","k","a","n","u","e","r","h","m","b","t","i","y","c","w","l","q","p","z","x","v","g","j","d" };
+
+string tab_B_m[26] =     { "e","n","k","q","a","u","y","w","j","i","c","o","p","b","l","m","d","x","z","v","f","t","h","r","g","s" };
+
+wirnik<26> rot1_m(tab_I_m);
+wirnik<26> rot2_m(tab_II_m);
+wirnik<26> rot3_m(tab_III_m);
+wirnik<26> rot4_m(tab_gamma_m);
+wirnik<26> UKW_m(tab_B_m);
+
+string przud(string op, wirnik<26> lis, string alf,int wir) {
+    char n = op[0];
+    char m = alf[0];
+    op = lis.pobierz(n-m+wir);
+    return op;
+}
+string tyl(string op, wirnik<26> lis, string alf, int wir) {
+    int zap = 0;
+    for (int i = 0; i < 26; i++) {
+        if (op == lis.pobierz(i+wir)) {
+            zap = i;
+            break;
+        }
+    }
+    op = alf[zap];
+    return op;
+}
+
+
+string enigma(string tab, string klucz) {
+
+    string wynik = "";
+    string lit = "";
+
+    int wir1 = 0+abs('A' - klucz[0]);
+    int wir2 = 0+abs('A' - klucz[1]);
+    int wir3 = 0+abs('A' - klucz[2]);
+    int wir4 = 0+abs('A' - klucz[3]);
+
+    for (int i = 0; i < tab.length(); i++) {
+        wir4++;
+        char k = tab[i];
+        lit = k;
+        if(tab[i] - 'a' >= 0) {
+            lit = przud(lit, rot1_m, alfab_m, wir4);
+            lit = przud(lit, rot2_m, alfab_m, wir3);
+            lit = przud(lit, rot3_m, alfab_m, wir2);
+            lit = przud(lit, rot4_m, alfab_m, wir1);
+            lit = tyl(lit, UKW_m, alfab_m, 0);
+            lit = tyl(lit, rot4_m, alfab_m, wir1);
+            lit = tyl(lit, rot3_m, alfab_m, wir2);
+            lit = tyl(lit, rot2_m, alfab_m, wir3);
+            lit = tyl(lit, rot1_m, alfab_m, wir4);
+            wynik += lit;
+        }
+         else if(tab[i] - 'A' >= 0){
+            lit = przud(lit, rot1, alfab, wir4);
+            lit = przud(lit, rot2, alfab, wir3);
+            lit = przud(lit, rot3, alfab, wir2);
+            lit = przud(lit, rot4, alfab, wir1);
+            lit = tyl(lit, UKW, alfab, 0);
+            lit = tyl(lit, rot4, alfab, wir1);
+            lit = tyl(lit, rot3, alfab, wir2);
+            lit = tyl(lit, rot2, alfab, wir3);
+            lit = tyl(lit, rot1, alfab, wir4);
+            wynik += lit;
+            }
+         else {
+            wynik += tab[i];
+          }
+    }
+    return wynik;
+}
 
 void Game::initWindow()   //rozmiar okna itp
 {
@@ -511,6 +623,7 @@ void Game::update_do_pliku()
     while (!odczyt.eof())
     {
         getline(odczyt, line, '\n');
+        line = enigma(line,"AAAA")
         if(line != "" && line != "\n")
             numb_lines_konta++;
     }
@@ -523,6 +636,7 @@ void Game::update_do_pliku()
     while (numer_konta <= numb_lines_konta)
     {
         getline(odczyt, line, '\n');
+        line = enigma(line,"AAAA")
         if (numer_konta != numer_konta_ogolny)
         {
             plik += line;
@@ -545,7 +659,7 @@ void Game::update_do_pliku()
 
     zapis.open("konta.txt", std::ios::out | std::ios::app);
 
-    zapis << plik;
+    zapis << enigma(plik,"AAAA");
     
     zapis.close();
     numb_lines_konta = 0;
@@ -928,6 +1042,7 @@ void Game::run() {
 
                     try {
                         while (getline(odczyt, konto_string))
+                            konto_string = enigma(konto_string,"AAAA")
                         {
                             std::stringstream s(konto_string);
                             while (getline(s, ss, ';'))
@@ -1098,6 +1213,7 @@ void Game::run() {
                     else
                     {
                         while (getline(odczyt, konto_string))
+                            konto_string = enigma(konto_string,"AAAA")
                         {
                             std::stringstream s(konto_string);
                             while (getline(s, ss, ';'))
@@ -1122,7 +1238,7 @@ void Game::run() {
                     if (pomoc_konta)
                     {
                         zapis.open("konta.txt", std::ios::out | std::ios::app);
-                        zapis << dodawanie_nazwa_button.input << ";" << dodawanie_haslo_button.input 
+                        zapis << enigma(dodawanie_nazwa_button.input,"AAAA") << ";" << enigma(dodawanie_haslo_button.input,"AAAA") 
                             << ";" << 0 << ";" << 0 << ";" << 0 << ";" << 0 << ";" << 0 << ";" << 0 
                             << ";" << 0 << ";" << 0 << ";" << 0 << ";" << 0 << ";" << 0 << ";" << std::endl;
                         zapis.close();
